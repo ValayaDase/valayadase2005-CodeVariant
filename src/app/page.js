@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/layout/Navbar";
 import SmoothScrollProvider from "@/components/common/SmoothScrollProvider";
 import Section01Hero from "@/components/sections/Section01Hero";
 import Section02Problem from "@/components/sections/Section02Problem";
@@ -16,9 +15,6 @@ export default function Home() {
   return (
     <SmoothScrollProvider>
       <main className="w-full min-h-screen bg-[#F4F1E8] text-[#252B26] overflow-x-clip selection:bg-[#263D31] selection:text-[#F4F1E8]">
-        {/* Fixed Editorial Navigation Header */}
-        <Navbar />
-
         {/* Hero & Problem Transition Wrapper: Hero sticks ONLY while Section 02 slides over it */}
         <div id="hero-problem-wrapper" className="relative w-full">
           {/* Section 01 — Hero: Show the Problem Immediately */}

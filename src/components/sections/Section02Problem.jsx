@@ -291,14 +291,14 @@ export default function Section02Problem() {
             const addSplitReveal = (card, start) => {
               const visual = card.querySelector(".split-visual");
               const narrative = card.querySelector(".split-narrative");
-              const intro = card.querySelector(".scene-intro");
+              const introElements = card.querySelectorAll(".scene-intro, .scene-overlay");
               const image = card.querySelector(".scene-image");
               const status = card.querySelector(".scene-status");
               const top = card.querySelector(".scene-top");
 
               timeline
                 .to(
-                  intro,
+                  introElements,
                   {
                     autoAlpha: 0,
                     y: -12,
@@ -687,13 +687,18 @@ export default function Section02Problem() {
                       sizes="(min-width: 1024px) 90vw, 100vw"
                     />
 
-                    {/* Overall dark vignette overlay */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0E1A13]/95 via-[#14231A]/60 via-45% to-[#14231A]/40" />
+                    {/* Feathered vignette: deep contrast behind text, multi-stop organic blur-fade toward center with zero hard lines */}
+                    <div
+                      className="scene-overlay pointer-events-none absolute inset-0 z-[5]"
+                      style={{
+                        background: `
+                          radial-gradient(ellipse 95% 85% at 0% 100%, rgba(7, 15, 10, 0.95) 0%, rgba(7, 15, 10, 0.88) 25%, rgba(7, 15, 10, 0.55) 50%, rgba(7, 15, 10, 0.18) 72%, transparent 92%),
+                          linear-gradient(90deg, rgba(7, 15, 10, 0.93) 0%, rgba(7, 15, 10, 0.88) 18%, rgba(7, 15, 10, 0.72) 30%, rgba(7, 15, 10, 0.44) 44%, rgba(7, 15, 10, 0.20) 56%, rgba(7, 15, 10, 0.06) 66%, rgba(7, 15, 10, 0.01) 74%, transparent 82%)
+                        `,
+                      }}
+                    />
 
-                    {/* Left-side dark vignette for crystal-clear text readability across any photo brightness */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0B150F]/90 via-[#14231A]/55 via-50% to-transparent" />
-
-                    <div className="scene-top absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
+                    <div className="scene-top absolute left-5 right-5 top-5 flex items-center justify-between gap-3 z-20">
                       <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/20 bg-[#101D15]/60 px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.16em] text-[#FCFBF7] backdrop-blur-md shadow-sm">
                         <span
                           className="h-1.5 w-1.5 rounded-full"
@@ -709,8 +714,8 @@ export default function Section02Problem() {
                       </span>
                     </div>
 
-                    {/* Full-image chapter opening with dedicated high-contrast scrim */}
-                    <div className="scene-intro absolute bottom-0 left-0 right-0 p-8 xl:p-10 bg-gradient-to-t from-[#0B150F]/95 via-[#111F16]/80 to-transparent pt-28">
+                    {/* Chapter opening text — strictly confined to left column (max 48% width) */}
+                    <div className="scene-intro absolute bottom-0 left-0 w-full sm:w-[60%] lg:w-[48%] p-8 xl:p-10 pt-28 z-20">
                       <div className="mb-4 flex items-end gap-5">
                         <span className="font-editorial text-[clamp(5rem,10vw,9rem)] leading-[0.8] tracking-tighter text-[#FCFBF7] drop-shadow-[0_6px_24px_rgba(0,0,0,0.9)]">
                           {problem.number}
@@ -724,7 +729,7 @@ export default function Section02Problem() {
                       </p>
 
                       <h3
-                        className="max-w-2xl font-editorial text-3xl leading-tight text-[#FCFBF7] xl:text-4xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]"
+                        className="max-w-xl font-editorial text-3xl leading-tight text-[#FCFBF7] xl:text-4xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]"
                         aria-hidden="true"
                       >
                         {problem.title}
