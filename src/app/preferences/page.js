@@ -23,6 +23,7 @@ import {
   ActionZone,
   DropFeedbackToast,
 } from "@/components/canvas";
+import { CurtainReveal, RevealItem } from "@/components/motion/MotionPrimitives";
 
 export default function PreferencesPage() {
   const [preferences, setPreferences] = useState(() => getUserPreferences());
@@ -58,6 +59,8 @@ export default function PreferencesPage() {
       >
         <div className="space-y-6 text-left max-w-4xl mx-auto pb-16">
           {/* Header */}
+          <CurtainReveal className="rounded-3xl" delay={0.04}>
+          <RevealItem delay={0.06}>
           <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)]">
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] text-xs font-semibold text-[#819477]">
@@ -75,6 +78,8 @@ export default function PreferencesPage() {
               Configure your cognitive focus profile below. To commit changes or reset, drag the generated Focus Profile Spec card into the designated Action Zones.
             </p>
           </div>
+          </RevealItem>
+          </CurtainReveal>
 
           {savedSuccess && (
             <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
@@ -91,6 +96,8 @@ export default function PreferencesPage() {
           )}
 
           {/* Preferences Form (Field selections remain standard) */}
+          <CurtainReveal className="rounded-3xl" delay={0.14}>
+          <RevealItem delay={0.16}>
           <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] space-y-8">
             {/* Section 1: Core Activity and Noise */}
             <div className="space-y-4">
@@ -296,6 +303,8 @@ export default function PreferencesPage() {
               </div>
             </div>
           </div>
+          </RevealItem>
+          </CurtainReveal>
         </div>
 
         <DropFeedbackToast />

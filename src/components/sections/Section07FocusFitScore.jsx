@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Image from "next/image";
-import { Award, CheckCircle, ShieldCheck, ArrowRight, Zap, Wifi, Volume2, Users, Eye, Sliders } from "lucide-react";
+import { Award, ShieldCheck, ArrowRight, Zap, Wifi, Volume2, Users, Eye, Sliders } from "lucide-react";
 import { SPACES_DATA } from "@/data/spacesData";
 
 export default function Section07FocusFitScore() {

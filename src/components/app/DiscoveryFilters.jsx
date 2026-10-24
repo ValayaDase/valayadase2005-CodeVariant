@@ -1,6 +1,7 @@
 "use client";
 
 import { Search, RotateCcw } from "lucide-react";
+import { RevealItem } from "@/components/motion/MotionPrimitives";
 
 export const ACTIVITY_OPTIONS = ["Deep Work", "Studying", "Meeting", "Casual Work"];
 export const DAY_OPTIONS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
@@ -43,6 +44,7 @@ export default function DiscoveryFilters({
   return (
     <div className="bg-white rounded-3xl border border-[#E8E0D2] p-5 sm:p-6 shadow-[0_4px_24px_rgba(32,35,31,0.04)] space-y-5">
       {/* Top Search & Primary Filters Row */}
+      <RevealItem delay={0.08}>
       <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5">
         {/* Search Query Input */}
         <div className="md:col-span-5 relative">
@@ -106,8 +108,10 @@ export default function DiscoveryFilters({
           </select>
         </div>
       </div>
+      </RevealItem>
 
       {/* Secondary Criteria: Noise, Budget & Facilities */}
+      <RevealItem delay={0.2}>
       <div className="pt-4 border-t border-[#E8E0D2] flex flex-wrap items-center justify-between gap-4">
         {/* Left: Quick Noise & Budget Pill Groups */}
         <div className="flex flex-wrap items-center gap-3">
@@ -168,8 +172,10 @@ export default function DiscoveryFilters({
           <span>Reset Filters</span>
         </button>
       </div>
+      </RevealItem>
 
       {/* Facilities Multi-Select Chips */}
+      <RevealItem delay={0.32}>
       <div className="pt-3 border-t border-dashed border-[#E8E0D2] flex flex-wrap items-center gap-2">
         <span className="text-xs font-semibold text-[#555D50] mr-1">
           Required Facilities:
@@ -193,6 +199,7 @@ export default function DiscoveryFilters({
           );
         })}
       </div>
+      </RevealItem>
     </div>
   );
 }

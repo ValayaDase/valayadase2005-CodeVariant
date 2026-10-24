@@ -16,6 +16,7 @@ import {
 import AppShell from "@/components/app/AppShell";
 import { backendRequest } from "@/lib/backend";
 import { CanvasProvider, DropFeedbackToast } from "@/components/canvas";
+import { CurtainReveal, StaggerGrid } from "@/components/motion/MotionPrimitives";
 
 export default function ReportsHistoryPage() {
   const [reports, setReports] = useState([]);
@@ -44,6 +45,7 @@ export default function ReportsHistoryPage() {
         <div className="space-y-6 text-left">
           {backendError && <p role="status" className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900">{backendError}</p>}
           {/* Header Banner */}
+          <CurtainReveal className="rounded-3xl" delay={0.04}>
           <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] text-xs font-semibold text-[#819477] mb-2">
@@ -66,8 +68,10 @@ export default function ReportsHistoryPage() {
               <span>Find a Venue to Report</span>
             </Link>
           </div>
+          </CurtainReveal>
 
           {/* Reports History List */}
+          <CurtainReveal className="rounded-3xl" delay={0.14}>
           {reports.length === 0 ? (
             <div className="rounded-3xl bg-white border border-[#E8E0D2] p-12 text-center my-8 shadow-xs">
               <AnimatedReports size={48} className="text-[#819477] mx-auto mb-3" />
@@ -87,7 +91,7 @@ export default function ReportsHistoryPage() {
               </Link>
             </div>
           ) : (
-            <div className="space-y-4">
+            <StaggerGrid delay={0.12} className="space-y-4">
               {reports.map((report) => (
                 <div
                   key={report.id}
@@ -148,8 +152,9 @@ export default function ReportsHistoryPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </StaggerGrid>
           )}
+          </CurtainReveal>
         </div>
         <DropFeedbackToast />
       </AppShell>

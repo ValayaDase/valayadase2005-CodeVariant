@@ -17,11 +17,8 @@ import {
   Search,
   RotateCcw,
   CheckCircle2,
-  Calendar,
-  AlertCircle,
-  HelpCircle,
 } from "lucide-react";
-import { SPACES_DATA, HOURLY_DAYS } from "@/data/spacesData";
+import { SPACES_DATA } from "@/data/spacesData";
 import InteractiveLeafletMap from "@/components/map/InteractiveLeafletMap";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -38,8 +35,6 @@ export default function Section04And05Discovery() {
   const [selectedBudget, setSelectedBudget] = useState("All");
   const [minWifi, setMinWifi] = useState("All");
   const [requireOutlets, setRequireOutlets] = useState(false);
-  const [selectedDay, setSelectedDay] = useState("All");
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState("All");
 
   // Selection & Modal States
   const [selectedSpace, setSelectedSpace] = useState(SPACES_DATA[0]);
@@ -55,7 +50,6 @@ export default function Section04And05Discovery() {
 
   const budgets = ["All", "$", "$$", "$$$"];
   const wifiOptions = ["All", "High-speed (>200 Mbps)", "Low-latency Fiber"];
-  const timeSlots = ["All", "Morning (08:00 - 12:00)", "Afternoon (12:00 - 17:00)", "Evening (17:00 - 21:00)"];
 
   // Reset all filters
   const handleResetFilters = () => {
@@ -66,8 +60,6 @@ export default function Section04And05Discovery() {
     setSelectedBudget("All");
     setMinWifi("All");
     setRequireOutlets(false);
-    setSelectedDay("All");
-    setSelectedTimeSlot("All");
   };
 
   // Filter logic

@@ -23,6 +23,7 @@ import {
 import { backendRequest, getDemoUserId } from "@/lib/backend";
 import { calculateSuitability } from "@/lib/scoring/suitability";
 import LoadingLottie from "@/components/common/LoadingLottie";
+import { SectionReveal } from "@/components/motion/MotionPrimitives";
 import {
   CanvasProvider,
   DraggableCard,
@@ -138,6 +139,7 @@ export default function PlaceDetailClient({ id }) {
         </div>
 
         {/* Hero Banner Card */}
+        <SectionReveal delay={0.06}>
         <div className="rounded-3xl bg-white border border-[#E8E0D2] overflow-hidden shadow-[0_8px_30px_rgba(32,35,31,0.06)]">
           <div className="relative w-full h-64 sm:h-80 lg:h-96 bg-[#E8E0D2] overflow-hidden">
             {!imgError && venue.image ? (
@@ -217,8 +219,10 @@ export default function PlaceDetailClient({ id }) {
             </div>
           </div>
         </div>
+        </SectionReveal>
 
         {/* Canvas Protocol Action Zones Strip */}
+        <SectionReveal delay={0.08}>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {saved ? (
             <ActionZone
@@ -248,8 +252,10 @@ export default function PlaceDetailClient({ id }) {
             compact
           />
         </div>
+        </SectionReveal>
 
         {/* 2-Column Overview Grid */}
+        <SectionReveal delay={0.06}>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Left Column: Narrative, Facilities, and Community Telemetry */}
           <div className="lg:col-span-7 space-y-8">
@@ -401,26 +407,31 @@ export default function PlaceDetailClient({ id }) {
             </div>
           </div>
         </div>
+        </SectionReveal>
         {saveError && <p role="status" className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900">{saveError}</p>}
 
         {/* Quiet When Full Hourly Telemetry Curve */}
-        <QuietWhenPanel
-          crowdSchedule={venue.crowdSchedule}
-          venueName={venue.name}
-        />
+        <SectionReveal>
+          <QuietWhenPanel
+            crowdSchedule={venue.crowdSchedule}
+            venueName={venue.name}
+          />
+        </SectionReveal>
 
         {/* Dedicated Interactive Map & Geographic Distance Section */}
-        <VenueDetailLocationSection venue={venue} />
+        <SectionReveal>
+          <VenueDetailLocationSection venue={venue} />
+        </SectionReveal>
 
         {/* Report Submission Section */}
         {showReportModal && (
-          <div className="pt-4">
+          <SectionReveal className="pt-4">
             <CommunityReportForm
               venueId={venue.id}
               venueName={venue.name}
               onReportSubmitted={handleReportSaved}
             />
-          </div>
+          </SectionReveal>
         )}
         </div>
 

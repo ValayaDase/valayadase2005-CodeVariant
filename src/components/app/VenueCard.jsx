@@ -8,12 +8,10 @@ import {
   MapPin,
   GripVertical,
   Navigation,
+  Volume2,
+  UsersRound,
 } from "lucide-react";
 import {
-  AnimatedVolume,
-  AnimatedCrowd,
-  AnimatedWifi,
-  AnimatedZap,
   AnimatedSparkles,
   AnimatedBookmark,
   AnimatedArrowRight,
@@ -39,32 +37,6 @@ function getIsTouchSnapshot() {
   return window.matchMedia("(hover: none), (pointer: coarse)").matches;
 }
 
-const cardEntranceVariants = {
-  hidden: {
-    opacity: 0,
-    y: 28,
-    scale: 0.97,
-  },
-  visible: (i = 0) => ({
-    opacity: 1,
-    y: 0,
-    scale: 1,
-    transition: {
-      duration: 0.5,
-      delay: Math.min(i * 0.085, 0.85),
-      ease: [0.22, 1, 0.36, 1],
-    },
-  }),
-};
-
-const reducedMotionVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0.25 },
-  },
-};
-
 export default function VenueCard({
   venue,
   suitability,
@@ -74,10 +46,32 @@ export default function VenueCard({
   isSelected = false,
   onSelect,
   index = 0,
+  cinematicEntrance = false,
+  entranceDelay = 0,
 }) {
   const { userLocation } = useUserLocation();
   const prefersReducedMotion = useReducedMotion();
   const cardRef = useRef(null);
+  const entranceVariants = useMemo(() => ({
+    gathered: (i = 0) => ({
+      opacity: 0,
+      x: i % 2 === 0 ? 16 : -16,
+      y: 18,
+      scale: 0.88,
+    }),
+    hidden: { opacity: 0, y: 14, scale: 0.98 },
+    visible: (i = 0) => ({
+      opacity: 1,
+      x: 0,
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: cinematicEntrance ? 0.54 : 0.26,
+        delay: (cinematicEntrance ? entranceDelay : 0) + Math.min(i * (cinematicEntrance ? 0.07 : 0.025), cinematicEntrance ? 0.63 : 0.18),
+        ease: [0.22, 1, 0.36, 1],
+      },
+    }),
+  }), [cinematicEntrance, entranceDelay]);
 
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
   const [isHovered, setIsHovered] = useState(false);
@@ -142,8 +136,8 @@ export default function VenueCard({
   return (
     <motion.div
       layout="position"
-      variants={prefersReducedMotion ? reducedMotionVariants : cardEntranceVariants}
-      initial="hidden"
+      variants={entranceVariants}
+      initial={cinematicEntrance ? "gathered" : "hidden"}
       animate="visible"
       custom={index}
       transition={{
@@ -197,7 +191,7 @@ export default function VenueCard({
             >
               <div>
                 {/* Card Image Banner */}
-                <div className="relative w-full aspect-[16/9] bg-[#E8E0D2] overflow-hidden">
+                <div className="relative w-full aspect-[16/7] bg-[#E8E0D2] overflow-hidden">
                   {!imgError && venue.image ? (
                     <Image
                       src={venue.image}
@@ -218,14 +212,14 @@ export default function VenueCard({
 
                   {/* Top category badge */}
                   <div className="absolute top-3 left-3 z-10">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-[#E8E0D2] text-xs font-semibold text-[#20231F] shadow-xs">
+                    <span className="inline-flex items-center gap-1 rounded-full border border-[#E8E0D2] bg-white/90 px-2.5 py-1 text-[10px] font-semibold text-[#20231F] shadow-xs sm:text-xs">
                       {venue.categoryLabel}
                     </span>
                   </div>
 
                   {/* Canvas Protocol Drag Indicator & Saved status badge */}
                   <div
-                    className={`absolute top-3 right-3 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/90 backdrop-blur-md border text-[#20231F] text-xs font-semibold shadow-xs transition-all ${
+                    className={`absolute top-3 right-3 z-10 flex items-center gap-1 rounded-full border bg-white/90 px-2.5 py-1.5 text-[10px] font-semibold text-[#20231F] shadow-xs backdrop-blur-md transition-all ${
                       isHovered && !isDragging ? "border-[#819477] bg-white" : "border-[#E8E0D2]"
                     }`}
                   >
@@ -238,36 +232,32 @@ export default function VenueCard({
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
                   {/* Estimated Slot Badge */}
-                  <div className="absolute bottom-3 left-3 z-10 text-[11px] font-medium text-white bg-black/50 backdrop-blur-sm px-2.5 py-1 rounded-md">
-                    <span>{selectedDay} {selectedTime}: {timeSlotData.status}</span>
+                  <div className="absolute bottom-2.5 left-3 z-10 rounded-md bg-black/55 px-2.5 py-1 text-[10px] font-medium text-white backdrop-blur-sm">
+                    <span>{selectedDay.slice(0, 3)} · {selectedTime} · {timeSlotData.noise}</span>
                   </div>
                 </div>
 
                 {/* Card Body */}
-                <div className="p-5 sm:p-6">
+                <div className="p-4">
                   {/* Title & Neighborhood */}
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <h2
-                        className={`text-lg font-serif font-bold tracking-tight transition-colors duration-250 ${
+                        className={`line-clamp-1 text-base font-serif font-bold tracking-tight transition-colors duration-250 sm:text-lg ${
                           isHovered && !isDragging ? "text-[#26382B]" : "text-[#20231F]"
                         }`}
                       >
                         <Link href={`/places/${venue.id}`}>{venue.name}</Link>
                       </h2>
-                      <p className="text-xs text-[#555D50] flex flex-wrap items-center gap-1 mt-1">
+                      <p className="text-xs text-[#555D50] flex min-w-0 items-center gap-1 mt-1">
                         <MapPin className="w-3.5 h-3.5 text-[#819477]" />
-                        <span>{venue.neighborhood} · {venue.budget}</span>
+                        <span className="min-w-0 truncate">{venue.neighborhood} · {venue.budget}</span>
                         {distanceKm !== null ? (
                           <span className="inline-flex items-center gap-1 font-mono text-[10px] font-semibold text-[#26382B] bg-[#EBF0E9] px-2 py-0.5 rounded-full ml-1">
                             <Navigation className="w-2.5 h-2.5 text-[#819477]" />
                             <span>{formattedDistance.text}</span>
                           </span>
-                        ) : (
-                          <span className="text-[10px] text-[#819477]/80 ml-1">
-                            · Enable location for distance
-                          </span>
-                        )}
+                        ) : null}
                       </p>
                     </div>
 
@@ -282,19 +272,14 @@ export default function VenueCard({
                     </div>
                   </div>
 
-                  {/* Description snippet */}
-                  <p className="mt-3 text-xs text-[#555D50] line-clamp-2 leading-relaxed">
-                    {venue.description}
-                  </p>
-
-                  {/* Telemetry Micro-Pills with Live Animated Micro-Icons */}
-                  <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-[#E8E0D2]/70 text-xs text-[#555D50]">
+                  {/* Essential at-a-glance telemetry; full details remain on the venue page. */}
+                    <div className="grid grid-cols-2 gap-2 mt-2.5 pt-2 border-t border-[#E8E0D2]/70 text-xs text-[#555D50]">
                     <div
                       className={`flex items-center gap-1.5 p-2 rounded-xl transition-colors duration-250 ${
                         isHovered && !isDragging ? "bg-[#EBF0E9]/90" : "bg-[#F5F3EC]/70"
                       }`}
                     >
-                      <AnimatedVolume size={15} color="#819477" />
+                      <Volume2 className="h-[15px] w-[15px] shrink-0 text-[#819477]" />
                       <span className="truncate">
                         {timeSlotData.decibels} dB · {timeSlotData.noise}
                       </span>
@@ -304,49 +289,21 @@ export default function VenueCard({
                         isHovered && !isDragging ? "bg-[#EBF0E9]/90" : "bg-[#F5F3EC]/70"
                       }`}
                     >
-                      <AnimatedCrowd size={15} color="#819477" />
+                      <UsersRound className="h-[15px] w-[15px] shrink-0 text-[#819477]" />
                       <span className="truncate">{timeSlotData.crowd}% Crowd</span>
                     </div>
-                    <div
-                      className={`flex items-center gap-1.5 p-2 rounded-xl transition-colors duration-250 ${
-                        isHovered && !isDragging ? "bg-[#EBF0E9]/90" : "bg-[#F5F3EC]/70"
-                      }`}
-                    >
-                      <AnimatedWifi size={15} color="#819477" />
-                      <span className="truncate">{venue.wifiSpeed}</span>
-                    </div>
-                    <div
-                      className={`flex items-center gap-1.5 p-2 rounded-xl transition-colors duration-250 ${
-                        isHovered && !isDragging ? "bg-[#EBF0E9]/90" : "bg-[#F5F3EC]/70"
-                      }`}
-                    >
-                      <AnimatedZap size={15} color="#819477" />
-                      <span className="truncate">{venue.outletsAvailability}</span>
-                    </div>
                   </div>
-
-                  {/* Suitability Match Reasons Teaser */}
-                  {suitability?.matchReasons?.[0] && (
-                    <div
-                      className={`mt-3 text-[11px] text-[#26382B] bg-[#EBF0E9] px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-all duration-250 ${
-                        isHovered && !isDragging ? "bg-[#DFE7DD] translate-y-[-1px]" : ""
-                      }`}
-                    >
-                      <AnimatedSparkles size={14} color="#819477" className="shrink-0" />
-                      <span className="truncate">{suitability.matchReasons[0]}</span>
-                    </div>
-                  )}
                 </div>
               </div>
 
               {/* Card Action Footer */}
-              <div className="px-5 sm:px-6 pb-5 pt-2 flex items-center justify-between border-t border-[#E8E0D2]/60 text-xs">
+              <div className="px-4 pb-3 pt-2 flex items-center justify-between border-t border-[#E8E0D2]/60 text-xs">
                 <span
                   className={`text-[10px] uppercase tracking-wider transition-colors duration-250 ${
                     isHovered && !isDragging ? "text-[#26382B] font-medium" : "text-[#555D50]/80"
                   }`}
                 >
-                  {venue.provenance}
+                  <span className="line-clamp-1">{venue.provenance}</span>
                 </span>
                 <Link
                   href={`/places/${venue.id}`}

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { ArrowUpRight, Compass, ShieldCheck, Volume2, Sparkles, Heart } from "lucide-react";
+import { ArrowUpRight, Compass, Sparkles } from "lucide-react";
 import InteractiveWaveTitle from "@/components/footer/InteractiveWaveTitle";
 
 export default function Section10ResolutionAndFooter() {

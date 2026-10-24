@@ -9,7 +9,7 @@ export default function AppHeader({ title, subtitle, onOpenMobile, user }) {
   const badgeLabel = user?.isDemo ? "Demo" : "Member";
 
   return (
-    <header className="w-full bg-white border-b border-[#E8E0D2] px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-[0_2px_10px_rgba(32,35,31,0.02)]">
+    <header className="sticky top-3 z-30 mx-3 mt-3 flex w-auto items-center justify-between gap-4 rounded-3xl border border-[#E8E0D2] bg-white px-4 py-3.5 shadow-[0_8px_28px_rgba(32,35,31,0.08)] sm:mx-5 sm:px-6 lg:mx-6 lg:px-8">
       {/* Left: Mobile Toggle & Page Title */}
       <div className="flex items-center gap-3">
         <button

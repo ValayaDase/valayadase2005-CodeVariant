@@ -63,10 +63,12 @@ export default function AppSidebar({ user, onCloseMobile }) {
                   />
                 )}
                 <motion.span
+                  key={`${item.href}-${isActive ? "active" : "idle"}`}
                   className="relative z-[1] inline-flex h-5 w-5 shrink-0 items-center justify-center"
                   aria-hidden="true"
+                  initial={isActive && !reduceMotion ? { opacity: 0.6, scale: 0.72, rotate: -14, y: 4 } : false}
                   animate={isActive && !reduceMotion ? item.animation : { rotate: 0, x: 0, y: 0, scale: 1 }}
-                  transition={reduceMotion ? { duration: 0 } : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+                  transition={reduceMotion ? { duration: 0 } : { type: "tween", duration: 0.58, ease: [0.22, 1, 0.36, 1] }}
                   whileHover={reduceMotion ? undefined : { scale: 1.08 }}
                 >
                   <Icon size={18} strokeWidth={isActive ? 2.2 : 1.8} />

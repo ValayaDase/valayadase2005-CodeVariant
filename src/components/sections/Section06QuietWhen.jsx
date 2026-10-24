@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Clock, Calendar, BarChart3, Sun, Moon, Sparkles, ShieldCheck, Wifi, Users, Zap, CheckCircle2 } from "lucide-react";
+import { Clock, Sun, ShieldCheck } from "lucide-react";
 import { SPACES_DATA, HOURLY_DAYS } from "@/data/spacesData";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";

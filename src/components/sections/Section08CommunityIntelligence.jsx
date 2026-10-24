@@ -4,16 +4,11 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Users,
-  MessageSquare,
   CheckCircle2,
   Clock,
-  Send,
   PlusCircle,
   X,
-  Volume2,
-  ThumbsUp,
   Radio,
-  Wifi,
   AlertTriangle,
 } from "lucide-react";
 import { COMMUNITY_REPORTS, SPACES_DATA } from "@/data/spacesData";
@@ -24,7 +19,6 @@ export default function Section08CommunityIntelligence() {
 
   // Form states
   const [venue, setVenue] = useState(SPACES_DATA[0].name);
-  const [reportCategory, setReportCategory] = useState("Noise & Acoustics");
   const [noiseInput, setNoiseInput] = useState("Quiet (<40 dB)");
   const [crowdInput, setCrowdInput] = useState("Under 30% full · Open solo desks");
   const [wifiInput, setWifiInput] = useState("Fast Fiber (>200 Mbps)");

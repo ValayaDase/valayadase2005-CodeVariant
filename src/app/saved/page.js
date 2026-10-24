@@ -9,6 +9,7 @@ import {
 } from "@/components/common";
 import AppShell from "@/components/app/AppShell";
 import VenueCard from "@/components/app/VenueCard";
+import { CurtainReveal } from "@/components/motion/MotionPrimitives";
 import { calculateSuitability } from "@/lib/scoring/suitability";
 import { backendRequest, getDemoUserId } from "@/lib/backend";
 import { getAllVenues, getSavedVenueIds } from "@/lib/discovery/venue-data";
@@ -63,6 +64,7 @@ export default function SavedPlacesPage() {
           )}
 
           {/* Header summary */}
+          <CurtainReveal className="rounded-3xl" delay={0.04}>
           <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -90,8 +92,10 @@ export default function SavedPlacesPage() {
               <span>Explore More Spots</span>
             </Link>
           </div>
+          </CurtainReveal>
 
           {/* Results / Empty state */}
+          <CurtainReveal className="rounded-3xl" delay={0.14}>
           {savedVenues.length === 0 ? (
             <div className="rounded-3xl bg-white border border-[#E8E0D2] p-12 text-center my-8 shadow-xs">
               <AnimatedBookmark size={48} className="text-[#819477] mx-auto mb-3" />
@@ -130,6 +134,7 @@ export default function SavedPlacesPage() {
               })}
             </div>
           )}
+          </CurtainReveal>
         </div>
 
         {/* Canvas Protocol Dock & Overlays */}
