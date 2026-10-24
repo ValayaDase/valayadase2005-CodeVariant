@@ -238,10 +238,10 @@ export default function Section01Hero() {
                   autoAlpha: 1,
                   y: 0,
                   scale: 1,
-                  duration: 0.55,
+                  duration: 0.85,
                   ease: "power3.out",
                 },
-                0.08
+                0.15
               )
               .to(
                 logo,
@@ -249,10 +249,10 @@ export default function Section01Hero() {
                   autoAlpha: 0,
                   y: -10,
                   scale: 1.03,
-                  duration: 0.32,
+                  duration: 0.45,
                   ease: "power2.in",
                 },
-                0.66
+                1.6
               );
 
             select(".intro-panel").forEach((panel, index) => {
@@ -262,10 +262,10 @@ export default function Section01Hero() {
                   scaleX: 0,
                   transformOrigin:
                     index % 2 === 0 ? "left center" : "right center",
-                  duration: 0.78,
+                  duration: 0.95,
                   ease: "power3.inOut",
                 },
-                0.72 + index * 0.055
+                1.95 + index * 0.08
               );
             });
 
@@ -275,10 +275,10 @@ export default function Section01Hero() {
                 {
                   scale: 1,
                   opacity: 1,
-                  duration: 1.4,
+                  duration: 1.6,
                   ease: "power2.out",
                 },
-                0.72
+                1.95
               )
               .set(
                 overlay,
@@ -286,10 +286,10 @@ export default function Section01Hero() {
                   autoAlpha: 0,
                   display: "none",
                 },
-                1.74
+                2.8
               );
 
-            addContentEntrance(intro, 1.03);
+            addContentEntrance(intro, 2.25);
           }
 
           // Gentle background depth while scrolling.

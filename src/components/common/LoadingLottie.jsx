@@ -1,6 +1,6 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useRef } from "react";
 import dynamic from "next/dynamic";
 
 // Dynamically import Lottie from lottie-react without SSR
@@ -23,7 +23,10 @@ const LoadingLottie = memo(function LoadingLottie({
   size = "lg",
   className = "",
   fullScreen = false,
+  speed = 0.5,
 }) {
+  const lottieRef = useRef(null);
+
   const sizeMap = {
     sm: "w-28 h-28",
     md: "w-40 h-40",
@@ -37,6 +40,12 @@ const LoadingLottie = memo(function LoadingLottie({
     <div className={`flex items-center justify-center p-2 ${className}`}>
       <div className={`relative ${lottieSizeClass} flex items-center justify-center`}>
         <Lottie
+          lottieRef={lottieRef}
+          onDOMLoaded={() => {
+            if (lottieRef.current) {
+              lottieRef.current.setSpeed(speed);
+            }
+          }}
           src="/animations/loading.json"
           loop={true}
           autoplay={true}

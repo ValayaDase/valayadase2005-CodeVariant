@@ -981,6 +981,7 @@ export default function Section04And05Discovery() {
             </motion.div>
           </motion.div>
         )}
+      </AnimatePresence>
     </section>
   );
 }
