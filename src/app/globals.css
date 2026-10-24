@@ -15,6 +15,14 @@
   --crowded-terracotta: #B86E52;
   --quiet-green: #648568;
   --unknown-grey: #92958D;
+
+  /* App Theme Variables */
+  --background: #F5F3EC;
+  --foreground: #20231F;
+  --bg-primary: #F5F3EC;
+  --surface: #FFFFFF;
+  --charcoal: #20231F;
+  --beige: #E8E0D2;
 }
 
 @theme {
@@ -30,6 +38,14 @@
   --color-crowded: #B86E52;
   --color-quiet: #648568;
   --color-unknown: #92958D;
+
+  /* Brand Theme Tokens */
+  --color-brand-bg: #F5F3EC;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-sage: #819477;
+  --color-brand-forest: #26382B;
+  --color-brand-charcoal: #20231F;
+  --color-brand-beige: #E8E0D2;
 }
 
 html {
@@ -41,7 +57,7 @@ html {
 body {
   background-color: var(--ivory);
   color: var(--dark-text);
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Plus Jakarta Sans', var(--font-sans, system-ui, -apple-system, sans-serif);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -85,6 +101,18 @@ body {
   background: #FCFBF7;
   border: 1px solid #E3E0D7;
   box-shadow: 0 4px 20px -2px rgba(38, 61, 49, 0.04);
+}
+
+/* App Glass Panel & Border Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(232, 224, 210, 0.7);
+}
+
+.subtle-border {
+  border-color: #E8E0D2;
 }
 
 /* Leaflet map custom styling for ivory/sage harmony */

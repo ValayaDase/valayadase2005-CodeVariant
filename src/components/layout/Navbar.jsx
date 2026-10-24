@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Compass, Menu, X, ArrowUpRight } from "lucide-react";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -32,23 +33,28 @@ export default function Navbar() {
     <>
       {/* Floating persistent navigation header - reveals smoothly once user scrolls past hero */}
       <header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl transition-all duration-400 ease-out ${
-          scrolled
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-6xl transition-all duration-400 ease-out ${scrolled
             ? "translate-y-0 opacity-100 pointer-events-auto"
             : "-translate-y-24 opacity-0 pointer-events-none"
-        }`}
+          }`}
       >
         <div className="bg-[#263D31]/92 backdrop-blur-md text-[#F4F1E8] px-5 py-2.5 rounded-full border border-[#819478]/40 shadow-xl flex items-center justify-between">
           {/* Logo */}
-          <a href="#hero" className="flex items-center space-x-2 text-[#FCFBF7] group">
-            <span className="w-2 h-2 rounded-full bg-[#819478] group-hover:scale-125 transition-transform" />
-            <span className="font-editorial text-lg tracking-[0.06em] text-[#FCFBF7] font-normal uppercase">
-              Spotwise
-            </span>
+          <a href="#hero" className="flex items-center group py-0.5 focus-visible:outline-none" aria-label="Spotwise Home">
+            <div className="relative h-6 sm:h-7 aspect-[2172/724] transition-transform duration-200 group-hover:scale-105">
+              <Image
+                src="/images/logo/b97527af-f745-457c-a0fb-ddb6d9649e8d.png"
+                alt="Spotwise"
+                fill
+                priority
+                className="object-contain object-left"
+                sizes="(max-width: 640px) 72px, 84px"
+              />
+            </div>
           </a>
 
           {/* Nav links */}
-          <nav className="hidden md:flex items-center space-x-5 lg:space-x-6 text-[11px] font-mono uppercase tracking-[0.15em] text-[#E3EBDD]/80">
+          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-5 text-[11px] font-mono uppercase tracking-[0.14em] text-[#E3EBDD]/80">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -60,17 +66,18 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right CTA */}
-          <div className="flex items-center space-x-3">
+          {/* Right Actions: Sign In + App Launch */}
+          <div className="flex items-center space-x-2.5">
             <Link
               href="/sign-in"
-              className="hidden lg:inline-flex text-[11px] font-mono uppercase tracking-wider text-[#E3EBDD] hover:text-white px-2 py-1 transition-colors"
+              className="hidden sm:inline-block text-[11px] font-mono uppercase tracking-wider text-[#E3EBDD] hover:text-white px-2.5 py-1 transition-colors"
             >
               Sign In
             </Link>
+
             <Link
               href="/discover"
-              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] transition-colors"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] transition-colors shadow-sm"
             >
               <span>Launch App</span>
               <ArrowUpRight className="w-3 h-3" />
@@ -78,10 +85,10 @@ export default function Navbar() {
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1 text-[#FCFBF7] hover:text-[#819478]"
+              className="lg:hidden p-1 text-[#FCFBF7] hover:text-[#819478]"
               aria-label="Toggle menu"
             >
-              <Menu className="w-4 h-4" />
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
@@ -97,7 +104,7 @@ export default function Navbar() {
           >
             <X className="w-6 h-6" />
           </button>
-          <div className="flex flex-col space-y-4 flex-1">
+          <div className="flex flex-col space-y-3 flex-1 overflow-y-auto">
             <p className="text-[11px] uppercase tracking-[0.25em] text-[#819478] font-mono font-bold">
               Navigation Chapters
             </p>
@@ -106,27 +113,27 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="font-editorial text-2xl text-[#FCFBF7] hover:text-[#819478] transition-colors"
+                className="font-editorial text-xl text-[#FCFBF7] hover:text-[#819478] transition-colors"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          <div className="pt-6 border-t border-[#819478]/30 space-y-3">
+          <div className="pt-5 border-t border-[#819478]/30 flex flex-col gap-2.5">
+            <Link
+              href="/sign-in"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center py-2 text-xs font-mono uppercase text-[#E3EBDD] hover:text-white"
+            >
+              Sign In (Demo)
+            </Link>
             <Link
               href="/discover"
               onClick={() => setMobileMenuOpen(false)}
               className="block w-full text-center py-3 rounded-full bg-[#FCFBF7] text-[#263D31] text-xs font-mono uppercase font-bold tracking-wider"
             >
               Launch App
-            </Link>
-            <Link
-              href="/sign-in"
-              onClick={() => setMobileMenuOpen(false)}
-              className="block w-full text-center py-2.5 rounded-full border border-[#819478]/40 text-[#FCFBF7] text-xs font-mono uppercase font-semibold tracking-wider hover:bg-[#819478]/10"
-            >
-              Sign In (Demo)
             </Link>
           </div>
         </div>
