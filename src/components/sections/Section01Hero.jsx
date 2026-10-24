@@ -108,7 +108,7 @@ export default function Section01Hero() {
         <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
           <div ref={bgRef} className="relative w-full h-[112%] -top-[6%] left-0">
             <Image
-              src="/images/hero/lakeside-cafe.png"
+              src="/images/hero/new image.png" 
               alt="Serene Lakeside Café at Golden Hour overlooking peaceful waters"
               fill
               priority
@@ -186,13 +186,7 @@ export default function Section01Hero() {
         <div className="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex-1 flex flex-col justify-between pt-8 sm:pt-12 pb-8 sm:pb-12">
           {/* Middle Left: Editorial Master Headline */}
           <div className="max-w-xl text-left my-auto">
-            {/* Chapter Label */}
-            <div className="hero-badge inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-[#263D31]/80 backdrop-blur-md border border-[#819478]/40 w-fit mb-5 shadow-sm">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#819478] animate-pulse" />
-              <span className="text-[10px] font-mono uppercase tracking-[0.22em] text-[#E3EBDD] font-semibold">
-                Chapter 01 · The Search
-              </span>
-            </div>
+            
 
             <h1
               ref={headlineRef}
