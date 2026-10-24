@@ -1,6 +1,5 @@
 "use client";
 
-import Navbar from "@/components/layout/Navbar";
 import SmoothScrollProvider from "@/components/common/SmoothScrollProvider";
 import Section01Hero from "@/components/sections/Section01Hero";
 import Section02Problem from "@/components/sections/Section02Problem";
@@ -16,9 +15,6 @@ export default function Home() {
   return (
     <SmoothScrollProvider>
       <main className="w-full min-h-screen bg-[#F4F1E8] text-[#252B26] overflow-x-clip selection:bg-[#263D31] selection:text-[#F4F1E8]">
-        {/* Fixed Editorial Navigation Header */}
-        <Navbar />
-
         {/* Hero & Problem Transition Wrapper: Hero sticks ONLY while Section 02 slides over it */}
         <div id="hero-problem-wrapper" className="relative w-full">
           {/* Section 01 — Hero: Show the Problem Immediately */}
@@ -31,11 +27,14 @@ export default function Home() {
         {/* Section 03 — The Turning Point: What if you knew before you arrived? */}
         <Section03TurningPoint />
 
-        {/* Sections 04 & 05 — Cinematic Map Reveal & Discovery Map with Fixed Left Sidebar */}
-        <Section04And05Discovery />
+        {/* Discovery & Quiet-When Transition Wrapper: Discovery sticks while Section 06 slides over it like a card */}
+        <div id="discovery-quietwhen-wrapper" className="relative w-full">
+          {/* Sections 04 & 05 — Cinematic Map Reveal & Discovery Map with Fixed Left Sidebar */}
+          <Section04And05Discovery />
 
-        {/* Section 06 — Quiet When: Time-Based Discovery */}
-        <Section06QuietWhen />
+          {/* Section 06 — Quiet When: Time-Based Discovery */}
+          <Section06QuietWhen />
+        </div>
 
         {/* Section 07 — Focus Fit: Not Just Nearby, Right For You */}
         <Section07FocusFitScore />

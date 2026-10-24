@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowDown, ArrowUpRight, Menu, X } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -89,6 +90,7 @@ export default function Section01Hero() {
     { label: "Discovery Map", href: "#discovery" },
     { label: "Quiet When", href: "#quiet-when" },
     { label: "Focus Fit", href: "#focus-fit" },
+    { label: "Compare", href: "#compare" },
   ];
 
   useEffect(() => {
@@ -627,19 +629,21 @@ export default function Section01Hero() {
               ))}
             </nav>
 
-            <div className="flex items-center space-x-1.5 sm:space-x-3 ml-auto md:ml-0 shrink-0">
-              <a
-                href="#discovery"
-                className="inline-flex items-center justify-center whitespace-nowrap px-3 sm:px-5 h-[34px] sm:h-[38px] rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] hover:shadow-md transition-all duration-200 shrink-0 shadow-sm"
+            <div className="flex items-center space-x-2 sm:space-x-3.5 ml-auto md:ml-0 shrink-0">
+              <Link
+                href="/sign-in"
+                className="hidden lg:inline-block text-[11px] font-mono uppercase tracking-wider text-[#E3EBDD]/80 hover:text-white px-2 py-1 transition-colors"
               >
-                <span className="md:hidden">Find Quiet</span>
+                Sign In
+              </Link>
 
-                <span className="hidden md:inline">
-                  Find your quiet place
-                </span>
-
-                <ArrowUpRight className="w-3.5 h-3.5 hidden md:inline-block ml-1" />
-              </a>
+              <Link
+                href="/discover"
+                className="inline-flex items-center justify-center whitespace-nowrap px-3.5 sm:px-5 h-[34px] sm:h-[38px] rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] hover:shadow-md transition-all duration-200 shrink-0 shadow-sm gap-1.5 group"
+              >
+                <span>Launch App</span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
 
               <button
                 type="button"
@@ -740,14 +744,23 @@ export default function Section01Hero() {
             ))}
           </div>
 
-          <div className="pt-6 border-t border-[#819478]/30 flex flex-col gap-3">
-            <a
-              href="#discovery"
+          <div className="pt-6 border-t border-[#819478]/30 flex flex-col gap-2.5">
+            <Link
+              href="/sign-in"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-3 rounded-full bg-[#FCFBF7] text-[#263D31] text-xs font-mono uppercase font-bold tracking-wider"
+              className="w-full text-center py-2 text-xs font-mono uppercase text-[#E3EBDD] hover:text-white"
             >
-              Find your quiet place
-            </a>
+              Sign In
+            </Link>
+
+            <Link
+              href="/discover"
+              onClick={() => setMobileMenuOpen(false)}
+              className="inline-flex items-center justify-center gap-1.5 w-full text-center py-3 rounded-full bg-[#FCFBF7] text-[#263D31] text-xs font-mono uppercase font-bold tracking-wider hover:bg-[#E3EBDD] transition-colors"
+            >
+              <span>Launch App</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </Link>
 
             <div className="flex justify-center pt-1">
               <div className="relative h-6 aspect-[2172/724] opacity-85">

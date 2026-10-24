@@ -1,273 +1,786 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import { Clock, Sun, ShieldCheck } from "lucide-react";
+import {
+  useState,
+  useMemo,
+  useEffect,
+  useRef,
+} from "react";
+import {
+  Clock,
+  Calendar,
+  Volume2,
+  Users,
+  Wifi,
+  Zap,
+  Check,
+  Info,
+  ArrowRight,
+  MousePointer2,
+} from "lucide-react";
 import { SPACES_DATA, HOURLY_DAYS } from "@/data/spacesData";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export default function Section06QuietWhen() {
-  const [selectedDay, setSelectedDay] = useState("Wednesday");
-  const [selectedHourIndex, setSelectedHourIndex] = useState(1); // 10:00 AM
-  const [selectedSpaceId, setSelectedSpaceId] = useState("solitude-atelier");
-  const [telemetryMode, setTelemetryMode] = useState("community"); // 'community' | 'model'
+const STATUS_STYLES = {
+  quiet: {
+    label: "Quiet",
+    color: "#263D31",
+    background: "#E3EBDD",
+  },
+  caution: {
+    label: "Moderate",
+    color: "#986334",
+    background: "#F3E8D9",
+  },
+  crowded: {
+    label: "Busy",
+    color: "#A15D47",
+    background: "#F2E5DF",
+  },
+  unknown: {
+    label: "Unknown",
+    color: "#77816E",
+    background: "#EDF0E7",
+  },
+};
 
+function getStatus(slot) {
+  if (!slot) return STATUS_STYLES.unknown;
+
+  return STATUS_STYLES[slot.status] ?? STATUS_STYLES.unknown;
+}
+
+function numericValue(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
+  }
+
+  const number = Number(value);
+
+  return Number.isFinite(number) ? number : null;
+}
+
+export default function Section06QuietWhen() {
   const sectionRef = useRef(null);
   const chartRef = useRef(null);
+  const selectedBandRef = useRef(null);
+  const summaryRef = useRef(null);
+
+  const [selectedSpaceId, setSelectedSpaceId] = useState(
+    () =>
+      SPACES_DATA.find(
+        (space) => space.id === "solitude-atelier"
+      )?.id ??
+      SPACES_DATA[0]?.id ??
+      ""
+  );
+
+  const [selectedDay, setSelectedDay] = useState(
+    () =>
+      HOURLY_DAYS.includes("Wednesday")
+        ? "Wednesday"
+        : HOURLY_DAYS[0] ?? ""
+  );
+
+  const [selectedHourIndex, setSelectedHourIndex] = useState(1);
 
   const currentSpace =
-    SPACES_DATA.find((s) => s.id === selectedSpaceId) || SPACES_DATA[0];
+    SPACES_DATA.find(
+      (space) => space.id === selectedSpaceId
+    ) ??
+    SPACES_DATA[0] ??
+    null;
 
-  const hourlyData = currentSpace.hourlyProfile;
-  const currentSlot = hourlyData[selectedHourIndex];
+  // Uses your existing hourlyProfile array.
+  // No day-specific values are fabricated.
+  const hourlyData = useMemo(
+    () =>
+      Array.isArray(currentSpace?.hourlyProfile)
+        ? currentSpace.hourlyProfile
+        : [],
+    [currentSpace]
+  );
 
+  const safeHourIndex = Math.max(
+    0,
+    Math.min(selectedHourIndex, hourlyData.length - 1)
+  );
+
+  const currentSlot = hourlyData[safeHourIndex] ?? null;
+  const currentStatus = getStatus(currentSlot);
+
+  const quietestIndex = useMemo(() => {
+    let result = -1;
+    let lowestNoise = Infinity;
+
+    hourlyData.forEach((slot, index) => {
+      const noise = numericValue(slot.noise);
+
+      if (noise !== null && noise < lowestNoise) {
+        lowestNoise = noise;
+        result = index;
+      }
+    });
+
+    return result;
+  }, [hourlyData]);
+
+  const quietestSlot =
+    quietestIndex >= 0 ? hourlyData[quietestIndex] : null;
+
+  const isQuietest =
+    quietestIndex >= 0 &&
+    safeHourIndex === quietestIndex;
+
+  const selectedNoise = numericValue(currentSlot?.noise);
+  const selectedCrowd = numericValue(currentSlot?.crowd);
+
+  // Keep the axis consistent, extending it if the data exceeds 80 dB.
+  const chartMaximum = useMemo(() => {
+    const values = hourlyData
+      .map((slot) => numericValue(slot.noise))
+      .filter((value) => value !== null);
+
+    return Math.max(
+      80,
+      Math.ceil(Math.max(0, ...values) / 20) * 20
+    );
+  }, [hourlyData]);
+
+  const gridTemplate = `repeat(${Math.max(
+    hourlyData.length,
+    1
+  )}, minmax(58px, 1fr))`;
+
+  const summaryTitle = !currentSlot
+    ? "No hourly information available."
+    : isQuietest
+      ? "The quietest time shown in this profile."
+      : currentSlot.status === "quiet"
+        ? "A quieter option for focused work."
+        : currentSlot.status === "caution"
+          ? "Some background activity to consider."
+          : currentSlot.status === "crowded"
+            ? "A busier time in this profile."
+            : "Check the available information before planning.";
+
+  // Section entrance and chart reveal.
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const isMobile = window.innerWidth < 1024;
-    if (isMobile) return;
+    const media = gsap.matchMedia();
 
     const ctx = gsap.context(() => {
-      // Pinned storytelling progression through time intervals
-      ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: "top 20%",
-        end: "+=120%",
-        onUpdate: (self) => {
-          // Smoothly advance time slot based on scroll progress if user hasn't manually pinned
-          const p = self.progress;
-          const index = Math.min(
-            hourlyData.length - 1,
-            Math.floor(p * hourlyData.length)
+      media.add(
+        "(prefers-reduced-motion: no-preference)",
+        () => {
+          gsap.from(".quiet-heading", {
+            y: 22,
+            opacity: 0,
+            duration: 0.85,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: "top 88%",
+              once: true,
+            },
+          });
+
+          gsap.from(".quiet-dashboard", {
+            y: 26,
+            opacity: 0,
+            duration: 0.9,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ".quiet-dashboard",
+              start: "top 92%",
+              once: true,
+            },
+          });
+        }
+      );
+    }, sectionRef);
+
+    return () => {
+      media.revert();
+      ctx.revert();
+    };
+  }, []);
+
+  // Animate bars when a place profile is loaded.
+  // Manual hour/day selection does not reset these animations.
+  useEffect(() => {
+    if (!hourlyData.length) return;
+
+    const media = gsap.matchMedia();
+
+    const ctx = gsap.context(() => {
+      media.add(
+        "(prefers-reduced-motion: no-preference)",
+        () => {
+          gsap.fromTo(
+            ".hour-bar",
+            {
+              scaleY: 0,
+              transformOrigin: "center bottom",
+            },
+            {
+              scaleY: 1,
+              duration: 0.9,
+              stagger: 0.065,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: chartRef.current,
+                start: "top 90%",
+                once: true,
+              },
+            }
           );
-          setSelectedHourIndex(index);
-        },
+        }
+      );
+    }, chartRef);
+
+    return () => {
+      media.revert();
+      ctx.revert();
+    };
+  }, [hourlyData]);
+
+  // Sliding selection highlight and readable summary transition.
+  useEffect(() => {
+    if (!hourlyData.length) return;
+
+    const reducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+    const ctx = gsap.context(() => {
+      gsap.to(selectedBandRef.current, {
+        left: `${(safeHourIndex / hourlyData.length) * 100}%`,
+        duration: reducedMotion ? 0 : 0.45,
+        ease: "power3.out",
+        overwrite: "auto",
       });
+
+      if (!reducedMotion) {
+        gsap.fromTo(
+          summaryRef.current,
+          {
+            y: 7,
+            opacity: 0.55,
+          },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.4,
+            ease: "power3.out",
+            overwrite: "auto",
+          }
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [hourlyData.length]);
+  }, [safeHourIndex, hourlyData]);
+
+  function handleSpaceChange(event) {
+    setSelectedSpaceId(event.target.value);
+    setSelectedHourIndex(0);
+  }
+
+  if (!currentSpace) {
+    return (
+      <section
+        id="quiet-when"
+        className="relative z-20 w-full rounded-t-[28px] sm:rounded-t-[36px] lg:rounded-t-[44px] border-t border-[#E3E0D7] bg-[#F4F1E8] shadow-[0_-24px_50px_rgba(15,28,20,0.35)] px-5 py-14 text-[#263D31]"
+      >
+        <div className="mx-auto max-w-7xl">
+          <h2 className="font-editorial text-3xl">
+            Find your quiet window.
+          </h2>
+
+          <p className="mt-3 text-sm text-[#6C7168]">
+            No place profiles are available yet.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
       id="quiet-when"
       ref={sectionRef}
-      className="relative w-full bg-[#F4F1E8] py-24 px-6 sm:px-8 lg:px-12 border-t border-[#E3E0D7]"
+      className="relative z-20 w-full overflow-hidden rounded-t-[28px] sm:rounded-t-[36px] lg:rounded-t-[44px] border-t border-[#E3E0D7] bg-[#F4F1E8] shadow-[0_-24px_50px_rgba(15,28,20,0.35)] px-5 py-14 text-[#252B26] sm:px-8 sm:py-16 lg:px-12 lg:py-20"
     >
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header matching Master Prompt verbatim */}
-        <div className="max-w-3xl mb-14">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-[#E3EBDD] border border-[#819478]/30 w-fit mb-4">
-            <Clock className="w-3.5 h-3.5 text-[#263D31]" />
-            <span className="text-[11px] font-mono uppercase tracking-[0.2em] text-[#263D31] font-semibold">
-              Section 06 · Quiet When
-            </span>
+      <div className="mx-auto max-w-7xl">
+        {/* Short, user-friendly introduction */}
+        <header className="quiet-heading mb-7 flex flex-col justify-between gap-5 lg:flex-row lg:items-end">
+          <div className="max-w-2xl">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#819478]/30 bg-[#E3EBDD] px-3.5 py-1.5">
+              <Clock className="h-3.5 w-3.5 text-[#263D31]" />
+
+              <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.17em] text-[#263D31]">
+                Section 06 · Quiet When
+              </span>
+            </div>
+
+            <h2 className="font-editorial text-3xl leading-tight tracking-tight text-[#263D31] sm:text-4xl lg:text-5xl">
+              Find your quiet window.
+            </h2>
+
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-[#6C7168] sm:text-base">
+              Choose a place and explore its hourly profile.
+              Select a time to see noise and crowd information.
+            </p>
           </div>
 
-          <h2 className="font-editorial text-4xl sm:text-5xl lg:text-6xl text-[#252B26] tracking-tight leading-[1.08] mb-4">
-            The right place. <br />
-            <span className="text-[#263D31] italic">At the right time.</span>
-          </h2>
-          <p className="text-base sm:text-lg text-[#6C7168] leading-relaxed">
-            A sanctuary at 9:00 AM can become a bustling hub by 1:00 PM. Spotwise maps the hourly acoustic curvature so you always arrive inside the sweet spot.
-          </p>
-        </div>
+          <div className="flex flex-wrap items-center gap-3 font-mono text-[8px] uppercase tracking-wider text-[#7B8470] sm:gap-4 sm:text-[9px]">
+            <span>01 Choose a place</span>
+            <ArrowRight className="h-3 w-3" />
+            <span>02 Explore hours</span>
+            <ArrowRight className="h-3 w-3" />
+            <span>03 Plan your visit</span>
+          </div>
+        </header>
 
-        {/* Interactive Main Dashboard Card */}
-        <div className="glass-ivory rounded-3xl p-6 sm:p-10 border border-[#E3E0D7] shadow-xl">
-          {/* Top Bar Controls: Space Picker + Mode Toggle */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between pb-8 border-b border-[#E3E0D7] gap-4">
-            <div>
-              <p className="text-xs font-mono uppercase text-[#6C7168] tracking-wider font-semibold">
-                Examining Workspace
-              </p>
-              <select
-                value={selectedSpaceId}
-                onChange={(e) => setSelectedSpaceId(e.target.value)}
-                className="font-editorial text-2xl text-[#252B26] bg-transparent border-b border-[#263D31]/40 focus:outline-none cursor-pointer pr-4 py-1 mt-1 font-semibold"
+        <div className="quiet-dashboard overflow-hidden rounded-[26px] border border-[#DDE2D4] bg-[#FCFBF7] shadow-[0_16px_45px_rgba(38,61,49,0.05)]">
+          {/* Place + planning day */}
+          <div className="grid gap-5 border-b border-[#E3E7DA] p-5 sm:p-6 lg:grid-cols-[0.8fr_1.2fr] lg:gap-8">
+            <div className="min-w-0">
+              <label
+                htmlFor="quiet-place"
+                className="mb-2 block font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-[#7B8470]"
               >
-                {SPACES_DATA.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name} ({s.category})
+                Choose a place
+              </label>
+
+              <select
+                id="quiet-place"
+                value={currentSpace.id}
+                onChange={handleSpaceChange}
+                className="h-12 w-full rounded-xl border border-[#DCE2D2] bg-[#F4F6EE] px-3 font-editorial text-lg text-[#263D31] outline-none focus:border-[#819478] sm:text-xl"
+              >
+                {SPACES_DATA.map((space) => (
+                  <option key={space.id} value={space.id}>
+                    {space.name}
                   </option>
                 ))}
               </select>
             </div>
 
-            {/* Telemetry vs Estimate Toggle */}
-            <div className="flex items-center space-x-2 bg-[#F4F1E8] p-1.5 rounded-full border border-[#E3E0D7] self-start md:self-auto">
-              <button
-                onClick={() => setTelemetryMode("community")}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all ${
-                  telemetryMode === "community"
-                    ? "bg-[#263D31] text-[#F4F1E8] font-bold shadow-sm"
-                    : "text-[#6C7168] hover:text-[#252B26]"
-                }`}
-              >
-                Verified Sensors
-              </button>
-              <button
-                onClick={() => setTelemetryMode("model")}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-mono transition-all ${
-                  telemetryMode === "model"
-                    ? "bg-[#263D31] text-[#F4F1E8] font-bold shadow-sm"
-                    : "text-[#6C7168] hover:text-[#252B26]"
-                }`}
-              >
-                Predictive Pattern
-              </button>
-            </div>
-          </div>
+            <div className="min-w-0">
+              <p className="mb-2 flex items-center gap-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.13em] text-[#7B8470]">
+                <Calendar className="h-3 w-3" />
+                Your planned day
+              </p>
 
-          {/* Day Selector Pills */}
-          <div className="pt-8 mb-8">
-            <p className="text-xs font-mono uppercase text-[#6C7168] tracking-wider mb-3 font-semibold">
-              Select Day of Week
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {HOURLY_DAYS.map((day) => (
-                <button
-                  key={day}
-                  onClick={() => setSelectedDay(day)}
-                  className={`px-4 py-2 rounded-xl text-xs font-mono transition-all ${
-                    selectedDay === day
-                      ? "bg-[#263D31] text-[#F4F1E8] font-bold shadow-sm"
-                      : "bg-[#F4F1E8] text-[#252B26] hover:bg-[#E3EBDD]"
-                  }`}
-                >
-                  {day}
-                </button>
-              ))}
-            </div>
-          </div>
+              <div
+                className="quiet-scroll overflow-x-auto pb-1"
+                tabIndex={0}
+                aria-label="Choose your planned day"
+              >
+                <div className="flex min-w-max gap-1.5">
+                  {HOURLY_DAYS.map((day) => (
+                    <button
+                      key={day}
+                      type="button"
+                      aria-pressed={selectedDay === day}
+                      onClick={() => setSelectedDay(day)}
+                      className={`h-12 rounded-xl px-3 font-mono text-[10px] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#819478] ${
+                        selectedDay === day
+                          ? "bg-[#263D31] text-[#F4F1E8]"
+                          : "bg-[#F2F4EC] text-[#67745B] hover:bg-[#E3EBDD]"
+                      }`}
+                    >
+                      <span className="sm:hidden">
+                        {day.slice(0, 3)}
+                      </span>
 
-          {/* Interactive Hourly Chart Visualizer */}
-          <div ref={chartRef} className="bg-[#FCFBF7] p-6 sm:p-8 rounded-3xl border border-[#E3E0D7] mb-8 shadow-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#E3E0D7] gap-3">
-              <div className="flex items-center space-x-2">
-                <Sun className="w-4 h-4 text-[#C58C5A]" />
-                <span className="text-xs font-mono uppercase text-[#252B26] font-bold">
-                  Hourly Acoustic & Occupancy Profile ({selectedDay})
-                </span>
+                      <span className="hidden sm:inline">
+                        {day}
+                      </span>
+                    </button>
+                  ))}
+                </div>
               </div>
-              <span className="text-xs font-mono text-[#263D31] flex items-center space-x-1 font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#263D31]" />
-                <span>{currentSpace.dataSource}</span>
+            </div>
+          </div>
+
+          {/* Data integrity notice */}
+          <div className="flex items-start gap-2 border-b border-[#E3E7DA] bg-[#F4F6EF] px-5 py-3 sm:px-6">
+            <Info className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#819478]" />
+
+            <p className="text-[10px] leading-relaxed text-[#77816D]">
+              Demo hourly profile—not live sensor readings. Your planned
+              day is {selectedDay || "not selected"}. This dataset
+              does not provide different hourly values for each day,
+              so the profile below remains the same.
+            </p>
+          </div>
+
+          {hourlyData.length > 0 ? (
+            <>
+              {/* Chart */}
+              <div ref={chartRef} className="p-5 sm:p-6">
+                <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <h3 className="text-sm font-semibold text-[#263D31]">
+                      How does the environment change?
+                    </h3>
+
+                    <p className="mt-1 flex items-center gap-1.5 text-[10px] text-[#7B8470]">
+                      <MousePointer2 className="h-3 w-3" />
+                      Tap or click an hour to explore.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap gap-3">
+                    {["quiet", "caution", "crowded"].map(
+                      (status) => (
+                        <span
+                          key={status}
+                          className="flex items-center gap-1.5 text-[9px] text-[#748069]"
+                        >
+                          <span
+                            className="h-1.5 w-1.5 rounded-full"
+                            style={{
+                              backgroundColor:
+                                STATUS_STYLES[status].color,
+                            }}
+                          />
+
+                          {STATUS_STYLES[status].label}
+                        </span>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                <div
+                  className="quiet-scroll overflow-x-auto pb-2"
+                  tabIndex={0}
+                  aria-label="Hourly noise chart"
+                >
+                  <div
+                    style={{
+                      minWidth: Math.max(
+                        420,
+                        hourlyData.length * 64
+                      ),
+                    }}
+                  >
+                    {/* Chart plotting area */}
+                    <div className="relative ml-9 pt-7">
+                      <div className="pointer-events-none absolute bottom-0 left-0 right-0 top-7">
+                        {[0, 1, 2, 3, 4].map((step) => {
+                          const value =
+                            chartMaximum -
+                            (step * chartMaximum) / 4;
+
+                          return (
+                            <div
+                              key={step}
+                              className="absolute left-0 right-0 border-t border-[#E4E8DC]"
+                              style={{
+                                top: `${step * 25}%`,
+                              }}
+                            >
+                              <span className="absolute -left-8 -top-1.5 w-6 text-right font-mono text-[8px] text-[#939B89]">
+                                {Math.round(value)}
+                              </span>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      <div className="relative h-[210px] sm:h-[240px]">
+                        {/* One persistent sliding highlight */}
+                        <div
+                          ref={selectedBandRef}
+                          className="pointer-events-none absolute inset-y-0 rounded-t-xl bg-[#E3EBDD]/65"
+                          style={{
+                            left: `${
+                              (safeHourIndex / hourlyData.length) *
+                              100
+                            }%`,
+                            width: `${
+                              100 / hourlyData.length
+                            }%`,
+                          }}
+                          aria-hidden="true"
+                        />
+
+                        <div
+                          className="relative grid h-full gap-2 px-1 sm:gap-4"
+                          style={{
+                            gridTemplateColumns: gridTemplate,
+                          }}
+                        >
+                          {hourlyData.map((slot, index) => {
+                            const noise = numericValue(slot.noise);
+                            const status = getStatus(slot);
+
+                            const selected =
+                              safeHourIndex === index;
+
+                            const barHeight =
+                              noise === null
+                                ? 3
+                                : Math.max(
+                                    3,
+                                    Math.min(
+                                      100,
+                                      (noise / chartMaximum) *
+                                        100
+                                    )
+                                  );
+
+                            return (
+                              <button
+                                key={`${slot.hour}-${index}`}
+                                type="button"
+                                aria-pressed={selected}
+                                aria-label={`${slot.hour}: ${
+                                  noise === null
+                                    ? "noise unknown"
+                                    : `${noise} decibels`
+                                }, ${status.label}${
+                                  index === quietestIndex
+                                    ? ", quietest shown"
+                                    : ""
+                                }`}
+                                onClick={() =>
+                                  setSelectedHourIndex(index)
+                                }
+                                className="group relative flex h-full min-w-0 items-end justify-center rounded-t-xl px-2 outline-none focus-visible:ring-2 focus-visible:ring-[#819478]"
+                              >
+                                <div
+                                  className="relative w-full max-w-[48px]"
+                                  style={{
+                                    height: `${barHeight}%`,
+                                  }}
+                                >
+                                  <span
+                                    className={`absolute -top-5 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] ${
+                                      selected
+                                        ? "font-bold text-[#263D31]"
+                                        : "text-[#7B8470]"
+                                    }`}
+                                  >
+                                    {noise === null
+                                      ? "—"
+                                      : noise}
+                                  </span>
+
+                                  <div
+                                    className={`hour-bar absolute inset-0 rounded-t-lg ${
+                                      selected
+                                        ? "ring-2 ring-[#819478] ring-offset-2 ring-offset-[#FCFBF7]"
+                                        : ""
+                                    }`}
+                                    style={{
+                                      backgroundColor:
+                                        status.color,
+                                      opacity: selected
+                                        ? 1
+                                        : 0.72,
+                                    }}
+                                  />
+
+                                  {index === quietestIndex && (
+                                    <span className="absolute bottom-2 left-1/2 flex h-4 w-4 -translate-x-1/2 items-center justify-center rounded-full bg-[#FCFBF7]/95 text-[#263D31]">
+                                      <Check className="h-2.5 w-2.5" />
+                                    </span>
+                                  )}
+                                </div>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Hour labels */}
+                    <div
+                      className="ml-9 mt-3 grid gap-2 px-1 sm:gap-4"
+                      style={{
+                        gridTemplateColumns: gridTemplate,
+                      }}
+                    >
+                      {hourlyData.map((slot, index) => (
+                        <button
+                          key={`${slot.hour}-label-${index}`}
+                          type="button"
+                          aria-label={`Select ${slot.hour}`}
+                          onClick={() =>
+                            setSelectedHourIndex(index)
+                          }
+                          className={`rounded-md py-1 text-center font-mono text-[10px] outline-none focus-visible:ring-2 focus-visible:ring-[#819478] ${
+                            safeHourIndex === index
+                              ? "font-bold text-[#263D31]"
+                              : "text-[#7B8470]"
+                          }`}
+                        >
+                          {slot.hour}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-[9px] text-[#8A9380]">
+                    Bar height represents noise in dB on a
+                    0–{chartMaximum} scale.
+                  </p>
+
+                  {quietestSlot && (
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setSelectedHourIndex(quietestIndex)
+                      }
+                      className="flex items-center gap-1.5 rounded-full bg-[#E3EBDD] px-3 py-1.5 text-[10px] font-medium text-[#263D31] transition-colors hover:bg-[#D5E0CA]"
+                    >
+                      <Check className="h-3 w-3" />
+                      Quietest shown: {quietestSlot.hour}
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* Selected hour explanation */}
+              <div className="border-t border-[#E3E7DA] bg-[#F4F6EF] p-5 sm:p-6">
+                <div ref={summaryRef}>
+                  <div className="flex flex-col justify-between gap-4 lg:flex-row lg:items-start">
+                    <div className="max-w-xl">
+                      <div className="mb-2 flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#77816D]">
+                          Selected time
+                        </span>
+
+                        <span
+                          className="rounded-full px-2 py-1 text-[8px] font-semibold"
+                          style={{
+                            color: currentStatus.color,
+                            backgroundColor:
+                              currentStatus.background,
+                          }}
+                        >
+                          {currentStatus.label}
+                        </span>
+                      </div>
+
+                      <p className="font-editorial text-3xl tracking-tight text-[#263D31] sm:text-4xl">
+                        {currentSlot.hour}
+                      </p>
+
+                      <h4 className="mt-2 text-sm font-medium leading-relaxed text-[#53634A]">
+                        {summaryTitle}
+                      </h4>
+
+                      <p className="mt-1 text-[10px] leading-relaxed text-[#7B8470]">
+                        Compare the profile with your activity needs.
+                        These sample values do not guarantee current
+                        conditions.
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 lg:min-w-[280px]">
+                      <div className="rounded-2xl border border-[#DDE3D3] bg-[#FCFBF7] p-4">
+                        <p className="mb-2 flex items-center gap-1.5 text-[9px] text-[#7B8470]">
+                          <Volume2 className="h-3 w-3" />
+                          Noise level
+                        </p>
+
+                        <p className="font-mono text-xl font-semibold text-[#263D31]">
+                          {selectedNoise === null
+                            ? "Unknown"
+                            : `${selectedNoise} dB`}
+                        </p>
+                      </div>
+
+                      <div className="rounded-2xl border border-[#DDE3D3] bg-[#FCFBF7] p-4">
+                        <p className="mb-2 flex items-center gap-1.5 text-[9px] text-[#7B8470]">
+                          <Users className="h-3 w-3" />
+                          Sample crowd
+                        </p>
+
+                        <p className="font-mono text-xl font-semibold text-[#263D31]">
+                          {selectedCrowd === null
+                            ? "Unknown"
+                            : `${selectedCrowd}%`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="p-8 text-center">
+              <Clock className="mx-auto mb-3 h-6 w-6 text-[#819478]" />
+
+              <p className="font-editorial text-xl text-[#263D31]">
+                No hourly profile available.
+              </p>
+
+              <p className="mt-2 text-sm text-[#7B8470]">
+                Select another place to explore its listed hours.
+              </p>
+            </div>
+          )}
+
+          {/* Facilities and honest source information */}
+          <footer className="flex flex-col justify-between gap-4 border-t border-[#E3E7DA] px-5 py-4 sm:px-6 lg:flex-row lg:items-center">
+            <div className="flex flex-wrap items-center gap-4 text-[10px] text-[#68765D]">
+              <span className="flex items-center gap-1.5">
+                <Wifi className="h-3.5 w-3.5 text-[#819478]" />
+                {currentSpace.wifiSpeed || "Wi-Fi unknown"}
+              </span>
+
+              <span className="flex items-center gap-1.5">
+                <Zap className="h-3.5 w-3.5 text-[#819478]" />
+                {currentSpace.hasOutlets
+                  ? "Table outlets listed"
+                  : "Outlet access not guaranteed"}
               </span>
             </div>
 
-            {/* The Hourly Acoustic Bars */}
-            <div className="grid grid-cols-7 gap-2 sm:gap-4 items-end h-56 pt-8 pb-3 border-b border-[#E3E0D7]">
-              {hourlyData.map((slot, index) => {
-                const isSelected = selectedHourIndex === index;
-                const heightPercent = Math.max(
-                  25,
-                  Math.min(100, ((slot.noise - 25) / 50) * 100)
-                );
-
-                return (
-                  <div
-                    key={slot.hour}
-                    onClick={() => setSelectedHourIndex(index)}
-                    className="flex flex-col items-center h-full justify-end cursor-pointer group"
-                  >
-                    {/* Floating dB indicator */}
-                    <span
-                      className={`text-[10px] font-mono font-bold mb-1 transition-all ${
-                        isSelected
-                          ? "text-[#263D31] scale-110 font-extrabold"
-                          : "text-[#6C7168] opacity-75 group-hover:opacity-100"
-                      }`}
-                    >
-                      {slot.noise} dB
-                    </span>
-
-                    {/* Bar */}
-                    <div
-                      className={`w-full max-w-[48px] rounded-t-xl transition-all duration-300 relative ${
-                        isSelected
-                          ? "bg-[#263D31] ring-2 ring-[#819478] shadow-md"
-                          : slot.status === "quiet"
-                          ? "bg-[#263D31]/70 hover:bg-[#263D31]"
-                          : slot.status === "caution"
-                          ? "bg-[#C58C5A]/80 hover:bg-[#C58C5A]"
-                          : "bg-[#B86E52]/80 hover:bg-[#B86E52]"
-                      }`}
-                      style={{ height: `${heightPercent}%` }}
-                    >
-                      {isSelected && (
-                        <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white" />
-                      )}
-                    </div>
-
-                    {/* Hour label */}
-                    <span
-                      className={`text-[11px] font-mono mt-3 transition-colors ${
-                        isSelected
-                          ? "text-[#263D31] font-bold"
-                          : "text-[#6C7168]"
-                      }`}
-                    >
-                      {slot.hour}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Selected Hour Telemetry Breakdown Narrative */}
-            <div className="mt-6 pt-2 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-              <div>
-                <span className="text-[10px] font-mono uppercase tracking-widest text-[#819478] font-bold">
-                  Time Window: {currentSlot.hour} ({selectedDay})
-                </span>
-                <p className="font-editorial text-2xl text-[#252B26] mt-0.5">
-                  {currentSlot.noise <= 38
-                    ? "Optimal Focus Window: Quiet & Uninterrupted Flow"
-                    : currentSlot.noise <= 52
-                    ? "Moderate Ambient Hum: Suitable for Creative & Reading Work"
-                    : "Peak Hour: Higher Background Noise and Occupancy"}
-                </p>
-              </div>
-
-              <div className="flex items-center space-x-6 text-sm font-mono">
-                <div>
-                  <p className="text-[10px] uppercase text-[#6C7168]">Acoustic Level</p>
-                  <p className="text-xl font-bold text-[#263D31]">
-                    {currentSlot.noise} dB
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase text-[#6C7168]">Expected Crowd</p>
-                  <p className="text-xl font-bold text-[#263D31]">
-                    {currentSlot.crowd}%
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase text-[#6C7168]">Wi-Fi & Sockets</p>
-                  <p className="text-xl font-bold text-[#263D31]">
-                    {currentSpace.wifiSpeed.split(" ")[0]} Mbps
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] uppercase text-[#6C7168]">Suitability</p>
-                  <p
-                    className={`text-xl font-bold ${
-                      currentSlot.status === "quiet"
-                        ? "text-[#263D31]"
-                        : currentSlot.status === "caution"
-                        ? "text-[#C58C5A]"
-                        : "text-[#B86E52]"
-                    }`}
-                  >
-                    {currentSlot.status === "quiet" ? "Serene" : currentSlot.status === "caution" ? "Caution" : "Crowded"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
+            <p className="max-w-md text-[9px] leading-relaxed text-[#858E7A]">
+              Source label: {currentSpace.dataSource || "Not provided"}
+              {" · "}
+              Demonstration profile, not verified live telemetry.
+            </p>
+          </footer>
         </div>
       </div>
+
+      <style jsx>{`
+        .quiet-scroll {
+          scrollbar-width: thin;
+          scrollbar-color: #bdc9af #f1f4eb;
+        }
+
+        .quiet-scroll::-webkit-scrollbar {
+          height: 4px;
+        }
+
+        .quiet-scroll::-webkit-scrollbar-track {
+          background: #f1f4eb;
+        }
+
+        .quiet-scroll::-webkit-scrollbar-thumb {
+          background: #bdc9af;
+          border-radius: 999px;
+        }
+      `}</style>
     </section>
   );
 }

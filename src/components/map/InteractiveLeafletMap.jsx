@@ -184,7 +184,8 @@ export default function InteractiveLeafletMap({
       )}
 
       {/* Floating Status System Legend */}
-      <div className="absolute top-4 right-4 z-[400] glass-ivory px-4 py-3.5 rounded-2xl border border-[#E3E0D7] shadow-lg flex flex-col space-y-2 text-xs font-mono">
+      {/* Floating Status System Legend (Hidden on small screens so map is completely open and visible) */}
+      <div className="hidden md:flex absolute top-4 right-4 z-[400] glass-ivory px-4 py-3.5 rounded-2xl border border-[#E3E0D7] shadow-lg flex-col space-y-2 text-xs font-mono">
         <p className="text-[10px] uppercase tracking-wider text-[#6C7168] font-bold border-b border-[#E3E0D7] pb-1.5">
           Acoustic & Space Telemetry
         </p>
