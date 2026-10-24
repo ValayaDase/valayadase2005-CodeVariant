@@ -126,7 +126,7 @@ body {
 .spotwise-app :is(.liquid-hover, .liquid-hover-red, .liquid-hover-light)::before {
   content: "";
   position: absolute;
-  z-index: 1;
+  z-index: -1;
   inset: -8% -3% 0;
   border-radius: 48% 52% 0 0 / 9% 12% 0 0;
   background: var(--liquid-fill, var(--forest));

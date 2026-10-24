@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -8,6 +9,7 @@ import {
   CheckCircle2,
   MessageSquare,
   ArrowLeft,
+  X,
 } from "lucide-react";
 import { AnimatedBookmark, AnimatedSparkles } from "@/components/common";
 import AppShell from "@/components/app/AppShell";
@@ -425,13 +427,38 @@ export default function PlaceDetailClient({ id }) {
 
         {/* Report Submission Section */}
         {showReportModal && (
-          <SectionReveal className="pt-4">
-            <CommunityReportForm
-              venueId={venue.id}
-              venueName={venue.name}
-              onReportSubmitted={handleReportSaved}
-            />
-          </SectionReveal>
+          createPortal(<div
+            className="fixed inset-0 z-[60] flex items-center justify-center bg-[#20231F]/50 p-2 backdrop-blur-sm sm:p-5"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) setShowReportModal(false);
+            }}
+          >
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="community-report-dialog-title"
+              className="relative max-h-[calc(100dvh-1rem)] w-full max-w-5xl overflow-y-auto rounded-3xl bg-[#F5F3EC] p-2 shadow-2xl sm:max-h-[92dvh] sm:p-4"
+            >
+              <div className="sticky top-0 z-10 mb-2 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => setShowReportModal(false)}
+                  aria-label="Close report form"
+                  className="rounded-full border border-[#E8E0D2] bg-white p-2 text-[#555D50] shadow-sm hover:bg-[#FAF8F3] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49624E]"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <h2 id="community-report-dialog-title" className="sr-only">
+                Submit a community report for {venue.name}
+              </h2>
+              <CommunityReportForm
+                venueId={venue.id}
+                venueName={venue.name}
+                onReportSubmitted={handleReportSaved}
+              />
+            </div>
+          </div>, document.body)
         )}
         </div>
 
