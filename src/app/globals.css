@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F5F3EC;
+  --foreground: #20231F;
+  --bg-primary: #F5F3EC;
+  --surface: #FFFFFF;
+  --sage: #819477;
+  --forest: #26382B;
+  --charcoal: #20231F;
+  --beige: #E8E0D2;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-brand-bg: #F5F3EC;
+  --color-brand-surface: #FFFFFF;
+  --color-brand-sage: #819477;
+  --color-brand-forest: #26382B;
+  --color-brand-charcoal: #20231F;
+  --color-brand-beige: #E8E0D2;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
+  background-color: #F5F3EC;
+  color: #20231F;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #F5F3EC;
+  color: #20231F;
+  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: #819477;
+  color: #FFFFFF;
+}
+
+/* Custom light styling utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(232, 224, 210, 0.7);
+}
+
+.subtle-border {
+  border-color: #E8E0D2;
+}
+
+/* Subtle editorial text styling */
+.font-editorial {
+  font-family: "Georgia", "Cambria", "Times New Roman", serif;
+  letter-spacing: -0.02em;
 }
