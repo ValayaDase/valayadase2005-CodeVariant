@@ -114,21 +114,18 @@ body {
   transform: scale(1.15) translateY(-2px);
 }
 
-/* Custom scrollbars */
+/* Hide scrollbars across the entire website */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  display: none !important;
+  width: 0px !important;
+  height: 0px !important;
+  background: transparent !important;
 }
 
-::-webkit-scrollbar-track {
-  background: #F4F1E8;
+html,
+body,
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #819478;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #263D31;
-}
