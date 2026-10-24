@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Compass, Menu, X, ArrowUpRight, ShieldCheck } from "lucide-react";
+import { Compass, Menu, X, ArrowUpRight } from "lucide-react";
 
 export default function Navbar({ style }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -55,21 +56,20 @@ export default function Navbar({ style }) {
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-3">
-            <a
-              href="#discovery-card"
-              className="text-xs uppercase tracking-wider font-semibold text-[#819477] flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2]"
+          <div className="hidden md:flex items-center gap-2.5">
+            <Link
+              href="/sign-in"
+              className="text-xs uppercase tracking-wider font-semibold text-[#20231F] hover:text-[#819477] px-3 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-[#819477] rounded-full"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-[#819477]" />
-              <span>Sensory Verified</span>
-            </a>
-            <a
-              href="#features"
+              Sign In
+            </Link>
+            <Link
+              href="/discover"
               className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-[#F5F3EC] bg-[#26382B] hover:bg-[#20231F] rounded-full transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#819477]"
             >
-              <span>Discover Spots</span>
+              <span>Launch App</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -115,14 +115,21 @@ export default function Navbar({ style }) {
                 ))}
               </div>
               <div className="pt-3 border-t border-[#E8E0D2] flex flex-col gap-2">
-                <a
-                  href="#features"
+                <Link
+                  href="/sign-in"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full flex items-center justify-center py-2 text-xs font-semibold uppercase tracking-wider text-[#20231F] hover:bg-[#F5F3EC] rounded-xl"
+                >
+                  Sign In (Demo)
+                </Link>
+                <Link
+                  href="/discover"
                   onClick={() => setMobileMenuOpen(false)}
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#F5F3EC] bg-[#26382B] rounded-xl shadow-sm"
                 >
-                  <span>Discover Spots</span>
+                  <span>Launch App</span>
                   <ArrowUpRight className="w-4 h-4" />
-                </a>
+                </Link>
               </div>
             </div>
           </motion.div>

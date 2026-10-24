@@ -55,10 +55,6 @@ export default function Footer() {
               thinkers, and creators to find verified calm spaces that foster deep
               focus.
             </p>
-            <div className="mt-6 flex items-center gap-2 text-xs text-[#819477] font-semibold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-[#819477]" />
-              <span>Sensory Telemetry v2.4 Active</span>
-            </div>
           </div>
 
           {/* Nav links columns */}

@@ -1,0 +1,1108 @@
+[
+  {
+    "id": "glasshouse-atelier",
+    "name": "The Glasshouse Study & Atelier",
+    "category": "study_space",
+    "categoryLabel": "Botanical Study Atelier",
+    "description": "A sunlit glasshouse sanctuary surrounded by lush botanical flora. Features wide white oak refectory desks, ergonomic seating, and a strictly enforced soft-whisper policy for deep concentration.",
+    "address": "18 St. Alfege Passage, Greenwich, London SE10 9NE",
+    "neighborhood": "Greenwich",
+    "coordinates": { "lat": 51.4816, "lng": -0.0091 },
+    "budget": "$$",
+    "baseDecibels": 28,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "280 Mbps",
+    "wifiType": "Low-latency fiber optic",
+    "outletsAvailability": "92% of desks equipped",
+    "seatingComfort": "Ergonomic oak & wool chairs",
+    "naturalLight": "Floor-to-ceiling north daylight",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "coffee",
+      "outdoor_terrace"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 18, "noise": "Quiet", "decibels": 27, "status": "Ideal Focus" },
+        "afternoon": { "crowd": 38, "noise": "Quiet", "decibels": 31, "status": "Calm" },
+        "evening": { "crowd": 24, "noise": "Quiet", "decibels": 29, "status": "Low Murmur" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 25, "status": "Whisper Silent" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 22, "noise": "Quiet", "decibels": 28, "status": "Ideal Focus" },
+        "afternoon": { "crowd": 45, "noise": "Quiet", "decibels": 32, "status": "Moderate" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 29, "status": "Low Murmur" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 26, "status": "Whisper Silent" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 25, "noise": "Quiet", "decibels": 29, "status": "Ideal Focus" },
+        "afternoon": { "crowd": 50, "noise": "Moderate", "decibels": 35, "status": "Busy" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 30, "status": "Calm" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 26, "status": "Whisper Silent" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 20, "noise": "Quiet", "decibels": 28, "status": "Ideal Focus" },
+        "afternoon": { "crowd": 48, "noise": "Quiet", "decibels": 33, "status": "Moderate" },
+        "evening": { "crowd": 28, "noise": "Quiet", "decibels": 29, "status": "Low Murmur" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 25, "status": "Whisper Silent" }
+      },
+      "Friday": {
+        "morning": { "crowd": 26, "noise": "Quiet", "decibels": 29, "status": "Ideal Focus" },
+        "afternoon": { "crowd": 55, "noise": "Moderate", "decibels": 36, "status": "Busy" },
+        "evening": { "crowd": 40, "noise": "Moderate", "decibels": 37, "status": "Social Evening" },
+        "night": { "crowd": 18, "noise": "Quiet", "decibels": 28, "status": "Calm" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 35, "noise": "Quiet", "decibels": 31, "status": "Pleasant" },
+        "afternoon": { "crowd": 62, "noise": "Moderate", "decibels": 38, "status": "Brisk" },
+        "evening": { "crowd": 45, "noise": "Moderate", "decibels": 36, "status": "Moderate" },
+        "night": { "crowd": 20, "noise": "Quiet", "decibels": 27, "status": "Quiet" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 20, "noise": "Quiet", "decibels": 27, "status": "Serene Morning" },
+        "afternoon": { "crowd": 44, "noise": "Quiet", "decibels": 32, "status": "Calm" },
+        "evening": { "crowd": 22, "noise": "Quiet", "decibels": 28, "status": "Quiet" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 25, "status": "Whisper Silent" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-1",
+        "author": "Elena M. (Writer)",
+        "timestamp": "25 mins ago",
+        "crowd": "Low",
+        "noise": "Quiet",
+        "wifi": "Excellent",
+        "outlets": "Available Everywhere",
+        "note": "Perfection this morning. Soft natural breeze and zero phone talkers."
+      },
+      {
+        "id": "rep-2",
+        "author": "Marcus K. (Dev)",
+        "timestamp": "2 hours ago",
+        "crowd": "Low",
+        "noise": "Quiet",
+        "wifi": "Excellent",
+        "outlets": "Available Everywhere",
+        "note": "280 Mbps ping 5ms tested. Great pour-over coffee bar too."
+      }
+    ],
+    "image": "/images/hero/workspace.jpg",
+    "lastUpdated": "2026-10-24T12:00:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "heritage-reading-room",
+    "name": "The Heritage Reading Room",
+    "category": "library",
+    "categoryLabel": "Silent Academic Library",
+    "description": "Double-height oak bookcases, green banker's lamps, and total acoustic tranquility. Strict silence enforced by research librarians, ideal for thesis writing and deep cognitive work.",
+    "address": "42 Russell Square, Bloomsbury, London WC1B 5DP",
+    "neighborhood": "Bloomsbury",
+    "coordinates": { "lat": 51.5218, "lng": -0.1268 },
+    "budget": "Free",
+    "baseDecibels": 24,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "190 Mbps",
+    "wifiType": "University eduroam & Guest fiber",
+    "outletsAvailability": "85% of reading desks",
+    "seatingComfort": "Leather library carrels & high backs",
+    "naturalLight": "High arched clerestory windows",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "accessible"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 24, "status": "Deep Silence" },
+        "afternoon": { "crowd": 65, "noise": "Quiet", "decibels": 26, "status": "Focused" },
+        "evening": { "crowd": 40, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 22, "status": "Pin Drop" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 35, "noise": "Quiet", "decibels": 24, "status": "Deep Silence" },
+        "afternoon": { "crowd": 70, "noise": "Quiet", "decibels": 27, "status": "Full Focus" },
+        "evening": { "crowd": 45, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "night": { "crowd": 18, "noise": "Quiet", "decibels": 23, "status": "Pin Drop" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 38, "noise": "Quiet", "decibels": 25, "status": "Deep Silence" },
+        "afternoon": { "crowd": 75, "noise": "Quiet", "decibels": 28, "status": "Near Capacity" },
+        "evening": { "crowd": 50, "noise": "Quiet", "decibels": 26, "status": "Focused" },
+        "night": { "crowd": 20, "noise": "Quiet", "decibels": 23, "status": "Pin Drop" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 24, "status": "Deep Silence" },
+        "afternoon": { "crowd": 68, "noise": "Quiet", "decibels": 27, "status": "Focused" },
+        "evening": { "crowd": 42, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "night": { "crowd": 16, "noise": "Quiet", "decibels": 22, "status": "Pin Drop" }
+      },
+      "Friday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 24, "status": "Deep Silence" },
+        "afternoon": { "crowd": 58, "noise": "Quiet", "decibels": 26, "status": "Focused" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 24, "status": "Early Wind-down" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 21, "status": "Pin Drop" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 45, "noise": "Quiet", "decibels": 25, "status": "Quiet Study" },
+        "afternoon": { "crowd": 72, "noise": "Quiet", "decibels": 27, "status": "Popular" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 22, "status": "Silent" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 25, "noise": "Quiet", "decibels": 23, "status": "Serene" },
+        "afternoon": { "crowd": 60, "noise": "Quiet", "decibels": 26, "status": "Focused" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 24, "status": "Quiet" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 21, "status": "Pin Drop" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-3",
+        "author": "Dr. Sarah T.",
+        "timestamp": "1 hour ago",
+        "crowd": "Moderate",
+        "noise": "Quiet",
+        "wifi": "Good",
+        "outlets": "Available Everywhere",
+        "note": "Acoustics below 25 dB as advertised. Unbeatable for serious reading."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-24T11:40:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "nordic-brew-atelier",
+    "name": "The Nordic Brew Atelier",
+    "category": "cafe",
+    "categoryLabel": "Quiet Specialty Coffee Bar",
+    "description": "Minimalist Copenhagen-inspired café with acoustic felt ceiling baffles and felt-dampened table bases. Serves exceptional single-origin pour-overs with acoustic zones specifically reserved for laptops.",
+    "address": "78 Redchurch Street, Shoreditch, London E2 7DD",
+    "neighborhood": "Shoreditch",
+    "coordinates": { "lat": 51.5245, "lng": -0.0762 },
+    "budget": "$$",
+    "baseDecibels": 36,
+    "noiseLevel": "Moderate",
+    "wifiSpeed": "320 Mbps",
+    "wifiType": "Commercial high-speed Wi-Fi 6",
+    "outletsAvailability": "Under-bench power strips at 70% tables",
+    "seatingComfort": "Danish ash wood benches with cushions",
+    "naturalLight": "Large street-facing storefront glass",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "coffee",
+      "outdoor_terrace"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 25, "noise": "Quiet", "decibels": 32, "status": "Calm Morning" },
+        "afternoon": { "crowd": 58, "noise": "Moderate", "decibels": 40, "status": "Lively Brew" },
+        "evening": { "crowd": 35, "noise": "Moderate", "decibels": 36, "status": "Mellow" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 30, "status": "Closed" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 33, "status": "Calm Morning" },
+        "afternoon": { "crowd": 62, "noise": "Moderate", "decibels": 41, "status": "Lively" },
+        "evening": { "crowd": 38, "noise": "Moderate", "decibels": 37, "status": "Mellow" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 30, "status": "Closed" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 34, "status": "Calm" },
+        "afternoon": { "crowd": 65, "noise": "Moderate", "decibels": 42, "status": "Buzzing" },
+        "evening": { "crowd": 40, "noise": "Moderate", "decibels": 38, "status": "Mellow" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 30, "status": "Closed" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 34, "status": "Calm" },
+        "afternoon": { "crowd": 68, "noise": "Moderate", "decibels": 43, "status": "Buzzing" },
+        "evening": { "crowd": 45, "noise": "Moderate", "decibels": 39, "status": "Social" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 31, "status": "Closed" }
+      },
+      "Friday": {
+        "morning": { "crowd": 35, "noise": "Quiet", "decibels": 35, "status": "Calm" },
+        "afternoon": { "crowd": 75, "noise": "Moderate", "decibels": 46, "status": "Friday Rush" },
+        "evening": { "crowd": 60, "noise": "Moderate", "decibels": 45, "status": "Vibrant" },
+        "night": { "crowd": 20, "noise": "Quiet", "decibels": 32, "status": "Closed" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 55, "noise": "Moderate", "decibels": 42, "status": "Weekend Crowd" },
+        "afternoon": { "crowd": 85, "noise": "Lively", "decibels": 52, "status": "Very Busy" },
+        "evening": { "crowd": 50, "noise": "Moderate", "decibels": 42, "status": "Moderate" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 30, "status": "Closed" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 40, "noise": "Moderate", "decibels": 38, "status": "Slow Sunday" },
+        "afternoon": { "crowd": 78, "noise": "Moderate", "decibels": 48, "status": "Weekend Peak" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 35, "status": "Quiet Evening" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 29, "status": "Closed" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-4",
+        "author": "Liam W.",
+        "timestamp": "4 hours ago",
+        "crowd": "Moderate",
+        "noise": "Moderate",
+        "wifi": "Excellent",
+        "outlets": "Some Desks",
+        "note": "Morning slot between 8-11am is golden. Background lo-fi playlist at 34 dB."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-24T10:15:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "foundry-workspace-studio",
+    "name": "Foundry Workspace Studio",
+    "category": "coworking",
+    "categoryLabel": "Professional Coworking Hub",
+    "description": "Converted Victorian ironworks offering dedicated silent desk bays, acoustic call pods, and ergonomic Aeron seating. Complimentary specialty coffee and high-speed fiber.",
+    "address": "22 Great Guildford Street, Southwark, London SE1 0FD",
+    "neighborhood": "Southwark",
+    "coordinates": { "lat": 51.5042, "lng": -0.0982 },
+    "budget": "$$$",
+    "baseDecibels": 30,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "500 Mbps",
+    "wifiType": "Dual redundant enterprise fiber",
+    "outletsAvailability": "100% of all desks and phone booths",
+    "seatingComfort": "Herman Miller Aeron chairs & standing desks",
+    "naturalLight": "Sawtooth industrial skylights",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "coffee",
+      "soundproof_booths",
+      "accessible"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 35, "noise": "Quiet", "decibels": 29, "status": "Productive" },
+        "afternoon": { "crowd": 60, "noise": "Quiet", "decibels": 33, "status": "Active" },
+        "evening": { "crowd": 25, "noise": "Quiet", "decibels": 28, "status": "Calm" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 24, "status": "Silent" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 45, "noise": "Quiet", "decibels": 31, "status": "High Focus" },
+        "afternoon": { "crowd": 72, "noise": "Quiet", "decibels": 34, "status": "Peak Flow" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 29, "status": "Calm" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 25, "status": "Silent" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 50, "noise": "Quiet", "decibels": 32, "status": "High Focus" },
+        "afternoon": { "crowd": 78, "noise": "Quiet", "decibels": 35, "status": "Peak Flow" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 30, "status": "Calm" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 25, "status": "Silent" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 48, "noise": "Quiet", "decibels": 31, "status": "High Focus" },
+        "afternoon": { "crowd": 75, "noise": "Quiet", "decibels": 34, "status": "Peak Flow" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 29, "status": "Calm" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 25, "status": "Silent" }
+      },
+      "Friday": {
+        "morning": { "crowd": 38, "noise": "Quiet", "decibels": 30, "status": "Productive" },
+        "afternoon": { "crowd": 52, "noise": "Quiet", "decibels": 32, "status": "Moderate" },
+        "evening": { "crowd": 20, "noise": "Quiet", "decibels": 27, "status": "Low" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 24, "status": "Silent" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 20, "noise": "Quiet", "decibels": 27, "status": "Weekend Flow" },
+        "afternoon": { "crowd": 35, "noise": "Quiet", "decibels": 29, "status": "Peaceful" },
+        "evening": { "crowd": 15, "noise": "Quiet", "decibels": 26, "status": "Quiet" },
+        "night": { "crowd": 5, "noise": "Quiet", "decibels": 23, "status": "Empty" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 15, "noise": "Quiet", "decibels": 26, "status": "Peaceful" },
+        "afternoon": { "crowd": 28, "noise": "Quiet", "decibels": 28, "status": "Quiet" },
+        "evening": { "crowd": 12, "noise": "Quiet", "decibels": 25, "status": "Quiet" },
+        "night": { "crowd": 4, "noise": "Quiet", "decibels": 22, "status": "Empty" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-5",
+        "author": "Priya D. (Engineer)",
+        "timestamp": "3 hours ago",
+        "crowd": "Moderate",
+        "noise": "Quiet",
+        "wifi": "Excellent",
+        "outlets": "Available Everywhere",
+        "note": "Took 4 client calls in the soundproof pods without disturbing anyone."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-24T09:30:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "quorum-silent-study-hall",
+    "name": "Quorum Silent Study Hall",
+    "category": "study_space",
+    "categoryLabel": "Dedicated Deep-Work Sanctuary",
+    "description": "Engineered purely for cognitive focus. Acoustic isolation partitions, circadian lighting tuned to alertness, zero conversational areas, and continuous decibel monitoring under 30 dB.",
+    "address": "15 Gower Street, Bloomsbury, London WC1E 6HA",
+    "neighborhood": "Bloomsbury",
+    "coordinates": { "lat": 51.5204, "lng": -0.1321 },
+    "budget": "$",
+    "baseDecibels": 25,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "350 Mbps",
+    "wifiType": "Enterprise high-throughput Wi-Fi",
+    "outletsAvailability": "Dual outlets + USB-C at each carrel",
+    "seatingComfort": "Steelcase Gesture ergonomic task chairs",
+    "naturalLight": "Filtered diffuse daylight and circadian LEDs",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "accessible"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 24, "status": "Pin Drop" },
+        "afternoon": { "crowd": 62, "noise": "Quiet", "decibels": 26, "status": "Strict Focus" },
+        "evening": { "crowd": 42, "noise": "Quiet", "decibels": 25, "status": "Silent" },
+        "night": { "crowd": 18, "noise": "Quiet", "decibels": 22, "status": "Empty" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 34, "noise": "Quiet", "decibels": 24, "status": "Pin Drop" },
+        "afternoon": { "crowd": 68, "noise": "Quiet", "decibels": 26, "status": "Strict Focus" },
+        "evening": { "crowd": 46, "noise": "Quiet", "decibels": 25, "status": "Silent" },
+        "night": { "crowd": 20, "noise": "Quiet", "decibels": 23, "status": "Empty" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 36, "noise": "Quiet", "decibels": 25, "status": "Pin Drop" },
+        "afternoon": { "crowd": 72, "noise": "Quiet", "decibels": 27, "status": "Busy Focus" },
+        "evening": { "crowd": 48, "noise": "Quiet", "decibels": 26, "status": "Silent" },
+        "night": { "crowd": 22, "noise": "Quiet", "decibels": 23, "status": "Empty" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 24, "status": "Pin Drop" },
+        "afternoon": { "crowd": 66, "noise": "Quiet", "decibels": 26, "status": "Strict Focus" },
+        "evening": { "crowd": 44, "noise": "Quiet", "decibels": 25, "status": "Silent" },
+        "night": { "crowd": 19, "noise": "Quiet", "decibels": 23, "status": "Empty" }
+      },
+      "Friday": {
+        "morning": { "crowd": 26, "noise": "Quiet", "decibels": 24, "status": "Pin Drop" },
+        "afternoon": { "crowd": 54, "noise": "Quiet", "decibels": 26, "status": "Calm" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 24, "status": "Silent" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 21, "status": "Empty" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 40, "noise": "Quiet", "decibels": 25, "status": "Deep Study" },
+        "afternoon": { "crowd": 70, "noise": "Quiet", "decibels": 27, "status": "High Demand" },
+        "evening": { "crowd": 38, "noise": "Quiet", "decibels": 25, "status": "Silent" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 22, "status": "Empty" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 24, "status": "Deep Study" },
+        "afternoon": { "crowd": 64, "noise": "Quiet", "decibels": 26, "status": "High Demand" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 24, "status": "Silent" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 21, "status": "Empty" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-6",
+        "author": "Julian R.",
+        "timestamp": "5 hours ago",
+        "crowd": "Moderate",
+        "noise": "Quiet",
+        "wifi": "Excellent",
+        "outlets": "Available Everywhere",
+        "note": "Wrote 3,000 words in 4 hours uninterrupted. Best study hall in Bloomsbury."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-24T08:15:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "canopy-creative-loft",
+    "name": "Canopy Creative Loft",
+    "category": "coworking",
+    "categoryLabel": "Daylight Creative Cowork",
+    "description": "Airy open-plan loft filled with indoor trees, standing desks, acoustic felt ceilings, and designated whisper booths. Attracts designers, writers, and technical architects.",
+    "address": "84 Clerkenwell Road, Farringdon, London EC1M 5RJ",
+    "neighborhood": "Farringdon",
+    "coordinates": { "lat": 51.5222, "lng": -0.1042 },
+    "budget": "$$",
+    "baseDecibels": 34,
+    "noiseLevel": "Moderate",
+    "wifiSpeed": "400 Mbps",
+    "wifiType": "Symmetrical gigabit uplink",
+    "outletsAvailability": "Integrated desk pop-up sockets (90%)",
+    "seatingComfort": "Ergonomic mesh chairs & standing desks",
+    "naturalLight": "Triple-aspect industrial sash windows",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "coffee",
+      "soundproof_booths",
+      "outdoor_terrace",
+      "accessible"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 31, "status": "Peaceful" },
+        "afternoon": { "crowd": 65, "noise": "Moderate", "decibels": 37, "status": "Collaborative" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 32, "status": "Calm" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 27, "status": "Silent" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 40, "noise": "Quiet", "decibels": 33, "status": "High Energy" },
+        "afternoon": { "crowd": 75, "noise": "Moderate", "decibels": 39, "status": "Busy" },
+        "evening": { "crowd": 38, "noise": "Quiet", "decibels": 33, "status": "Calm" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 28, "status": "Silent" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 42, "noise": "Quiet", "decibels": 33, "status": "Focused" },
+        "afternoon": { "crowd": 78, "noise": "Moderate", "decibels": 40, "status": "Peak Flow" },
+        "evening": { "crowd": 40, "noise": "Quiet", "decibels": 34, "status": "Calm" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 28, "status": "Silent" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 38, "noise": "Quiet", "decibels": 32, "status": "Focused" },
+        "afternoon": { "crowd": 72, "noise": "Moderate", "decibels": 39, "status": "Busy" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 33, "status": "Calm" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 27, "status": "Silent" }
+      },
+      "Friday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 31, "status": "Productive" },
+        "afternoon": { "crowd": 50, "noise": "Moderate", "decibels": 36, "status": "Relaxed" },
+        "evening": { "crowd": 22, "noise": "Quiet", "decibels": 30, "status": "Low" },
+        "night": { "crowd": 6, "noise": "Quiet", "decibels": 25, "status": "Silent" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 18, "noise": "Quiet", "decibels": 28, "status": "Serene" },
+        "afternoon": { "crowd": 32, "noise": "Quiet", "decibels": 31, "status": "Quiet" },
+        "evening": { "crowd": 14, "noise": "Quiet", "decibels": 27, "status": "Quiet" },
+        "night": { "crowd": 4, "noise": "Quiet", "decibels": 24, "status": "Empty" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 12, "noise": "Quiet", "decibels": 27, "status": "Serene" },
+        "afternoon": { "crowd": 26, "noise": "Quiet", "decibels": 30, "status": "Quiet" },
+        "evening": { "crowd": 10, "noise": "Quiet", "decibels": 26, "status": "Quiet" },
+        "night": { "crowd": 3, "noise": "Quiet", "decibels": 23, "status": "Empty" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-7",
+        "author": "Chloe S.",
+        "timestamp": "6 hours ago",
+        "crowd": "Low",
+        "noise": "Quiet",
+        "wifi": "Excellent",
+        "outlets": "Available Everywhere",
+        "note": "Rooftop terrace is open today and has strong Wi-Fi signal."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-24T07:45:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "paper-and-press-cafe",
+    "name": "Paper & Press Bookshop Café",
+    "category": "cafe",
+    "categoryLabel": "Literary Independent Café",
+    "description": "Quiet bookshop café tucked behind Covent Garden. Hand-roasted filter brews, warm wood banquettes, quiet classical background music, and a dedicated back room for writers.",
+    "address": "12 Floral Street, Covent Garden, London WC2E 9DH",
+    "neighborhood": "Covent Garden",
+    "coordinates": { "lat": 51.5126, "lng": -0.1235 },
+    "budget": "$",
+    "baseDecibels": 38,
+    "noiseLevel": "Moderate",
+    "wifiSpeed": "180 Mbps",
+    "wifiType": "Community fiber",
+    "outletsAvailability": "Wall sockets along banquette seating (65%)",
+    "seatingComfort": "Upholstered wood banquettes & bistro tables",
+    "naturalLight": "Cozy warm ambient lighting with front window",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "coffee"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 35, "noise": "Quiet", "decibels": 34, "status": "Calm" },
+        "afternoon": { "crowd": 65, "noise": "Moderate", "decibels": 42, "status": "Brisk" },
+        "evening": { "crowd": 40, "noise": "Moderate", "decibels": 38, "status": "Cozy" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 31, "status": "Closed" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 38, "noise": "Quiet", "decibels": 35, "status": "Calm" },
+        "afternoon": { "crowd": 68, "noise": "Moderate", "decibels": 43, "status": "Brisk" },
+        "evening": { "crowd": 42, "noise": "Moderate", "decibels": 39, "status": "Cozy" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 31, "status": "Closed" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 40, "noise": "Quiet", "decibels": 35, "status": "Calm" },
+        "afternoon": { "crowd": 72, "noise": "Moderate", "decibels": 44, "status": "Busy" },
+        "evening": { "crowd": 45, "noise": "Moderate", "decibels": 40, "status": "Cozy" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 32, "status": "Closed" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 42, "noise": "Quiet", "decibels": 36, "status": "Calm" },
+        "afternoon": { "crowd": 75, "noise": "Moderate", "decibels": 45, "status": "Busy" },
+        "evening": { "crowd": 48, "noise": "Moderate", "decibels": 41, "status": "Cozy" },
+        "night": { "crowd": 16, "noise": "Quiet", "decibels": 32, "status": "Closed" }
+      },
+      "Friday": {
+        "morning": { "crowd": 45, "noise": "Quiet", "decibels": 36, "status": "Calm" },
+        "afternoon": { "crowd": 80, "noise": "Lively", "decibels": 48, "status": "Crowded" },
+        "evening": { "crowd": 55, "noise": "Moderate", "decibels": 43, "status": "Lively" },
+        "night": { "crowd": 18, "noise": "Quiet", "decibels": 33, "status": "Closed" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 65, "noise": "Moderate", "decibels": 44, "status": "Busy" },
+        "afternoon": { "crowd": 92, "noise": "Lively", "decibels": 54, "status": "Peak Crowd" },
+        "evening": { "crowd": 60, "noise": "Moderate", "decibels": 45, "status": "Active" },
+        "night": { "crowd": 20, "noise": "Quiet", "decibels": 34, "status": "Closed" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 50, "noise": "Moderate", "decibels": 40, "status": "Pleasant" },
+        "afternoon": { "crowd": 85, "noise": "Lively", "decibels": 50, "status": "Peak Crowd" },
+        "evening": { "crowd": 45, "noise": "Moderate", "decibels": 40, "status": "Winding Down" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 30, "status": "Closed" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-8",
+        "author": "Nadia F.",
+        "timestamp": "Yesterday",
+        "crowd": "Moderate",
+        "noise": "Moderate",
+        "wifi": "Good",
+        "outlets": "Some Desks",
+        "note": "Back room alcove is very peaceful. Try the lavender flat white."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-23T16:20:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "city-guild-athenaeum",
+    "name": "City Guild Athenaeum",
+    "category": "library",
+    "categoryLabel": "Civic Reference Library",
+    "description": "Historic mahogany library featuring high ceilings, acoustic cork flooring, silent study quadrants, and individual desk carrels with green shaded brass task lamps.",
+    "address": "66 Queen Victoria Street, City of London, London EC4N 4TR",
+    "neighborhood": "City of London",
+    "coordinates": { "lat": 51.5129, "lng": -0.0938 },
+    "budget": "Free",
+    "baseDecibels": 26,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "220 Mbps",
+    "wifiType": "City Civic High-Speed Network",
+    "outletsAvailability": "Every individual carrel (100%)",
+    "seatingComfort": "Ergonomic leather study armchairs",
+    "naturalLight": "Arched leaded-glass windows",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "accessible"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 25, "noise": "Quiet", "decibels": 25, "status": "Whisper Quiet" },
+        "afternoon": { "crowd": 55, "noise": "Quiet", "decibels": 27, "status": "Focused" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 22, "status": "Silent" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 25, "status": "Whisper Quiet" },
+        "afternoon": { "crowd": 60, "noise": "Quiet", "decibels": 28, "status": "Focused" },
+        "evening": { "crowd": 38, "noise": "Quiet", "decibels": 26, "status": "Calm" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 23, "status": "Silent" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 26, "status": "Whisper Quiet" },
+        "afternoon": { "crowd": 64, "noise": "Quiet", "decibels": 28, "status": "Focused" },
+        "evening": { "crowd": 40, "noise": "Quiet", "decibels": 26, "status": "Calm" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 23, "status": "Silent" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 25, "status": "Whisper Quiet" },
+        "afternoon": { "crowd": 58, "noise": "Quiet", "decibels": 27, "status": "Focused" },
+        "evening": { "crowd": 36, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 22, "status": "Silent" }
+      },
+      "Friday": {
+        "morning": { "crowd": 24, "noise": "Quiet", "decibels": 24, "status": "Whisper Quiet" },
+        "afternoon": { "crowd": 48, "noise": "Quiet", "decibels": 26, "status": "Moderate" },
+        "evening": { "crowd": 25, "noise": "Quiet", "decibels": 24, "status": "Calm" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 21, "status": "Silent" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 35, "noise": "Quiet", "decibels": 26, "status": "Quiet Study" },
+        "afternoon": { "crowd": 58, "noise": "Quiet", "decibels": 28, "status": "Focused" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 22, "status": "Silent" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 20, "noise": "Quiet", "decibels": 24, "status": "Serene" },
+        "afternoon": { "crowd": 45, "noise": "Quiet", "decibels": 26, "status": "Calm" },
+        "evening": { "crowd": 22, "noise": "Quiet", "decibels": 24, "status": "Silent" },
+        "night": { "crowd": 6, "noise": "Quiet", "decibels": 21, "status": "Silent" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-9",
+        "author": "Thomas A.",
+        "timestamp": "Yesterday",
+        "crowd": "Low",
+        "noise": "Quiet",
+        "wifi": "Good",
+        "outlets": "Available Everywhere",
+        "note": "Acoustics are exceptional. Truly zero interruptions."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-23T14:10:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "atelier-botanica-work-lounge",
+    "name": "Atelier Botanica Work Lounge",
+    "category": "coworking",
+    "categoryLabel": "Biophilic Coworking Sanctuary",
+    "description": "Award-winning biophilic design studio featuring over 400 living indoor plants, natural circadian light spectrums, acoustic moss walls, and silent ergonomic focus pods.",
+    "address": "33 Old Street, Islington, London EC1V 9HX",
+    "neighborhood": "Islington",
+    "coordinates": { "lat": 51.5258, "lng": -0.0924 },
+    "budget": "$$",
+    "baseDecibels": 29,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "450 Mbps",
+    "wifiType": "Enterprise low-jitter Wi-Fi 6",
+    "outletsAvailability": "Integrated power ports at 95% seats",
+    "seatingComfort": "Steelcase ergonomic chairs and kneeling stools",
+    "naturalLight": "Circadian biological daylight & glass atrium",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "coffee",
+      "soundproof_booths",
+      "accessible"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 26, "noise": "Quiet", "decibels": 28, "status": "Zen Mode" },
+        "afternoon": { "crowd": 55, "noise": "Quiet", "decibels": 31, "status": "Active Focus" },
+        "evening": { "crowd": 28, "noise": "Quiet", "decibels": 29, "status": "Gentle Flow" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 25, "status": "Silent" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 29, "status": "Zen Mode" },
+        "afternoon": { "crowd": 62, "noise": "Quiet", "decibels": 32, "status": "Active Focus" },
+        "evening": { "crowd": 34, "noise": "Quiet", "decibels": 29, "status": "Gentle Flow" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 26, "status": "Silent" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 35, "noise": "Quiet", "decibels": 30, "status": "Zen Mode" },
+        "afternoon": { "crowd": 68, "noise": "Quiet", "decibels": 33, "status": "Active Focus" },
+        "evening": { "crowd": 36, "noise": "Quiet", "decibels": 30, "status": "Gentle Flow" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 26, "status": "Silent" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 29, "status": "Zen Mode" },
+        "afternoon": { "crowd": 65, "noise": "Quiet", "decibels": 32, "status": "Active Focus" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 29, "status": "Gentle Flow" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 25, "status": "Silent" }
+      },
+      "Friday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 28, "status": "Zen Mode" },
+        "afternoon": { "crowd": 48, "noise": "Quiet", "decibels": 31, "status": "Gentle" },
+        "evening": { "crowd": 22, "noise": "Quiet", "decibels": 27, "status": "Low" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 24, "status": "Silent" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 22, "noise": "Quiet", "decibels": 27, "status": "Peaceful" },
+        "afternoon": { "crowd": 40, "noise": "Quiet", "decibels": 30, "status": "Calm" },
+        "evening": { "crowd": 18, "noise": "Quiet", "decibels": 27, "status": "Quiet" },
+        "night": { "crowd": 6, "noise": "Quiet", "decibels": 23, "status": "Empty" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 16, "noise": "Quiet", "decibels": 26, "status": "Serene" },
+        "afternoon": { "crowd": 35, "noise": "Quiet", "decibels": 29, "status": "Peaceful" },
+        "evening": { "crowd": 15, "noise": "Quiet", "decibels": 26, "status": "Quiet" },
+        "night": { "crowd": 5, "noise": "Quiet", "decibels": 23, "status": "Empty" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-10",
+        "author": "Zoe B. (Designer)",
+        "timestamp": "2 days ago",
+        "crowd": "Low",
+        "noise": "Quiet",
+        "wifi": "Excellent",
+        "outlets": "Available Everywhere",
+        "note": "Air quality is noticeably fresh due to all the foliage. Fantastic vibe."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-23T11:00:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "monolith-pour-over-bar",
+    "name": "Monolith Coffee & Work Studio",
+    "category": "cafe",
+    "categoryLabel": "Modernist Coffee Workspace",
+    "description": "Brutalist polished concrete paired with warm walnut joinery. Sound-absorbing ceiling treatment keeps conversational noise contained, making it a favorite for laptop nomads seeking world-class espresso.",
+    "address": "45 Berwick Street, Soho, London W1F 8SF",
+    "neighborhood": "Soho",
+    "coordinates": { "lat": 51.5142, "lng": -0.1364 },
+    "budget": "$$",
+    "baseDecibels": 42,
+    "noiseLevel": "Moderate",
+    "wifiSpeed": "250 Mbps",
+    "wifiType": "Commercial high-speed Wi-Fi",
+    "outletsAvailability": "Power strip under central sharing table (60%)",
+    "seatingComfort": "Walnut stools and high tables",
+    "naturalLight": "Frosted architectural glass facade",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "coffee"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 30, "noise": "Moderate", "decibels": 38, "status": "Mellow" },
+        "afternoon": { "crowd": 70, "noise": "Moderate", "decibels": 45, "status": "Bustling" },
+        "evening": { "crowd": 45, "noise": "Moderate", "decibels": 41, "status": "Evening Buzz" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 32, "status": "Closed" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 35, "noise": "Moderate", "decibels": 39, "status": "Mellow" },
+        "afternoon": { "crowd": 75, "noise": "Moderate", "decibels": 46, "status": "Bustling" },
+        "evening": { "crowd": 50, "noise": "Moderate", "decibels": 42, "status": "Evening Buzz" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 32, "status": "Closed" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 38, "noise": "Moderate", "decibels": 40, "status": "Mellow" },
+        "afternoon": { "crowd": 80, "noise": "Lively", "decibels": 48, "status": "High Energy" },
+        "evening": { "crowd": 52, "noise": "Moderate", "decibels": 43, "status": "Evening Buzz" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 33, "status": "Closed" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 36, "noise": "Moderate", "decibels": 39, "status": "Mellow" },
+        "afternoon": { "crowd": 78, "noise": "Lively", "decibels": 47, "status": "High Energy" },
+        "evening": { "crowd": 55, "noise": "Moderate", "decibels": 44, "status": "Evening Buzz" },
+        "night": { "crowd": 16, "noise": "Quiet", "decibels": 33, "status": "Closed" }
+      },
+      "Friday": {
+        "morning": { "crowd": 40, "noise": "Moderate", "decibels": 41, "status": "Mellow" },
+        "afternoon": { "crowd": 85, "noise": "Lively", "decibels": 52, "status": "Peak Crowd" },
+        "evening": { "crowd": 65, "noise": "Lively", "decibels": 48, "status": "Vibrant" },
+        "night": { "crowd": 20, "noise": "Quiet", "decibels": 34, "status": "Closed" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 60, "noise": "Moderate", "decibels": 44, "status": "Weekend Energy" },
+        "afternoon": { "crowd": 95, "noise": "Lively", "decibels": 56, "status": "Very Loud" },
+        "evening": { "crowd": 70, "noise": "Lively", "decibels": 50, "status": "Social" },
+        "night": { "crowd": 22, "noise": "Quiet", "decibels": 35, "status": "Closed" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 45, "noise": "Moderate", "decibels": 41, "status": "Slow Sunday" },
+        "afternoon": { "crowd": 88, "noise": "Lively", "decibels": 52, "status": "High Energy" },
+        "evening": { "crowd": 50, "noise": "Moderate", "decibels": 43, "status": "Moderate" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 32, "status": "Closed" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-11",
+        "author": "Felix T.",
+        "timestamp": "2 days ago",
+        "crowd": "Moderate",
+        "noise": "Moderate",
+        "wifi": "Good",
+        "outlets": "Some Desks",
+        "note": "Great for collaborative work and brainstorming. A bit loud for deep reading after 1pm."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-23T10:00:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "st-judes-modern-archive",
+    "name": "St. Jude's Modern Archive",
+    "category": "library",
+    "categoryLabel": "Quiet Research Archive",
+    "description": "Converted former chapel featuring vaulted stone ceilings, individual micro-carrels with task lighting, and designated silent study wings where laptop typing is isolated to felt-lined bays.",
+    "address": "11 Kensington Church Street, Kensington, London W8 4LF",
+    "neighborhood": "Kensington",
+    "coordinates": { "lat": 51.5034, "lng": -0.1916 },
+    "budget": "Free",
+    "baseDecibels": 23,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "200 Mbps",
+    "wifiType": "Library Research Network",
+    "outletsAvailability": "All carrels equipped (100%)",
+    "seatingComfort": "Ergonomic oak high-back chairs",
+    "naturalLight": "Stained glass clerestory and soft uplighting",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "accessible"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 20, "noise": "Quiet", "decibels": 23, "status": "Deep Focus" },
+        "afternoon": { "crowd": 50, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 24, "status": "Quiet" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 21, "status": "Pin Drop" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 25, "noise": "Quiet", "decibels": 24, "status": "Deep Focus" },
+        "afternoon": { "crowd": 55, "noise": "Quiet", "decibels": 26, "status": "Calm" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 24, "status": "Quiet" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 22, "status": "Pin Drop" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 24, "status": "Deep Focus" },
+        "afternoon": { "crowd": 60, "noise": "Quiet", "decibels": 27, "status": "Focused" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 25, "status": "Quiet" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 22, "status": "Pin Drop" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 26, "noise": "Quiet", "decibels": 24, "status": "Deep Focus" },
+        "afternoon": { "crowd": 56, "noise": "Quiet", "decibels": 26, "status": "Calm" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 24, "status": "Quiet" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 22, "status": "Pin Drop" }
+      },
+      "Friday": {
+        "morning": { "crowd": 22, "noise": "Quiet", "decibels": 23, "status": "Deep Focus" },
+        "afternoon": { "crowd": 45, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "evening": { "crowd": 20, "noise": "Quiet", "decibels": 23, "status": "Quiet" },
+        "night": { "crowd": 6, "noise": "Quiet", "decibels": 20, "status": "Pin Drop" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 25, "status": "Focused" },
+        "afternoon": { "crowd": 52, "noise": "Quiet", "decibels": 27, "status": "Calm" },
+        "evening": { "crowd": 25, "noise": "Quiet", "decibels": 24, "status": "Quiet" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 21, "status": "Silent" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 18, "noise": "Quiet", "decibels": 22, "status": "Serene" },
+        "afternoon": { "crowd": 40, "noise": "Quiet", "decibels": 25, "status": "Calm" },
+        "evening": { "crowd": 18, "noise": "Quiet", "decibels": 23, "status": "Quiet" },
+        "night": { "crowd": 5, "noise": "Quiet", "decibels": 20, "status": "Pin Drop" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-12",
+        "author": "Arthur P. (Historian)",
+        "timestamp": "3 days ago",
+        "crowd": "Low",
+        "noise": "Quiet",
+        "wifi": "Good",
+        "outlets": "Available Everywhere",
+        "note": "Most peaceful venue in West London. Strict silence respected by all visitors."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1507842229451-79714971a695?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-22T17:00:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "brick-and-beam-quiet-club",
+    "name": "The Brick & Beam Quiet Club",
+    "category": "study_space",
+    "categoryLabel": "Quiet Member Study Lounge",
+    "description": "Exposed Georgian brickwork, low ambient lighting, soundproof telephone booths, and wide communal drafting tables. Designed for entrepreneurs and deep-work professionals.",
+    "address": "29 Percy Street, Fitzrovia, London W1T 1DZ",
+    "neighborhood": "Fitzrovia",
+    "coordinates": { "lat": 51.5192, "lng": -0.1362 },
+    "budget": "$$",
+    "baseDecibels": 31,
+    "noiseLevel": "Quiet",
+    "wifiSpeed": "380 Mbps",
+    "wifiType": "Enterprise low-latency fiber",
+    "outletsAvailability": "Integrated surface outlets at 90% tables",
+    "seatingComfort": "Leather task chairs and Scandinavian benches",
+    "naturalLight": "Period sash windows with light diffusers",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "ergonomic_seating",
+      "quiet_zone",
+      "coffee",
+      "soundproof_booths"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 24, "noise": "Quiet", "decibels": 29, "status": "Calm" },
+        "afternoon": { "crowd": 58, "noise": "Quiet", "decibels": 33, "status": "Productive" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 30, "status": "Low Murmur" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 26, "status": "Silent" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 30, "status": "Calm" },
+        "afternoon": { "crowd": 64, "noise": "Quiet", "decibels": 34, "status": "Productive" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 31, "status": "Low Murmur" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 27, "status": "Silent" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 32, "noise": "Quiet", "decibels": 31, "status": "Calm" },
+        "afternoon": { "crowd": 68, "noise": "Quiet", "decibels": 35, "status": "Active" },
+        "evening": { "crowd": 38, "noise": "Quiet", "decibels": 32, "status": "Low Murmur" },
+        "night": { "crowd": 15, "noise": "Quiet", "decibels": 27, "status": "Silent" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 30, "status": "Calm" },
+        "afternoon": { "crowd": 65, "noise": "Quiet", "decibels": 34, "status": "Productive" },
+        "evening": { "crowd": 34, "noise": "Quiet", "decibels": 31, "status": "Low Murmur" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 27, "status": "Silent" }
+      },
+      "Friday": {
+        "morning": { "crowd": 25, "noise": "Quiet", "decibels": 29, "status": "Calm" },
+        "afternoon": { "crowd": 50, "noise": "Quiet", "decibels": 32, "status": "Moderate" },
+        "evening": { "crowd": 22, "noise": "Quiet", "decibels": 28, "status": "Quiet" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 25, "status": "Silent" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 20, "noise": "Quiet", "decibels": 28, "status": "Serene" },
+        "afternoon": { "crowd": 38, "noise": "Quiet", "decibels": 31, "status": "Calm" },
+        "evening": { "crowd": 20, "noise": "Quiet", "decibels": 28, "status": "Quiet" },
+        "night": { "crowd": 6, "noise": "Quiet", "decibels": 24, "status": "Empty" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 16, "noise": "Quiet", "decibels": 27, "status": "Serene" },
+        "afternoon": { "crowd": 32, "noise": "Quiet", "decibels": 30, "status": "Calm" },
+        "evening": { "crowd": 16, "noise": "Quiet", "decibels": 27, "status": "Quiet" },
+        "night": { "crowd": 5, "noise": "Quiet", "decibels": 24, "status": "Empty" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-13",
+        "author": "Maya L. (Architect)",
+        "timestamp": "4 days ago",
+        "crowd": "Moderate",
+        "noise": "Quiet",
+        "wifi": "Excellent",
+        "outlets": "Available Everywhere",
+        "note": "Great lighting for sketching and drafting. Phone booths are very clean."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-21T18:00:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  },
+  {
+    "id": "fiddle-and-fig-coffee",
+    "name": "Fiddle & Fig Coffeehouse",
+    "category": "cafe",
+    "categoryLabel": "Quiet Neighbourhood Cafe",
+    "description": "Charming café filled with potted fiddle-leaf figs, warm timber tables, and a dedicated 'Silent Work Mezzanine' where laptop users enjoy high-speed Wi-Fi and artisan herbal teas.",
+    "address": "5 Nelson Road, Greenwich, London SE10 9JB",
+    "neighborhood": "Greenwich",
+    "coordinates": { "lat": 51.4822, "lng": -0.0082 },
+    "budget": "$",
+    "baseDecibels": 35,
+    "noiseLevel": "Moderate",
+    "wifiSpeed": "220 Mbps",
+    "wifiType": "Commercial high-speed Wi-Fi",
+    "outletsAvailability": "Mezzanine desks (85%)",
+    "seatingComfort": "Upholstered wood benches & cushions",
+    "naturalLight": "Sunlit skylights on upper floor",
+    "facilities": [
+      "wifi",
+      "power_outlets",
+      "quiet_zone",
+      "coffee",
+      "outdoor_terrace"
+    ],
+    "crowdSchedule": {
+      "Monday": {
+        "morning": { "crowd": 22, "noise": "Quiet", "decibels": 32, "status": "Calm" },
+        "afternoon": { "crowd": 52, "noise": "Moderate", "decibels": 38, "status": "Pleasant" },
+        "evening": { "crowd": 28, "noise": "Quiet", "decibels": 34, "status": "Quiet" },
+        "night": { "crowd": 8, "noise": "Quiet", "decibels": 28, "status": "Closed" }
+      },
+      "Tuesday": {
+        "morning": { "crowd": 25, "noise": "Quiet", "decibels": 33, "status": "Calm" },
+        "afternoon": { "crowd": 55, "noise": "Moderate", "decibels": 39, "status": "Pleasant" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 34, "status": "Quiet" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 28, "status": "Closed" }
+      },
+      "Wednesday": {
+        "morning": { "crowd": 28, "noise": "Quiet", "decibels": 34, "status": "Calm" },
+        "afternoon": { "crowd": 58, "noise": "Moderate", "decibels": 40, "status": "Active" },
+        "evening": { "crowd": 32, "noise": "Quiet", "decibels": 35, "status": "Quiet" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 29, "status": "Closed" }
+      },
+      "Thursday": {
+        "morning": { "crowd": 26, "noise": "Quiet", "decibels": 33, "status": "Calm" },
+        "afternoon": { "crowd": 56, "noise": "Moderate", "decibels": 39, "status": "Pleasant" },
+        "evening": { "crowd": 30, "noise": "Quiet", "decibels": 34, "status": "Quiet" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 28, "status": "Closed" }
+      },
+      "Friday": {
+        "morning": { "crowd": 30, "noise": "Quiet", "decibels": 34, "status": "Calm" },
+        "afternoon": { "crowd": 65, "noise": "Moderate", "decibels": 42, "status": "Brisk" },
+        "evening": { "crowd": 40, "noise": "Moderate", "decibels": 38, "status": "Social" },
+        "night": { "crowd": 12, "noise": "Quiet", "decibels": 30, "status": "Closed" }
+      },
+      "Saturday": {
+        "morning": { "crowd": 45, "noise": "Moderate", "decibels": 39, "status": "Busy" },
+        "afternoon": { "crowd": 80, "noise": "Lively", "decibels": 48, "status": "Crowded" },
+        "evening": { "crowd": 42, "noise": "Moderate", "decibels": 38, "status": "Calm" },
+        "night": { "crowd": 14, "noise": "Quiet", "decibels": 30, "status": "Closed" }
+      },
+      "Sunday": {
+        "morning": { "crowd": 35, "noise": "Moderate", "decibels": 36, "status": "Pleasant" },
+        "afternoon": { "crowd": 72, "noise": "Moderate", "decibels": 45, "status": "Busy" },
+        "evening": { "crowd": 35, "noise": "Quiet", "decibels": 34, "status": "Quiet" },
+        "night": { "crowd": 10, "noise": "Quiet", "decibels": 28, "status": "Closed" }
+      }
+    },
+    "sampleReports": [
+      {
+        "id": "rep-14",
+        "author": "Samir K.",
+        "timestamp": "4 days ago",
+        "crowd": "Low",
+        "noise": "Quiet",
+        "wifi": "Good",
+        "outlets": "Some Desks",
+        "note": "The mezzanine is quiet even when the main counter downstairs is busy."
+      }
+    ],
+    "image": "https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=800&q=80",
+    "lastUpdated": "2026-10-21T15:30:00Z",
+    "provenance": "Demo Venue · Synthetic Telemetry"
+  }
+]
