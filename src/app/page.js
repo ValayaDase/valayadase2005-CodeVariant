@@ -15,15 +15,18 @@ import Section10ResolutionAndFooter from "@/components/sections/Section10Resolut
 export default function Home() {
   return (
     <SmoothScrollProvider>
-      <main className="w-full min-h-screen bg-[#F4F1E8] text-[#252B26] overflow-x-hidden selection:bg-[#263D31] selection:text-[#F4F1E8]">
+      <main className="w-full min-h-screen bg-[#F4F1E8] text-[#252B26] overflow-x-clip selection:bg-[#263D31] selection:text-[#F4F1E8]">
         {/* Fixed Editorial Navigation Header */}
         <Navbar />
 
-        {/* Section 01 — Hero: Show the Problem Immediately */}
-        <Section01Hero />
+        {/* Hero & Problem Transition Wrapper: Hero sticks ONLY while Section 02 slides over it */}
+        <div id="hero-problem-wrapper" className="relative w-full">
+          {/* Section 01 — Hero: Show the Problem Immediately */}
+          <Section01Hero />
 
-        {/* Section 02 — The Problem: Pinned Bottom-to-Top Reveal (4 Core Frictions) */}
-        <Section02Problem />
+          {/* Section 02 — The Problem: Pinned Bottom-to-Top Reveal (4 Core Frictions) */}
+          <Section02Problem />
+        </div>
 
         {/* Section 03 — The Turning Point: What if you knew before you arrived? */}
         <Section03TurningPoint />

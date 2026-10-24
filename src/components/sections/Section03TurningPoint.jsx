@@ -66,7 +66,7 @@ export default function Section03TurningPoint() {
     <section
       id="turning-point"
       ref={sectionRef}
-      className="relative min-h-[92svh] w-full bg-gradient-to-b from-[#F4F1E8] via-[#E3EBDD]/60 to-[#FCFBF7] py-28 px-6 sm:px-8 lg:px-12 flex flex-col justify-center items-center overflow-hidden border-t border-[#E3E0D7]"
+      className="relative z-20 min-h-[92svh] w-full bg-[#F4F1E8] bg-gradient-to-b from-[#F4F1E8] via-[#E3EBDD]/60 to-[#FCFBF7] py-28 px-6 sm:px-8 lg:px-12 flex flex-col justify-center items-center overflow-hidden border-t border-[#E3E0D7]"
     >
       {/* Three.js 3D Spatial Transition Layer */}
       <TurningPointDepth />

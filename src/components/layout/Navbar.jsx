@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { Compass, Menu, X, ArrowUpRight } from "lucide-react";
 
@@ -32,19 +33,24 @@ export default function Navbar() {
     <>
       {/* Floating persistent navigation header - reveals smoothly once user scrolls past hero */}
       <header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-6xl transition-all duration-400 ease-out ${
-          scrolled
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-6xl transition-all duration-400 ease-out ${scrolled
             ? "translate-y-0 opacity-100 pointer-events-auto"
             : "-translate-y-24 opacity-0 pointer-events-none"
-        }`}
+          }`}
       >
         <div className="bg-[#263D31]/92 backdrop-blur-md text-[#F4F1E8] px-5 py-2.5 rounded-full border border-[#819478]/40 shadow-xl flex items-center justify-between">
           {/* Logo */}
-          <a href="#hero" className="flex items-center space-x-2 text-[#FCFBF7] group">
-            <span className="w-2 h-2 rounded-full bg-[#819478] group-hover:scale-125 transition-transform" />
-            <span className="font-editorial text-lg tracking-[0.06em] text-[#FCFBF7] font-normal uppercase">
-              Spotwise
-            </span>
+          <a href="#hero" className="flex items-center group py-0.5 focus-visible:outline-none" aria-label="Spotwise Home">
+            <div className="relative h-6 sm:h-7 aspect-[2172/724] transition-transform duration-200 group-hover:scale-105">
+              <Image
+                src="/images/logo/b97527af-f745-457c-a0fb-ddb6d9649e8d.png"
+                alt="Spotwise"
+                fill
+                priority
+                className="object-contain object-left"
+                sizes="(max-width: 640px) 72px, 84px"
+              />
+            </div>
           </a>
 
           {/* Nav links */}
