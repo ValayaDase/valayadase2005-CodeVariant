@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Check, X, ArrowUpRight, Scale, Volume2, Wifi, Zap, Clock, ShieldCheck, ArrowRight } from "lucide-react";
+import { ArrowUpRight, Scale } from "lucide-react";
 import { SPACES_DATA } from "@/data/spacesData";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -161,7 +161,7 @@ export default function Section09CompareAndChoose() {
               <div className="col-span-1 text-xs font-mono text-[#6C7168] font-semibold">
                 Ready to focus?
               </div>
-              {comparisonSpaces.map((space, idx) => (
+              {comparisonSpaces.map((space) => (
                 <div key={space.id}>
                   <a
                     href="#discovery"

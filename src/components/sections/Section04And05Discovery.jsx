@@ -25,7 +25,6 @@ import {
   ExternalLink,
   Search,
   RotateCcw,
-  CheckCircle2,
   ArrowDown,
 } from "lucide-react";
 import { SPACES_DATA } from "@/data/spacesData";
@@ -454,7 +453,7 @@ export default function Section04And05Discovery() {
     <section
       id="discovery"
       ref={sectionRef}
-      className="sticky bottom-0 z-10 w-full border-t border-[#E3E0D7] bg-[#FCFBF7] text-[#252B26]"
+      className="relative z-10 w-full border-t border-[#E3E0D7] bg-[#FCFBF7] text-[#252B26] will-change-transform origin-bottom"
     >
       {/* Short heading + near-full-view map */}
       <div
@@ -982,37 +981,6 @@ export default function Section04And05Discovery() {
             </motion.div>
           </motion.div>
         )}
-      </AnimatePresence>
-
-      <style jsx>{`
-        .controls-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: #becab1 #f4f1e8;
-        }
-
-        .controls-scroll::-webkit-scrollbar {
-          height: 4px;
-        }
-
-        .controls-scroll::-webkit-scrollbar-track {
-          background: #f4f1e8;
-        }
-
-        .controls-scroll::-webkit-scrollbar-thumb {
-          border-radius: 999px;
-          background: #becab1;
-        }
-
-        .discovery-map-host > :global(div) {
-          height: 100% !important;
-          min-height: 0 !important;
-        }
-
-        .discovery-map-host :global(.leaflet-container) {
-          height: 100% !important;
-          width: 100% !important;
-        }
-      `}</style>
     </section>
   );
 }

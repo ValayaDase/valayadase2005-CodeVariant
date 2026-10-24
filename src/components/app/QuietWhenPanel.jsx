@@ -49,7 +49,7 @@ export default function QuietWhenPanel({
               className={`px-3.5 py-1.5 rounded-full text-xs font-medium shrink-0 transition-all border ${
                 isActive
                   ? "bg-[#26382B] text-[#F5F3EC] border-[#26382B] shadow-xs"
-                  : "bg-white text-[#555D50] border-[#E8E0D2] hover:bg-[#FAF8F3] hover:text-[#20231F]"
+                  : "liquid-hover bg-white text-[#555D50] border-[#E8E0D2] hover:bg-[#FAF8F3] hover:text-[#20231F]"
               }`}
             >
               {day}

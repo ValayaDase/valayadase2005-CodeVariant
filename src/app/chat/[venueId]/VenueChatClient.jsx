@@ -14,7 +14,7 @@ export default function VenueChatClient({ venueId }) {
   return (
     <AppShell
       title={`${venueName} Channel`}
-      subtitle="Real-time peer chat & verified room conditions"
+      subtitle="Shared venue chat with automatic refresh"
     >
       <div className="space-y-6 text-left max-w-6xl mx-auto">
         {/* Navigation Breadcrumb */}
@@ -34,7 +34,7 @@ export default function VenueChatClient({ venueId }) {
         </div>
 
         {/* Venue Chat Component */}
-        <VenueChat venue={venue} venueId={venueId} venueName={venueName} />
+        <VenueChat key={venueId} venue={venue} venueId={venueId} venueName={venueName} />
 
         {/* Information Notice */}
         <div className="p-4 rounded-2xl bg-white border border-[#E8E0D2] text-xs text-[#555D50] flex items-center justify-between shadow-xs">

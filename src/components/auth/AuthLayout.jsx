@@ -59,13 +59,18 @@ export default function AuthLayout({ mode = "sign-in" }) {
   }, []);
 
   return (
-    <main className="min-h-screen w-full bg-[#F5F3EC] flex flex-col justify-center items-center p-3 sm:p-6 lg:p-10 select-none">
+    <motion.main
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: shouldReduceMotion ? 0.15 : 0.3, ease: [0.22, 1, 0.36, 1] }}
+      className="min-h-screen w-full bg-[#F5F3EC] flex flex-col justify-center items-center p-3 sm:p-6 lg:p-10 select-none"
+    >
       {/* Existing Session Notice */}
       {existingSession && (
-        <div className="w-full max-w-5xl mb-4 p-3 rounded-2xl bg-white border border-[#E8E0D2] shadow-sm flex items-center justify-between gap-3 text-xs text-[#20231F]">
-          <div className="flex items-center gap-2">
+        <div className="mb-4 flex w-full max-w-5xl flex-col items-start justify-between gap-3 rounded-2xl border border-[#E8E0D2] bg-white p-3 text-xs text-[#20231F] shadow-sm sm:flex-row sm:items-center">
+          <div className="flex min-w-0 items-start gap-2 sm:items-center">
             <UserCheck className="w-4 h-4 text-[#819477]" />
-            <span>
+            <span className="min-w-0 break-words">
               Signed in as <strong>{existingSession.user?.name}</strong> ({existingSession.user?.email})
             </span>
           </div>
@@ -126,6 +131,6 @@ export default function AuthLayout({ mode = "sign-in" }) {
           <AuthIllustration />
         </motion.div>
       </div>
-    </main>
+    </motion.main>
   );
 }

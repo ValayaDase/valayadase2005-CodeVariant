@@ -103,6 +103,83 @@ body {
   box-shadow: 0 4px 20px -2px rgba(38, 61, 49, 0.04);
 }
 
+/* Quiet botanical corner art for the four signed-in workspace pages. */
+.botanical-sprig {
+  color: var(--sage);
+  opacity: 0.12;
+}
+
+@media (max-width: 640px) {
+  .botanical-sprig {
+    opacity: 0.085;
+  }
+}
+
+/* Explicitly opt-in liquid treatment for selected navigation and action controls. */
+.spotwise-app :is(.liquid-hover, .liquid-hover-red, .liquid-hover-light) {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition: color 220ms ease, background-color 220ms ease, border-color 220ms ease;
+}
+
+.spotwise-app :is(.liquid-hover, .liquid-hover-red, .liquid-hover-light)::before {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: -8% -3% 0;
+  border-radius: 48% 52% 0 0 / 9% 12% 0 0;
+  background: var(--liquid-fill, var(--forest));
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 460ms cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.spotwise-app :is(.liquid-hover, .liquid-hover-red, .liquid-hover-light) > :not(.absolute) {
+  position: relative;
+  z-index: 2;
+}
+
+.spotwise-app .liquid-hover-red { --liquid-fill: #A8403B; }
+.spotwise-app .liquid-hover-light { --liquid-fill: #DCE9D5; }
+
+.spotwise-app :is(.liquid-hover, .liquid-hover-red, .liquid-hover-light):hover::before,
+.spotwise-app :is(.liquid-hover, .liquid-hover-red, .liquid-hover-light):focus-visible::before {
+  transform: scaleY(1);
+}
+
+.spotwise-app :is(.liquid-hover, .liquid-hover-red):hover,
+.spotwise-app :is(.liquid-hover, .liquid-hover-red):focus-visible,
+.spotwise-app :is(.liquid-hover, .liquid-hover-red):hover *,
+.spotwise-app :is(.liquid-hover, .liquid-hover-red):focus-visible * {
+  color: #fff !important;
+}
+
+.spotwise-app .liquid-hover-light:hover,
+.spotwise-app .liquid-hover-light:focus-visible,
+.spotwise-app .liquid-hover-light:hover *,
+.spotwise-app .liquid-hover-light:focus-visible * {
+  color: var(--forest) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spotwise-app :is(.liquid-hover, .liquid-hover-red, .liquid-hover-light)::before {
+    display: none;
+  }
+
+  .spotwise-app .liquid-hover:hover,
+  .spotwise-app .liquid-hover:focus-visible {
+    background-color: var(--forest);
+    transition: color 160ms ease, background-color 160ms ease;
+  }
+
+  .spotwise-app .liquid-hover-red:hover,
+  .spotwise-app .liquid-hover-red:focus-visible { background-color: #A8403B; }
+  .spotwise-app .liquid-hover-light:hover,
+  .spotwise-app .liquid-hover-light:focus-visible { background-color: #DCE9D5; }
+}
+
 /* App Glass Panel & Border Utilities */
 .glass-panel {
   background: rgba(255, 255, 255, 0.85);
@@ -156,3 +233,4 @@ body,
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
 }
+

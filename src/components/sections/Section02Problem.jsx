@@ -724,7 +724,7 @@ export default function Section02Problem() {
                         <span className="mb-2 h-[1.5px] w-16 bg-[#819478] shadow-sm" />
                       </div>
 
-                      <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#E3EBDD] drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                      <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[#D4AA85]">
                         First impressions don&apos;t tell the whole story
                       </p>
 
@@ -885,40 +885,6 @@ export default function Section02Problem() {
         </div>
       </div>
 
-      <style jsx>{`
-        .desktop-story {
-          display: none;
-        }
-
-        .stacked-story {
-          display: block;
-        }
-
-        .split-narrative {
-          scrollbar-width: thin;
-          scrollbar-color: #c6ccbc transparent;
-        }
-
-        @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
-          .desktop-story {
-            display: block;
-          }
-
-          .stacked-story {
-            display: none;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .desktop-story {
-            display: none;
-          }
-
-          .stacked-story {
-            display: block;
-          }
-        }
-      `}</style>
     </section>
   );
 }

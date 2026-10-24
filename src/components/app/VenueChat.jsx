@@ -19,8 +19,7 @@ import {
   BarChart2,
 } from "lucide-react";
 import { SendIcon } from "@animateicons/react/lucide";
-import { io } from "socket.io-client";
-import { API_URL, backendRequest } from "@/lib/backend";
+import { backendRequest } from "@/lib/backend";
 import { getDemoSession, getInitials } from "@/lib/auth/demo-auth";
 
 // Quick prompt suggestions
@@ -70,7 +69,8 @@ export default function VenueChat({ venue, venueId, venueName }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [connected, setConnected] = useState(false);
+  const [chatAvailable, setChatAvailable] = useState(false);
+  const [chatError, setChatError] = useState("");
   const [currentUser, setCurrentUser] = useState(() => {
     const session = getDemoSession();
     return session?.user?.name || "Spotwise Member";
@@ -100,99 +100,69 @@ export default function VenueChat({ venue, venueId, venueName }) {
   }, []);
 
   const messagesEndRef = useRef(null);
-  const socketRef = useRef(null);
+  const pollingRef = useRef(false);
 
   const displayName = venue?.name || venueName || "Workspace";
   const displayCategory = venue?.categoryLabel || "Study Space / Library";
   const displayLocation =
     venue?.neighborhood || venue?.address || "London, UK";
 
-  // Setup Socket.IO connection and load genuine messages from database
+  // Load saved messages and poll periodically; this works on serverless hosts.
   useEffect(() => {
     if (!venueId) return undefined;
     let active = true;
-
-    // Load existing messages from database
-    backendRequest(`/api/venues/${venueId}/chat`)
-      .then(({ messages: history }) => {
-        if (!active || !history) return;
-        setMessages(
-          history.map((m) => {
-            const author = m.author || "Guest";
-            const isMe = author === currentUser || author === "You";
-            return {
-              ...m,
-              author,
-              isMe,
-              status: "delivered",
-            };
-          })
-        );
-      })
-      .catch(() => {
-        // Handled silently
-      })
-      .finally(() => {
-        if (active) setLoading(false);
-      });
-
-    try {
-      const socket = io(API_URL, {
-        transports: ["websocket", "polling"],
-        timeout: 5000,
-      });
-      socketRef.current = socket;
-
-      socket.on("connect", () => {
-        if (!active) return;
-        setConnected(true);
-        socket.emit("join-venue", venueId);
-      });
-
-      socket.on("disconnect", () => {
-        if (active) setConnected(false);
-      });
-
-      // Handle incoming messages from other peers (no duplicate of sender's own message)
-      socket.on("new-message", (incoming) => {
-        if (!active || incoming.venueId !== venueId) return;
-
+    pollingRef.current = false;
+    const refreshMessages = async (initial = false) => {
+      if (pollingRef.current) return;
+      pollingRef.current = true;
+      try {
+        const { messages: history = [] } = await backendRequest(`/api/venues/${venueId}/chat`);
+        if (!active || !Array.isArray(history)) return;
+        setChatAvailable(true);
+        setChatError("");
         setMessages((current) => {
-          // If we already have this message by clientId or server id, update it rather than duplicating
-          if (incoming.clientId && current.some((m) => m.clientId === incoming.clientId)) {
-            return current.map((m) =>
-              m.clientId === incoming.clientId
-                ? { ...m, id: incoming.id, status: "delivered" }
-                : m
-            );
+          const existingIds = new Set(current.map((message) => message.id));
+          const existingClientIds = new Set(current.map((message) => message.clientId).filter(Boolean));
+          const fetchedIds = new Set(history.map((message) => message.id));
+          const fetchedClientIds = new Set(history.map((message) => message.clientId).filter(Boolean));
+          const pending = current.filter((message) =>
+            message.status === "sending" &&
+            !fetchedIds.has(message.id) &&
+            !fetchedClientIds.has(message.clientId)
+          );
+          const newMessages = history
+            .filter((message) => !existingIds.has(message.id) && !existingClientIds.has(message.clientId))
+            .map((message) => ({
+              ...message,
+              author: message.author || "Guest",
+              isMe: message.author === currentUser || message.author === "You",
+              status: "delivered",
+            }));
+
+          if (initial) {
+            return [...newMessages, ...pending].slice(-100);
           }
-          if (current.some((m) => m.id === incoming.id)) {
+          if (newMessages.length === 0 && pending.length === current.filter((message) => message.status === "sending").length) {
             return current;
           }
-
-          const isMe =
-            incoming.author === currentUser || incoming.author === "You";
-
-          return [
-            ...current,
-            {
-              ...incoming,
-              isMe,
-              status: "delivered",
-            },
-          ];
+          return [...current.filter((message) => message.status !== "sending"), ...newMessages, ...pending]
+            .sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0))
+            .slice(-100);
         });
-      });
-    } catch {
-      // In standalone demo mode
-    }
+      } catch {
+        if (active) setChatAvailable(false);
+      } finally {
+        pollingRef.current = false;
+        if (active && initial) setLoading(false);
+      }
+    };
+
+    void refreshMessages(true);
+    const pollTimer = window.setInterval(() => void refreshMessages(), 4000);
 
     return () => {
       active = false;
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
+      window.clearInterval(pollTimer);
     };
   }, [venueId, currentUser]);
 
@@ -202,7 +172,7 @@ export default function VenueChat({ venue, venueId, venueName }) {
   }, [messages]);
 
   // Send message without duplication
-  const handleSendMessage = (textToSend) => {
+  const handleSendMessage = async (textToSend) => {
     const text = (textToSend || input).trim();
     if (!text || sending || text.length > 500) return;
 
@@ -212,35 +182,24 @@ export default function VenueChat({ venue, venueId, venueName }) {
     // Optimistically add client message
     setMessages((prev) => [...prev, newMsg]);
     setInput("");
-
-    const socket = socketRef.current;
-    if (socket?.connected) {
-      socket.emit(
-        "send-message",
-        {
-          venueId,
-          text,
-          author: currentUser,
-          clientId: newMsg.clientId,
-        },
-        (response) => {
-          setSending(false);
-          if (response?.message) {
-            // Reconcile optimistic message with server ID
-            setMessages((prev) =>
-              prev.map((m) =>
-                m.clientId === newMsg.clientId
-                  ? { ...m, id: response.message.id, status: "delivered" }
-                  : m
-              )
-            );
-          }
-        }
-      );
-    } else {
-      setTimeout(() => {
-        setSending(false);
-      }, 300);
+    setChatError("");
+    try {
+      const { message } = await backendRequest(`/api/venues/${venueId}/chat`, {
+        method: "POST",
+        body: JSON.stringify({ venueId, text, author: currentUser, clientId: newMsg.clientId }),
+      });
+      setChatAvailable(true);
+      setMessages((prev) => prev.map((item) =>
+        item.clientId === newMsg.clientId
+          ? { ...message, isMe: true, status: "delivered" }
+          : item
+      ));
+    } catch (error) {
+      setChatError(error.message || "Message could not be saved. Please try again.");
+      setMessages((prev) => prev.filter((item) => item.clientId !== newMsg.clientId));
+      setInput((current) => current || text);
+    } finally {
+      setSending(false);
     }
   };
 
@@ -288,10 +247,10 @@ export default function VenueChat({ venue, venueId, venueName }) {
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
               <span
                 className={`w-2 h-2 rounded-full ${
-                  connected ? "bg-emerald-500 animate-pulse" : "bg-emerald-500"
+                  chatAvailable ? "bg-emerald-500" : "bg-amber-500"
                 }`}
               />
-              <span>{connected ? "Live Room" : "Connecting"}</span>
+              <span>{chatAvailable ? "Chat synced" : "Connecting"}</span>
             </span>
           </div>
 
@@ -309,7 +268,7 @@ export default function VenueChat({ venue, venueId, venueName }) {
 
           <div className="mt-2.5 pt-2 border-t border-[#E8E0D2]/60">
             <p className="text-sm font-medium text-[#20231F]">
-              Real-time peer chat &amp; room conditions
+              Shared venue chat
             </p>
             <p className="text-xs text-[#555D50] mt-0.5">
               Ask questions, share updates, and help others find the right time to visit.
@@ -319,30 +278,30 @@ export default function VenueChat({ venue, venueId, venueName }) {
       </div>
 
       {/* 2. SPLIT LAYOUT: LEFT SIDEBAR + RIGHT CHAT CONTAINER */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN WIDGETS (4 Cols) */}
-        <div className="lg:col-span-4 space-y-4">
-          {/* Widget 1: Live Members in this chat (Real Count, No Fake Profiles) */}
+        <div className="xl:col-span-4 space-y-4">
+          {/* Widget 1: Shared chat refresh status */}
           <div className="rounded-3xl bg-white border border-[#E8E0D2] p-5 shadow-[0_2px_12px_rgba(32,35,31,0.03)]">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-[#819477]" />
                 <h3 className="text-sm font-semibold text-[#20231F]">
-                  Live in this chat
+                  Shared chat
                 </h3>
               </div>
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-semibold">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                Active
+                {chatAvailable ? "Ready" : "Waiting"}
               </span>
             </div>
             <p className="text-2xl font-serif font-bold text-[#20231F] mt-2">
-              {connected ? "1 active now" : "Connecting…"}
+              {chatAvailable ? "Updates automatically" : "Connecting…"}
             </p>
             <p className="text-xs text-[#555D50] mt-1">
-              {connected
-                ? "Connected to live room chat & verified telemetry."
-                : "Establishing secure WebSocket connection..."}
+              {chatAvailable
+                ? "New messages appear about every 4 seconds."
+                : "Connecting to the venue chat..."}
             </p>
           </div>
 
@@ -410,7 +369,7 @@ export default function VenueChat({ venue, venueId, venueName }) {
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#819477] mt-1.5 shrink-0" />
-                <span>Share real-time observations</span>
+                <span>Share venue observations</span>
               </li>
               <li className="flex items-start gap-2">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#819477] mt-1.5 shrink-0" />
@@ -425,8 +384,8 @@ export default function VenueChat({ venue, venueId, venueName }) {
         </div>
 
         {/* RIGHT COLUMN: CHAT STREAM + COMPOSER (8 Cols) */}
-        <div className="lg:col-span-8">
-          <div className="rounded-3xl bg-white border border-[#E8E0D2] shadow-[0_8px_30px_rgba(32,35,31,0.04)] overflow-hidden flex flex-col h-[680px] relative">
+        <div className="xl:col-span-8">
+          <div className="relative flex h-[min(680px,calc(100dvh_-_9rem))] min-h-[26rem] flex-col overflow-hidden rounded-3xl border border-[#E8E0D2] bg-white shadow-[0_8px_30px_rgba(32,35,31,0.04)] sm:min-h-[32rem]">
             {/* Subtle botanical leaves watermark in top-right & bottom-left */}
             <svg
               className="absolute top-0 right-0 w-52 h-52 text-[#819477]/12 pointer-events-none z-0"
@@ -456,6 +415,11 @@ export default function VenueChat({ venue, venueId, venueName }) {
 
             {/* Message Stream */}
             <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-4 z-10 scroll-smooth">
+              {chatError && (
+                <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-800">
+                  {chatError}
+                </p>
+              )}
               {loading ? (
                 <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#555D50]">
                   <div className="w-8 h-8 border-2 border-[#819477] border-t-transparent rounded-full animate-spin mb-3" />
@@ -538,8 +502,8 @@ export default function VenueChat({ venue, venueId, venueName }) {
                           {/* Delivery status for 'You' */}
                           {isMe && (
                             <div className="flex items-center gap-1 mt-1 text-[11px] text-[#819477] pr-1">
-                              <span>Sent</span>
-                              <CheckCheck className="w-3.5 h-3.5" />
+                              <span>{msg.status === "sending" ? "Sending…" : "Sent"}</span>
+                              {msg.status !== "sending" && <CheckCheck className="w-3.5 h-3.5" />}
                             </div>
                           )}
                         </div>

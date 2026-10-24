@@ -9,6 +9,7 @@ import {
 import Image from "next/image";
 import {
   Award,
+  ShieldCheck,
   ArrowRight,
   Zap,
   Wifi,
@@ -902,25 +903,6 @@ export default function Section07FocusFitScore() {
         </footer>
       </div>
 
-      <style jsx>{`
-        .fit-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: #bdc9af #f1f4eb;
-        }
-
-        .fit-scroll::-webkit-scrollbar {
-          height: 4px;
-        }
-
-        .fit-scroll::-webkit-scrollbar-track {
-          background: #f1f4eb;
-        }
-
-        .fit-scroll::-webkit-scrollbar-thumb {
-          background: #bdc9af;
-          border-radius: 999px;
-        }
-      `}</style>
     </section>
   );
 }

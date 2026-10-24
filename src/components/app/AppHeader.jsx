@@ -9,20 +9,20 @@ export default function AppHeader({ title, subtitle, onOpenMobile, user }) {
   const badgeLabel = user?.isDemo ? "Demo" : "Member";
 
   return (
-    <header className="w-full bg-white border-b border-[#E8E0D2] px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-[0_2px_10px_rgba(32,35,31,0.02)]">
+    <header className="sticky top-2 z-30 mx-2 mt-2 flex w-auto min-w-0 items-center justify-between gap-2 rounded-3xl border border-[#E8E0D2] bg-white px-3 py-3 shadow-[0_8px_28px_rgba(32,35,31,0.08)] sm:top-3 sm:mx-5 sm:mt-3 sm:gap-4 sm:px-6 sm:py-3.5 lg:mx-6 lg:px-8">
       {/* Left: Mobile Toggle & Page Title */}
-      <div className="flex items-center gap-3">
+      <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-3">
         <button
           type="button"
           onClick={onOpenMobile}
-          className="lg:hidden p-2 text-[#20231F] hover:bg-[#F5F3EC] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#819477]"
+          className="lg:hidden shrink-0 p-2 text-[#20231F] hover:bg-[#F5F3EC] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#819477]"
           aria-label="Open navigation sidebar"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div>
-          <h1 className="text-lg sm:text-xl font-serif font-bold text-[#20231F] tracking-tight">
+        <div className="min-w-0">
+          <h1 className="line-clamp-2 text-base font-serif font-bold leading-tight text-[#20231F] tracking-tight sm:line-clamp-1 sm:text-xl">
             {title || "Space Discovery"}
           </h1>
           {subtitle && (
@@ -34,9 +34,9 @@ export default function AppHeader({ title, subtitle, onOpenMobile, user }) {
       </div>
 
       {/* Right: User initials and name badge */}
-      <div className="flex items-center gap-2.5 sm:gap-3">
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E8E0D2] shadow-sm">
-          <div className="w-6 h-6 rounded-full bg-[#26382B] text-[#F5F3EC] flex items-center justify-center font-bold text-xs font-serif tracking-tight">
+      <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 rounded-full border border-[#E8E0D2] bg-white px-2 py-1.5 shadow-sm sm:gap-2 sm:px-3">
+          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#26382B] font-serif text-xs font-bold tracking-tight text-[#F5F3EC]">
             {initials}
           </div>
           <span className="text-xs font-semibold text-[#20231F] hidden sm:inline">

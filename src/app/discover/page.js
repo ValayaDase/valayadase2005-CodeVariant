@@ -15,6 +15,13 @@ import VenueCard from "@/components/app/VenueCard";
 import VenueMap from "@/components/app/VenueMap";
 import { getAllVenues, getUserPreferences } from "@/lib/discovery/venue-data";
 import { calculateSuitability } from "@/lib/scoring/suitability";
+import { CurtainReveal, RevealItem, StaggerGrid } from "@/components/motion/MotionPrimitives";
+import {
+  CanvasProvider,
+  ActionCanvasDock,
+  ComparisonDrawer,
+  DropFeedbackToast,
+} from "@/components/canvas";
 
 export default function DiscoverPage() {
   const [allVenues, setAllVenues] = useState(() => getAllVenues());
@@ -22,6 +29,7 @@ export default function DiscoverPage() {
   const [sortBy, setSortBy] = useState("score"); // 'score', 'noise', 'crowd', 'name'
   const [selectedLocation, setSelectedLocation] = useState("London (All Districts)");
   const [selectedVenueId, setSelectedVenueId] = useState(null);
+  const [cinematicEntranceComplete, setCinematicEntranceComplete] = useState(false);
 
   // Initialize filters from saved preferences or neutral defaults
   const [filters, setFilters] = useState(() => {
@@ -49,7 +57,13 @@ export default function DiscoverPage() {
     };
   }, []);
 
+  useEffect(() => {
+    const timer = window.setTimeout(() => setCinematicEntranceComplete(true), 1900);
+    return () => window.clearTimeout(timer);
+  }, []);
+
   const handleResetFilters = () => {
+    setCinematicEntranceComplete(true);
     setFilters({
       searchQuery: "",
       activity: "Deep Work",
@@ -151,57 +165,80 @@ export default function DiscoverPage() {
   }, [allVenues, filters, sortBy]);
 
   return (
-    <AppShell
-      title="Workspace Discovery"
-      subtitle="Find places that match your focus state, sensory needs, and schedule."
-    >
-      <div className="space-y-6 text-left">
-        {/* Welcome Header & Location Selector */}
-        <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] text-xs font-semibold text-[#819477] mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#819477]" />
-              <span>Sensory Match Engine Active</span>
-            </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#20231F] tracking-tight">
-              Find your next focus spot.
-            </h1>
-            <p className="mt-2 text-sm text-[#555D50] leading-relaxed">
-              Discover places that match your cognitive style, quiet thresholds, and
-              intended visit time.
-            </p>
-          </div>
+    <CanvasProvider initialPage="discover">
+      <AppShell
+        title="Workspace Discovery"
+        subtitle="Find places that match your focus state, sensory needs, and schedule."
+      >
+        <div className="space-y-6 text-left pb-64 xl:pb-72">
+          {/* Welcome Header & Location Selector */}
+          <CurtainReveal delay={0} className="rounded-3xl">
+            <div className="grid gap-4 rounded-3xl border border-[#E8E0D2] bg-white p-5 shadow-[0_4px_24px_rgba(32,35,31,0.04)] sm:p-6 md:grid-cols-[minmax(0,1fr)_15rem] md:items-center md:gap-6">
+              <div className="min-w-0">
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <RevealItem delay={0.08}>
+                    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E8E0D2] bg-[#F5F3EC] px-3 py-1 text-xs font-semibold text-[#819477]">
+                      <Sparkles className="h-3.5 w-3.5 text-[#819477]" />
+                      <span>Sensory Match Engine Active</span>
+                    </span>
+                  </RevealItem>
+                  <RevealItem delay={0.15}>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#26382B] px-3 py-1 text-xs font-semibold text-[#F5F3EC]">
+                      <span>Canvas Protocol Active</span>
+                    </span>
+                  </RevealItem>
+                </div>
+                <RevealItem delay={0.2}>
+                  <h1 className="font-serif text-2xl font-bold tracking-tight text-[#20231F] sm:text-3xl lg:text-4xl">
+                    Find your next focus spot.
+                  </h1>
+                </RevealItem>
+                <RevealItem delay={0.28}>
+                  <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[#555D50]">
+                    Save a place, open its full profile, or compare spaces from the Canvas Action Dock.
+                  </p>
+                </RevealItem>
+              </div>
 
-          {/* Location Selector */}
-          <div className="p-4 rounded-2xl bg-[#F5F3EC]/80 border border-[#E8E0D2] flex flex-col gap-1.5 shrink-0">
-            <span className="text-[11px] font-semibold uppercase tracking-wider text-[#555D50] flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-[#819477]" />
-              <span>Current Search Region</span>
-            </span>
-            <select
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              className="bg-white py-1.5 px-3 rounded-xl border border-[#E8E0D2] text-xs font-semibold text-[#20231F] focus:outline-none focus:ring-2 focus:ring-[#819477]/40 cursor-pointer"
-            >
-              <option value="London (All Districts)">London (All Districts)</option>
-              <option value="Greenwich & Maritime">Greenwich &amp; Maritime</option>
-              <option value="Bloomsbury Academic">Bloomsbury Academic</option>
-              <option value="Shoreditch & Farringdon">Shoreditch &amp; Farringdon</option>
-              <option value="Fitzrovia & Soho">Fitzrovia &amp; Soho</option>
-            </select>
-          </div>
-        </div>
+              <RevealItem delay={0.36} className="w-full">
+                <div className="flex flex-col gap-1.5 rounded-2xl border border-[#E8E0D2] bg-[#F5F3EC]/80 p-4">
+                  <label htmlFor="search-region" className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-[#555D50]">
+                    <MapPin className="h-3.5 w-3.5 text-[#819477]" />
+                    <span>Current Search Region</span>
+                  </label>
+                  <select
+                    id="search-region"
+                    value={selectedLocation}
+                    onChange={(e) => setSelectedLocation(e.target.value)}
+                    className="w-full rounded-xl border border-[#E8E0D2] bg-white px-3 py-2 text-xs font-semibold text-[#20231F] focus:outline-none focus:ring-2 focus:ring-[#819477]/40"
+                  >
+                    <option value="London (All Districts)">London (All Districts)</option>
+                    <option value="Greenwich & Maritime">Greenwich &amp; Maritime</option>
+                    <option value="Bloomsbury Academic">Bloomsbury Academic</option>
+                    <option value="Shoreditch & Farringdon">Shoreditch &amp; Farringdon</option>
+                    <option value="Fitzrovia & Soho">Fitzrovia &amp; Soho</option>
+                  </select>
+                </div>
+              </RevealItem>
+            </div>
+          </CurtainReveal>
 
         {/* Discovery Filter Controls */}
+        <CurtainReveal delay={0.12} className="rounded-3xl">
         <DiscoveryFilters
           filters={filters}
-          onChange={setFilters}
+          onChange={(nextFilters) => {
+            setCinematicEntranceComplete(true);
+            setFilters(nextFilters);
+          }}
           onReset={handleResetFilters}
           totalMatches={processedVenues.length}
         />
+        </CurtainReveal>
 
         {/* Dynamic Quick Insights Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
+        <CurtainReveal delay={0.28} className="rounded-2xl">
+        <StaggerGrid delay={0.34} className="grid grid-cols-1 min-[520px]:grid-cols-2 gap-3.5 sm:gap-4 lg:grid-cols-4">
           <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E8E0D2] shadow-xs">
             <p className="text-xs font-medium text-[#555D50]">Matching Sanctuaries</p>
             <p className="text-2xl font-serif font-bold text-[#26382B] mt-1">
@@ -235,11 +272,12 @@ export default function DiscoverPage() {
             </p>
             <p className="text-[11px] text-[#819477] mt-0.5">Across current matches</p>
           </div>
-        </div>
+        </StaggerGrid>
+        </CurtainReveal>
 
         {/* View Controls & Sort Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
             <span className="text-sm font-semibold text-[#20231F]">
               Showing {processedVenues.length} spaces
             </span>
@@ -248,7 +286,7 @@ export default function DiscoverPage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {/* Sort Dropdown */}
             <div className="flex items-center gap-1.5 text-xs text-[#555D50]">
               <ArrowUpDown className="w-3.5 h-3.5 text-[#819477]" />
@@ -256,7 +294,7 @@ export default function DiscoverPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-white py-1 px-2.5 rounded-lg border border-[#E8E0D2] font-semibold text-[#20231F] focus:outline-none"
+                className="max-w-[min(13rem,55vw)] bg-white py-1 px-2.5 rounded-lg border border-[#E8E0D2] font-semibold text-[#20231F] focus:outline-none"
               >
                 <option value="score">Focus Fit (Highest)</option>
                 <option value="noise">Noise (Quietest)</option>
@@ -273,7 +311,7 @@ export default function DiscoverPage() {
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                   viewMode === "list"
                     ? "bg-[#26382B] text-[#F5F3EC]"
-                    : "text-[#555D50] hover:text-[#20231F]"
+                    : "liquid-hover text-[#555D50] hover:text-[#20231F]"
                 }`}
               >
                 <List className="w-3.5 h-3.5" />
@@ -285,7 +323,7 @@ export default function DiscoverPage() {
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                   viewMode === "map"
                     ? "bg-[#26382B] text-[#F5F3EC]"
-                    : "text-[#555D50] hover:text-[#20231F]"
+                    : "liquid-hover text-[#555D50] hover:text-[#20231F]"
                 }`}
               >
                 <MapIcon className="w-3.5 h-3.5" />
@@ -317,17 +355,24 @@ export default function DiscoverPage() {
           </div>
         ) : viewMode === "list" ? (
           /* Grid of Venue Cards */
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {processedVenues.map((venue) => (
+          <CurtainReveal delay={0.42} className="rounded-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {processedVenues.map((venue, index) => (
               <VenueCard
                 key={venue.id}
                 venue={venue}
+                index={index}
                 suitability={suitabilityMap[venue.id]}
                 selectedDay={filters.day}
                 selectedTime={filters.time}
+                isSelected={selectedVenueId === venue.id}
+                onSelect={setSelectedVenueId}
+                cinematicEntrance={!cinematicEntranceComplete}
+                entranceDelay={cinematicEntranceComplete ? 0 : 0.38}
               />
             ))}
           </div>
+          </CurtainReveal>
         ) : (
           /* Map View */
           <div className="space-y-6">
@@ -337,20 +382,31 @@ export default function DiscoverPage() {
               onSelectVenue={setSelectedVenueId}
             />
             {/* Accompanying condensed cards below map */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {processedVenues.map((venue) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+              {processedVenues.map((venue, index) => (
                 <VenueCard
                   key={venue.id}
                   venue={venue}
+                  index={index}
                   suitability={suitabilityMap[venue.id]}
                   selectedDay={filters.day}
                   selectedTime={filters.time}
+                  isSelected={selectedVenueId === venue.id}
+                  onSelect={setSelectedVenueId}
+                  cinematicEntrance={!cinematicEntranceComplete}
+                  entranceDelay={cinematicEntranceComplete ? 0 : 0.38}
                 />
               ))}
             </div>
           </div>
         )}
-      </div>
-    </AppShell>
+        </div>
+
+        {/* Canvas Protocol Dock & Overlays */}
+        <ActionCanvasDock mode="discover" />
+        <ComparisonDrawer />
+        <DropFeedbackToast />
+      </AppShell>
+    </CanvasProvider>
   );
 }

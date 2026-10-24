@@ -169,7 +169,7 @@ export default function Section06QuietWhen() {
             ? "A busier time in this profile."
             : "Check the available information before planning.";
 
-  // Section entrance and chart reveal.
+  // Section entrance and chart reveal + card-stacking over Section 05
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
@@ -179,6 +179,25 @@ export default function Section06QuietWhen() {
       media.add(
         "(prefers-reduced-motion: no-preference)",
         () => {
+          const discoveryEl = document.getElementById("discovery");
+
+          if (discoveryEl && sectionRef.current) {
+            ScrollTrigger.create({
+              trigger: discoveryEl,
+              start: "bottom bottom",
+              endTrigger: sectionRef.current,
+              end: "top top",
+              pin: true,
+              pinSpacing: false,
+              scrub: true,
+              animation: gsap.to(discoveryEl, {
+                scale: 0.965,
+                opacity: 0.8,
+                ease: "none",
+              }),
+            });
+          }
+
           gsap.from(".quiet-heading", {
             y: 22,
             opacity: 0,
@@ -316,7 +335,7 @@ export default function Section06QuietWhen() {
     <section
       id="quiet-when"
       ref={sectionRef}
-      className="relative z-20 w-full overflow-hidden rounded-t-[28px] sm:rounded-t-[36px] lg:rounded-t-[44px] border-t border-[#E3E0D7] bg-[#F4F1E8] shadow-[0_-24px_50px_rgba(15,28,20,0.35)] px-5 py-14 text-[#252B26] sm:px-8 sm:py-16 lg:px-12 lg:py-20"
+      className="relative z-20 w-full overflow-hidden rounded-t-[32px] sm:rounded-t-[44px] lg:rounded-t-[54px] border-t border-[#819478]/40 bg-[#F4F1E8] shadow-[0_-28px_60px_rgba(15,28,20,0.38)] px-5 py-14 text-[#252B26] sm:px-8 sm:py-16 lg:px-12 lg:py-20"
     >
       <div className="mx-auto max-w-7xl">
         {/* Short, user-friendly introduction */}
@@ -326,7 +345,7 @@ export default function Section06QuietWhen() {
               <Clock className="h-3.5 w-3.5 text-[#263D31]" />
 
               <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.17em] text-[#263D31]">
-                Section 06 · Quiet When
+                Hourly Acoustic Forecast · Quiet Windows
               </span>
             </div>
 
@@ -762,25 +781,6 @@ export default function Section06QuietWhen() {
         </div>
       </div>
 
-      <style jsx>{`
-        .quiet-scroll {
-          scrollbar-width: thin;
-          scrollbar-color: #bdc9af #f1f4eb;
-        }
-
-        .quiet-scroll::-webkit-scrollbar {
-          height: 4px;
-        }
-
-        .quiet-scroll::-webkit-scrollbar-track {
-          background: #f1f4eb;
-        }
-
-        .quiet-scroll::-webkit-scrollbar-thumb {
-          background: #bdc9af;
-          border-radius: 999px;
-        }
-      `}</style>
     </section>
   );
 }
