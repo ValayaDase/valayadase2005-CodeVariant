@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { Compass, Menu, X, ArrowUpRight } from "lucide-react";
 
@@ -31,7 +32,7 @@ export default function Navbar() {
     <>
       {/* Floating persistent navigation header - reveals smoothly once user scrolls past hero */}
       <header
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl transition-all duration-400 ease-out ${
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-6xl transition-all duration-400 ease-out ${
           scrolled
             ? "translate-y-0 opacity-100 pointer-events-auto"
             : "-translate-y-24 opacity-0 pointer-events-none"
@@ -47,7 +48,7 @@ export default function Navbar() {
           </a>
 
           {/* Nav links */}
-          <nav className="hidden md:flex items-center space-x-5 lg:space-x-6 text-[11px] font-mono uppercase tracking-[0.15em] text-[#E3EBDD]/80">
+          <nav className="hidden lg:flex items-center space-x-4 xl:space-x-5 text-[11px] font-mono uppercase tracking-[0.14em] text-[#E3EBDD]/80">
             {navLinks.map((link) => (
               <a
                 key={link.label}
@@ -59,22 +60,29 @@ export default function Navbar() {
             ))}
           </nav>
 
-          {/* Right CTA */}
-          <div className="flex items-center space-x-3">
-            <a
-              href="#discovery"
-              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] transition-colors"
+          {/* Right Actions: Sign In + App Launch */}
+          <div className="flex items-center space-x-2.5">
+            <Link
+              href="/sign-in"
+              className="hidden sm:inline-block text-[11px] font-mono uppercase tracking-wider text-[#E3EBDD] hover:text-white px-2.5 py-1 transition-colors"
             >
-              <span>Explore</span>
+              Sign In
+            </Link>
+
+            <Link
+              href="/discover"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] transition-colors shadow-sm"
+            >
+              <span>Launch App</span>
               <ArrowUpRight className="w-3 h-3" />
-            </a>
+            </Link>
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1 text-[#FCFBF7] hover:text-[#819478]"
+              className="lg:hidden p-1 text-[#FCFBF7] hover:text-[#819478]"
               aria-label="Toggle menu"
             >
-              <Menu className="w-4 h-4" />
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
         </div>
@@ -90,7 +98,7 @@ export default function Navbar() {
           >
             <X className="w-6 h-6" />
           </button>
-          <div className="flex flex-col space-y-4 flex-1">
+          <div className="flex flex-col space-y-3 flex-1 overflow-y-auto">
             <p className="text-[11px] uppercase tracking-[0.25em] text-[#819478] font-mono font-bold">
               Navigation Chapters
             </p>
@@ -99,21 +107,28 @@ export default function Navbar() {
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="font-editorial text-2xl text-[#FCFBF7] hover:text-[#819478] transition-colors"
+                className="font-editorial text-xl text-[#FCFBF7] hover:text-[#819478] transition-colors"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          <div className="pt-6 border-t border-[#819478]/30">
-            <a
-              href="#discovery"
+          <div className="pt-5 border-t border-[#819478]/30 flex flex-col gap-2.5">
+            <Link
+              href="/sign-in"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full text-center py-2 text-xs font-mono uppercase text-[#E3EBDD] hover:text-white"
+            >
+              Sign In (Demo)
+            </Link>
+            <Link
+              href="/discover"
               onClick={() => setMobileMenuOpen(false)}
               className="block w-full text-center py-3 rounded-full bg-[#FCFBF7] text-[#263D31] text-xs font-mono uppercase font-bold tracking-wider"
             >
-              Explore Discovery Map
-            </a>
+              Launch App
+            </Link>
           </div>
         </div>
       )}
