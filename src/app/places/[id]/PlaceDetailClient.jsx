@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -17,26 +17,80 @@ import QuietWhenPanel from "@/components/app/QuietWhenPanel";
 import CommunityReportForm from "@/components/app/CommunityReportForm";
 import {
   getVenueById,
-  toggleSavedVenue,
-  isVenueSaved,
 } from "@/lib/discovery/venue-data";
+import { backendRequest, getDemoUserId } from "@/lib/backend";
 import { calculateSuitability } from "@/lib/scoring/suitability";
 import LoadingLottie from "@/components/common/LoadingLottie";
 
 export default function PlaceDetailClient({ id }) {
   const [venue, setVenue] = useState(() => (id ? getVenueById(id) : null));
-  const [saved, setSaved] = useState(() => (id ? isVenueSaved(id) : false));
+  const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState("");
   const [imgError, setImgError] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
-  const handleToggleSave = () => {
+  useEffect(() => {
+    if (!id) return;
+    let active = true;
+    const userId = getDemoUserId();
+    backendRequest(`/api/saved/${userId}`)
+      .then(({ venueIds }) => active && setSaved(venueIds.includes(id)))
+      .catch(() => active && setSaveError("Saved places are unavailable while the backend is offline."));
+    backendRequest(`/api/venues/${id}/reports`)
+      .then(({ reports }) => {
+        if (!active || !reports.length) return;
+        setVenue((current) => current ? ({
+          ...current,
+          sampleReports: reports.map((report) => ({
+            id: report._id,
+            author: "Spotwise guest",
+            timestamp: new Date(report.createdAt).toLocaleString(),
+            crowd: report.crowd,
+            noise: report.noise,
+            wifi: report.wifi,
+            outlets: report.outlets,
+            note: report.note,
+          })),
+        }) : current);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [id]);
+
+  const handleToggleSave = async () => {
     if (!venue) return;
-    const nextSaved = toggleSavedVenue(venue.id);
-    setSaved(nextSaved);
+    setSaveError("");
+    try {
+      const nextSaved = !saved;
+      await backendRequest(`/api/saved/${venue.id}`, {
+        method: "PUT",
+        body: JSON.stringify({ userId: getDemoUserId(), saved: nextSaved }),
+      });
+      setSaved(nextSaved);
+    } catch {
+      setSaveError("Could not update saved places. Check that the backend and database are running.");
+    }
   };
 
-  const handleReportSaved = () => {
-    setVenue(getVenueById(venue.id));
+  const handleReportSaved = async () => {
+    try {
+      const { reports } = await backendRequest(`/api/venues/${venue.id}/reports`);
+      setVenue((current) => current ? ({
+        ...current,
+        sampleReports: reports.map((report) => ({
+          id: report._id,
+          author: "Spotwise guest",
+          timestamp: new Date(report.createdAt).toLocaleString(),
+          crowd: report.crowd,
+          noise: report.noise,
+          wifi: report.wifi,
+          outlets: report.outlets,
+          note: report.note,
+        })),
+      }) : current);
+    } catch {
+      setSaveError("Report saved, but the report history could not refresh.");
+    }
     setShowReportModal(false);
   };
 
@@ -219,7 +273,7 @@ export default function PlaceDetailClient({ id }) {
                     Community Telemetry Feed
                   </h2>
                   <p className="text-xs text-[#555D50] mt-0.5">
-                    Peer-reported sensory telemetry from verified nomads
+                    Recent reports shared by the Spotwise community
                   </p>
                 </div>
                 <button
@@ -300,6 +354,7 @@ export default function PlaceDetailClient({ id }) {
             </div>
           </div>
         </div>
+        {saveError && <p role="status" className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900">{saveError}</p>}
 
         {/* Quiet When Full Hourly Telemetry Curve */}
         <QuietWhenPanel

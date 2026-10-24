@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ClipboardList,
@@ -12,10 +12,17 @@ import {
   MapPin,
 } from "lucide-react";
 import AppShell from "@/components/app/AppShell";
-import { getAllReports } from "@/lib/discovery/venue-data";
+import { backendRequest } from "@/lib/backend";
 
 export default function ReportsHistoryPage() {
-  const [reports] = useState(() => getAllReports());
+  const [reports, setReports] = useState([]);
+  const [backendError, setBackendError] = useState("");
+
+  useEffect(() => {
+    backendRequest("/api/reports")
+      .then(({ reports: latest }) => setReports(latest))
+      .catch(() => setBackendError("Community reports could not be loaded from the backend."));
+  }, []);
 
   return (
     <AppShell
@@ -23,6 +30,7 @@ export default function ReportsHistoryPage() {
       subtitle="Your contributions to the Spotwise distributed sensory network."
     >
       <div className="space-y-6 text-left">
+        {backendError && <p role="status" className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900">{backendError}</p>}
         {/* Header Banner */}
         <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
@@ -34,7 +42,7 @@ export default function ReportsHistoryPage() {
               Submitted Reports ({reports.length})
             </h1>
             <p className="text-xs sm:text-sm text-[#555D50] mt-1">
-              Real-time crowd and acoustic telemetry updates recorded in your local browser session.
+              Reports submitted by the Spotwise community.
             </p>
           </div>
 

@@ -1,15 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Bookmark, Compass, ArrowRight } from "lucide-react";
 import AppShell from "@/components/app/AppShell";
 import VenueCard from "@/components/app/VenueCard";
-import { getSavedVenues } from "@/lib/discovery/venue-data";
 import { calculateSuitability } from "@/lib/scoring/suitability";
+import { backendRequest, getDemoUserId } from "@/lib/backend";
+import { getAllVenues } from "@/lib/discovery/venue-data";
 
 export default function SavedPlacesPage() {
-  const [savedVenues] = useState(() => getSavedVenues());
+  const [savedVenues, setSavedVenues] = useState([]);
+  const [backendError, setBackendError] = useState("");
+
+  useEffect(() => {
+    backendRequest(`/api/saved/${getDemoUserId()}`)
+      .then(({ venueIds }) => {
+        const saved = new Set(venueIds);
+        setSavedVenues(getAllVenues().filter((venue) => saved.has(venue.id)));
+      })
+      .catch(() => setBackendError("Saved places could not be loaded from the backend."));
+  }, []);
 
   return (
     <AppShell
@@ -17,6 +28,7 @@ export default function SavedPlacesPage() {
       subtitle="Your personal collection of bookmarked focus sanctuaries."
     >
       <div className="space-y-6 text-left">
+        {backendError && <p role="status" className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900">{backendError}</p>}
         {/* Header summary */}
         <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] flex items-center justify-between">
           <div>

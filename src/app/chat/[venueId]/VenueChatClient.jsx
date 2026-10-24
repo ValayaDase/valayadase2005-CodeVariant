@@ -28,7 +28,7 @@ export default function VenueChatClient({ venueId }) {
           </Link>
 
           <span className="text-[11px] font-semibold uppercase tracking-wider text-[#819477] px-3 py-1 rounded-full bg-white border border-[#E8E0D2]">
-            Local Demo Messaging
+            Shared Venue Chat
           </span>
         </div>
 
@@ -40,8 +40,7 @@ export default function VenueChatClient({ venueId }) {
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#819477] shrink-0" />
             <span>
-              Messages in this prototype are persisted locally to your browser session.
-              A future release connects this to our shared community WebSocket server.
+              Messages are saved to the Spotwise database and shared with people in this venue chat. Guest names are demo identities.
             </span>
           </div>
         </div>

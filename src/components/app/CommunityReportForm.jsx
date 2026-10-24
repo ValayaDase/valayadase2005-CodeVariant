@@ -11,7 +11,7 @@ import {
   Wifi,
   Zap,
 } from "lucide-react";
-import { saveVenueReport } from "@/lib/discovery/venue-data";
+import { backendRequest } from "@/lib/backend";
 
 export default function CommunityReportForm({ venueId, venueName, onReportSubmitted }) {
   const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -38,13 +38,23 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
 
     setIsSubmitting(true);
     try {
-      const saved = saveVenueReport(venueId, formData);
+      const { report } = await backendRequest(`/api/venues/${venueId}/reports`, {
+        method: "POST",
+        body: JSON.stringify(formData),
+      });
+      const saved = {
+        ...report,
+        id: report._id,
+        author: "Spotwise guest",
+        timestamp: "Just now",
+        timestampIso: report.createdAt,
+      };
       setSuccess(true);
       setIsSubmitting(false);
       if (onReportSubmitted) onReportSubmitted(saved);
       setTimeout(() => setSuccess(false), 4000);
     } catch {
-      setError("Failed to save report locally.");
+      setError("Could not save your report. Check that the backend and database are running.");
       setIsSubmitting(false);
     }
   };
@@ -66,7 +76,7 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
           </h3>
         </div>
         <span className="text-xs font-mono text-[#819477] px-2.5 py-1 rounded-full bg-[#EBF0E9]">
-          Local Demo Session
+          Shared Community
         </span>
       </div>
 
@@ -74,7 +84,7 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
         <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs text-emerald-800 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>
-            Thank you! Your verified community report has been recorded locally and updated venue telemetry.
+            Thank you! Your report has been saved for the Spotwise community.
           </span>
         </div>
       )}
@@ -191,7 +201,7 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
       {/* Submit button */}
       <div className="flex items-center justify-between pt-2">
         <p className="text-[11px] text-[#555D50]">
-          * Stored locally in this browser session. Verified against community consensus.
+          Comments are community observations and are not verified facts.
         </p>
         <button
           type="submit"
