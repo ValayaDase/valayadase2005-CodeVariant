@@ -6,14 +6,9 @@ import {
   MapPin,
   ArrowDown,
   Radio,
-  Volume2,
-  Plug,
-  Clock3,
-  Users,
 } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import TurningPointDepth from "@/components/three/TurningPointDepth";
 
 const PLACES = [
   {
@@ -22,23 +17,21 @@ const PLACES = [
     label: "Quiet Sanctuary",
     noise: "36 dB",
     details: "98% Focus Match · 100% Sockets",
-    description: "A quieter setting for focused work.",
-    accent: "#263D31",
+    explanation: "A quieter setting for focused work.",
+    color: "#263D31",
     soft: "#E3EBDD",
     icon: MapPin,
-    detailIcon: Plug,
   },
   {
-    id: "variable",
+    id: "caution",
     name: "Amber Courtyard",
     label: "Caution Variable",
     noise: "58 dB",
     details: "74% Focus Match · Morning Only",
-    description: "Conditions can change with the time.",
-    accent: "#986334",
-    soft: "#F3E9DA",
+    explanation: "Suitability can change with the time.",
+    color: "#986334",
+    soft: "#F3E8D9",
     icon: Radio,
-    detailIcon: Clock3,
   },
   {
     id: "crowded",
@@ -46,129 +39,83 @@ const PLACES = [
     label: "Crowded Warning",
     noise: "67 dB",
     details: "89% Occupancy · High Echo",
-    description: "A busier setting may interrupt focus.",
-    accent: "#A15D47",
-    soft: "#F2E5DF",
-    icon: Users,
-    detailIcon: Users,
+    explanation: "A busier setting may interrupt focus.",
+    color: "#A15D47",
+    soft: "#F1E2DB",
+    icon: MapPin,
   },
 ];
 
-function createContour(radius, phase) {
-  const points = [];
+// Deterministic decorative points, not geographic locations.
+const SIGNAL_POINTS = Array.from({ length: 21 }, (_, index) => ({
+  x: 95 + (index % 7) * 135,
+  y: 130 + Math.floor(index / 7) * 165,
+  offsetX: ((index * 37) % 110) - 55,
+  offsetY: ((index * 23) % 90) - 45,
+}));
 
-  for (let i = 0; i < 90; i += 1) {
-    const angle = (i / 90) * Math.PI * 2;
-
-    const offset =
-      1 +
-      Math.sin(angle * 3 + phase) * 0.07 +
-      Math.cos(angle * 5 - phase) * 0.035;
-
-    const x = 500 + Math.cos(angle) * radius * offset;
-    const y = 300 + Math.sin(angle) * radius * 0.56 * offset;
-
-    points.push(
-      `${i === 0 ? "M" : "L"}${x.toFixed(2)},${y.toFixed(2)}`
-    );
-  }
-
-  return `${points.join(" ")} Z`;
-}
-
-const CONTOURS = Array.from({ length: 8 }, (_, index) =>
-  createContour(85 + index * 47, index * 0.12)
-);
-
-function PlaceCard({ place, index }) {
+function EnvironmentCard({ place }) {
   const Icon = place.icon;
-  const DetailIcon = place.detailIcon;
 
   return (
-    <article className="place-card relative min-w-0 pl-10 md:pl-0">
-      {/* Coordinate node */}
-      <div className="absolute left-0 top-6 flex h-7 w-7 items-center justify-center md:relative md:left-auto md:top-auto md:mx-auto md:mb-4">
+    <article className="environment-card min-w-0">
+      {/* Entrance transforms remain separate from hover transforms. */}
+      <div
+        className="environment-surface relative flex h-full overflow-hidden rounded-2xl border bg-[#FCFBF7]/95 p-5 text-left shadow-[0_8px_24px_rgba(38,61,49,0.05)] transition-shadow duration-300 hover:shadow-[0_12px_32px_rgba(38,61,49,0.09)]"
+        style={{
+          borderColor: `${place.color}40`,
+        }}
+      >
         <span
-          className="node-halo absolute inset-0 rounded-full border opacity-40"
+          className="card-edge absolute inset-x-0 top-0 h-[2px] origin-left"
           style={{
-            borderColor: place.accent,
-            backgroundColor: place.soft,
+            backgroundColor: place.color,
           }}
           aria-hidden="true"
         />
 
+        {/* One restrained sweep during reveal, not a looping effect. */}
         <span
-          className="coordinate-dot relative h-2 w-2 rounded-full"
-          style={{ backgroundColor: place.accent }}
+          className="card-sheen pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-[#E3EBDD]/70 to-transparent"
+          style={{
+            transform: "translateX(-110%) skewX(-18deg)",
+          }}
           aria-hidden="true"
         />
-      </div>
 
-      <div className="card-shell h-full">
-        <div
-          className="relative h-full overflow-hidden rounded-[22px] border bg-[#FCFBF7]/95 p-5 shadow-[0_10px_28px_rgba(38,61,49,0.05)] sm:p-6"
-          style={{
-            borderColor: `${place.accent}35`,
-          }}
-        >
-          <div
-            className="card-accent absolute inset-x-0 top-0 h-[2px] origin-left"
-            style={{ backgroundColor: place.accent }}
-            aria-hidden="true"
-          />
+        <div className="relative flex w-full items-start gap-3.5">
+          <span
+            className="condition-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
+            style={{
+              backgroundColor: place.soft,
+              color: place.color,
+            }}
+          >
+            <Icon className="h-4 w-4" />
+          </span>
 
-          <div className="mb-4 flex items-center justify-between">
-            <span
-              className="flex h-9 w-9 items-center justify-center rounded-xl"
+          <div className="min-w-0 flex-1">
+            <p
+              className="font-mono text-[9px] font-semibold uppercase leading-relaxed tracking-[0.1em]"
               style={{
-                color: place.accent,
-                backgroundColor: place.soft,
+                color: place.color,
               }}
             >
-              <Icon className="h-4 w-4" />
-            </span>
+              {place.label} · {place.noise}
+            </p>
 
-            <span className="font-mono text-[8px] tracking-[0.12em] text-[#929A88]">
-              NODE 0{index + 1}
-            </span>
+            <h3 className="mt-1.5 font-editorial text-xl leading-tight tracking-tight text-[#252B26]">
+              {place.name}
+            </h3>
+
+            <p className="mt-2 font-mono text-[10px] leading-relaxed text-[#6C7168]">
+              {place.details}
+            </p>
+
+            <p className="mt-3 border-t border-[#E3E7DA] pt-3 text-xs leading-relaxed text-[#7A8370]">
+              {place.explanation}
+            </p>
           </div>
-
-          <p
-            className="mb-2 font-mono text-[9px] font-semibold uppercase tracking-[0.12em]"
-            style={{ color: place.accent }}
-          >
-            {place.label}
-          </p>
-
-          <h3 className="font-editorial text-[23px] leading-tight tracking-tight text-[#252B26]">
-            {place.name}
-          </h3>
-
-          <div className="my-4 flex items-center justify-between gap-3 rounded-xl bg-[#F2F5ED] px-3 py-2.5">
-            <span className="flex items-center gap-1.5 text-[#78836D]">
-              <Volume2 className="h-3 w-3" />
-
-              <span className="font-mono text-[8px] uppercase tracking-wider">
-                Demo noise
-              </span>
-            </span>
-
-            <span
-              className="font-editorial text-2xl"
-              style={{ color: place.accent }}
-            >
-              {place.noise}
-            </span>
-          </div>
-
-          <p className="flex items-start gap-2 text-[10px] leading-relaxed text-[#68755D]">
-            <DetailIcon className="mt-0.5 h-3 w-3 shrink-0" />
-            <span>{place.details}</span>
-          </p>
-
-          <p className="mt-3 border-t border-[#E4E8DB] pt-3 text-xs leading-relaxed text-[#7B8471]">
-            {place.description}
-          </p>
         </div>
       </div>
     </article>
@@ -177,8 +124,6 @@ function PlaceCard({ place, index }) {
 
 export default function Section03TurningPoint() {
   const sectionRef = useRef(null);
-  const depthProgressRef = useRef({ value: 0 });
-  const depthApiRef = useRef(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -197,31 +142,86 @@ export default function Section03TurningPoint() {
           const { desktop, reduceMotion } = context.conditions;
           const select = gsap.utils.selector(sectionRef);
 
+          // No hidden initial JSX states:
+          // content stays readable when motion is disabled.
           if (reduceMotion) return;
 
-          const header = gsap.timeline({
+          const header = select(".turning-header")[0];
+          const stage = select(".environment-stage")[0];
+          const cards = select(".environment-card");
+          const points = select(".signal-point");
+
+          // 1. UNcertainty -> organized background points.
+          const background = gsap.timeline({
             scrollTrigger: {
-              trigger: ".turning-header",
-              start: "top 90%",
-              end: "top 35%",
-              scrub: 0.65,
+              trigger: sectionRef.current,
+              start: "top 95%",
+              end: "center center",
+              scrub: 0.8,
               invalidateOnRefresh: true,
             },
           });
 
-          header
+          points.forEach((point, index) => {
+            const settings = SIGNAL_POINTS[index];
+
+            background.fromTo(
+              point,
+              {
+                x: settings.offsetX,
+                y: settings.offsetY,
+                opacity: 0.04,
+              },
+              {
+                x: 0,
+                y: 0,
+                opacity: 0.24,
+                duration: 1,
+                ease: "power2.out",
+              },
+              index * 0.012
+            );
+          });
+
+          background.fromTo(
+            select(".signal-line"),
+            {
+              strokeDashoffset: 1,
+              opacity: 0,
+            },
+            {
+              strokeDashoffset: 0,
+              opacity: 0.28,
+              duration: 1.15,
+              ease: "none",
+            },
+            0.2
+          );
+
+          // 2. Question revealed through two clean masks.
+          const headline = gsap.timeline({
+            scrollTrigger: {
+              trigger: header,
+              start: "top 92%",
+              end: "top 38%",
+              scrub: 0.6,
+              invalidateOnRefresh: true,
+            },
+          });
+
+          headline
             .from(
               select(".turning-badge"),
               {
                 y: 10,
-                opacity: 0.3,
+                opacity: 0.35,
                 duration: 0.5,
                 ease: "power2.out",
               },
               0
             )
             .fromTo(
-              select(".title-line"),
+              select(".headline-line"),
               {
                 yPercent: 108,
                 opacity: 0,
@@ -229,11 +229,21 @@ export default function Section03TurningPoint() {
               {
                 yPercent: 0,
                 opacity: 1,
-                duration: 0.9,
+                duration: 0.95,
                 stagger: 0.1,
                 ease: "power3.out",
               },
               0.05
+            )
+            .from(
+              select(".headline-highlight"),
+              {
+                scaleX: 0,
+                transformOrigin: "left center",
+                duration: 0.7,
+                ease: "power2.inOut",
+              },
+              0.55
             )
             .from(
               select(".turning-copy"),
@@ -243,68 +253,30 @@ export default function Section03TurningPoint() {
                 duration: 0.7,
                 ease: "power2.out",
               },
-              0.35
+              0.4
             );
 
-          gsap.fromTo(
-            select(".contour-fallback"),
-            {
-              scale: 0.92,
-              opacity: 0.1,
-            },
-            {
-              scale: 1.06,
-              opacity: 0.22,
-              ease: "none",
-              scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.9,
-              },
-            }
-          );
-
-          // Updates the optional Three.js layer without React rerenders.
-          gsap.fromTo(
-            depthProgressRef.current,
-            { value: 0 },
-            {
-              value: 1,
-              ease: "none",
-              onUpdate: () => {
-                depthApiRef.current?.render();
-              },
-              scrollTrigger: {
-                trigger: sectionRef.current,
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.9,
-                invalidateOnRefresh: true,
-              },
-            }
-          );
-
-          const cards = select(".place-card");
-
+          // 3. Environment information appears in a connected sequence.
           if (desktop) {
-            const connection = gsap.timeline({
+            const reveal = gsap.timeline({
               scrollTrigger: {
-                trigger: ".coordinates-stage",
-                start: "top 92%",
-                end: "top 35%",
-                scrub: 0.7,
+                trigger: stage,
+                start: "top 94%",
+                end: "top 44%",
+                scrub: 0.65,
                 invalidateOnRefresh: true,
               },
             });
 
-            connection.fromTo(
-              select(".desktop-connector"),
+            reveal.fromTo(
+              select(".card-connector"),
               {
                 strokeDashoffset: 1,
+                opacity: 0,
               },
               {
                 strokeDashoffset: 0,
+                opacity: 0.55,
                 duration: 1.3,
                 ease: "none",
               },
@@ -312,91 +284,89 @@ export default function Section03TurningPoint() {
             );
 
             cards.forEach((card, index) => {
-              const start = index * 0.33;
+              const start = index * 0.25;
 
-              connection
+              reveal
                 .fromTo(
-                  card.querySelector(".coordinate-dot"),
-                  { scale: 0.3, opacity: 0 },
+                  card,
                   {
-                    scale: 1,
-                    opacity: 1,
-                    duration: 0.35,
-                    ease: "power2.out",
+                    y: 22,
+                    scale: 0.98,
+                    opacity: 0,
                   },
-                  start
-                )
-                .fromTo(
-                  card.querySelector(".node-halo"),
-                  { scale: 0.6, opacity: 0 },
-                  {
-                    scale: 1,
-                    opacity: 0.4,
-                    duration: 0.5,
-                    ease: "power2.out",
-                  },
-                  start
-                )
-                .fromTo(
-                  card.querySelector(".card-shell"),
-                  { y: 20, scale: 0.98, opacity: 0 },
                   {
                     y: 0,
                     scale: 1,
                     opacity: 1,
-                    duration: 0.75,
+                    duration: 0.8,
                     ease: "power3.out",
                   },
-                  start + 0.08
+                  start
+                )
+                .from(
+                  card.querySelector(".card-edge"),
+                  {
+                    scaleX: 0,
+                    duration: 0.65,
+                    ease: "power2.inOut",
+                  },
+                  start + 0.15
+                )
+                .fromTo(
+                  card.querySelector(".card-sheen"),
+                  {
+                    xPercent: -110,
+                    skewX: -18,
+                  },
+                  {
+                    xPercent: 420,
+                    skewX: -18,
+                    duration: 0.9,
+                    ease: "power2.inOut",
+                  },
+                  start + 0.2
                 );
             });
           } else {
-            gsap.from(
-              select(".mobile-connector"),
-              {
-                scaleY: 0,
-                transformOrigin: "top center",
-                ease: "none",
-                scrollTrigger: {
-                  trigger: ".coordinates-stage",
-                  start: "top 85%",
-                  end: "bottom 65%",
-                  scrub: 0.65,
-                },
-              }
-            );
-
             cards.forEach((card) => {
               const reveal = gsap.timeline({
                 scrollTrigger: {
                   trigger: card,
-                  start: "top 93%",
+                  start: "top 94%",
                   toggleActions: "play none none reverse",
                 },
               });
 
               reveal
-                .from(card.querySelector(".card-shell"), {
-                  y: 20,
-                  opacity: 0,
-                  duration: 0.75,
-                  ease: "power3.out",
-                })
                 .from(
-                  card.querySelector(".coordinate-dot"),
+                  card,
                   {
-                    scale: 0,
+                    y: 20,
                     opacity: 0,
-                    duration: 0.4,
-                    ease: "power2.out",
+                    duration: 0.75,
+                    ease: "power3.out",
                   },
                   0
                 )
                 .from(
-                  card.querySelector(".card-accent"),
+                  card.querySelector(".card-edge"),
                   {
                     scaleX: 0,
                     duration: 0.6,
+                    ease: "power2.inOut",
+                  },
+                  0.15
+                )
+                .fromTo(
+                  card.querySelector(".card-sheen"),
+                  {
+                    xPercent: -110,
+                    skewX: -18,
+                  },
+                  {
+                    xPercent: 420,
+                    skewX: -18,
+                    duration: 0.9,
                     ease: "power2.inOut",
                   },
                   0.15
@@ -404,16 +374,19 @@ export default function Section03TurningPoint() {
             });
           }
 
-          // The original CTA remains visible and clickable.
+          // 4. Same CTA, subtle reveal, always clickable.
           gsap.fromTo(
             select(".turning-cta"),
-            { y: 10, opacity: 0.7 },
+            {
+              y: 10,
+              opacity: 0.7,
+            },
             {
               y: 0,
               opacity: 1,
               ease: "none",
               scrollTrigger: {
-                trigger: ".turning-footer",
+                trigger: select(".turning-footer")[0],
                 start: "top 98%",
                 end: "top 82%",
                 scrub: 0.4,
@@ -436,45 +409,59 @@ export default function Section03TurningPoint() {
       ref={sectionRef}
       className="relative z-20 isolate flex min-h-[92svh] w-full flex-col items-center justify-center overflow-hidden border-t border-[#E3E0D7] bg-[#F4F1E8] px-5 py-14 sm:px-8 sm:py-16 lg:px-12 lg:py-20"
     >
-      {/* Optional terrain enhancement, never a functional map */}
-      <TurningPointDepth
-        progressRef={depthProgressRef}
-        apiRef={depthApiRef}
-      />
-
-      {/* Always available on mobile and when WebGL is unavailable */}
+      {/* Light atmospheric background. No canvas or Three.js. */}
       <div
-        className="pointer-events-none absolute inset-0 -z-20 overflow-hidden"
-        aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 1000 600"
-          preserveAspectRatio="xMidYMid slice"
-          className="contour-fallback h-full w-full text-[#819478] opacity-15"
-          fill="none"
-        >
-          {CONTOURS.map((path, index) => (
-            <path
-              key={index}
-              d={path}
-              stroke="currentColor"
-              strokeWidth={index % 3 === 0 ? 1 : 0.65}
-            />
-          ))}
-        </svg>
-      </div>
-
-      {/* Keeps text readable over the terrain; always light */}
-      <div
-        className="pointer-events-none absolute inset-0 -z-10"
+        className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "linear-gradient(180deg, rgba(244,241,232,0.92) 0%, rgba(244,241,232,0.72) 30%, rgba(244,241,232,0.8) 70%, rgba(244,241,232,0.96) 100%)",
+            "radial-gradient(ellipse at 50% 45%, rgba(227,235,221,0.95) 0%, rgba(244,241,232,0.7) 48%, #FCFBF7 100%)",
         }}
         aria-hidden="true"
       />
 
-      <div className="relative w-full max-w-5xl">
+      {/* Abstract coordinate illustration, not a real map. */}
+      <svg
+        viewBox="0 0 1000 600"
+        preserveAspectRatio="xMidYMid slice"
+        className="pointer-events-none absolute inset-0 z-0 h-full w-full text-[#819478]"
+        fill="none"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <path
+          className="signal-line"
+          d="M-50 430 C170 430 160 180 360 240 S620 470 770 300 S930 150 1080 180"
+          stroke="currentColor"
+          strokeWidth="0.8"
+          pathLength="1"
+          strokeDasharray="1"
+          opacity="0.18"
+        />
+
+        {SIGNAL_POINTS.map((point, index) => (
+          <circle
+            key={index}
+            className="signal-point"
+            cx={point.x}
+            cy={point.y}
+            r={index % 4 === 0 ? 2.5 : 1.5}
+            fill="currentColor"
+            opacity="0.16"
+          />
+        ))}
+      </svg>
+
+      {/* Quiet centre for readable text */}
+      <div
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          background:
+            "radial-gradient(ellipse at 50% 28%, rgba(244,241,232,0.94) 0%, rgba(244,241,232,0.65) 28%, transparent 70%)",
+        }}
+        aria-hidden="true"
+      />
+
+      <div className="relative z-10 w-full max-w-5xl">
         <header className="turning-header mx-auto flex max-w-4xl flex-col items-center text-center">
           <div className="turning-badge mb-5 inline-flex items-center gap-2 rounded-full border border-[#819478]/40 bg-[#FCFBF7] px-3.5 py-1.5 shadow-sm">
             <Sparkles className="h-3.5 w-3.5 text-[#263D31]" />
@@ -486,14 +473,21 @@ export default function Section03TurningPoint() {
 
           <h2 className="font-editorial text-[clamp(2.25rem,5.8vw,4.5rem)] leading-[1.08] tracking-tight text-[#252B26]">
             <span className="block overflow-hidden pb-[0.12em]">
-              <span className="title-line block">
+              <span className="headline-line block">
                 What if you knew
               </span>
             </span>
 
-            <span className="-mt-[0.08em] block overflow-hidden pb-[0.15em]">
-              <span className="title-line block italic text-[#60774F]">
-                before you arrived?
+            <span className="-mt-[0.08em] block overflow-hidden pb-[0.16em]">
+              <span className="headline-line relative inline-block italic text-[#60774F]">
+                <span
+                  className="headline-highlight absolute bottom-[0.02em] left-0 right-0 h-[0.13em] rounded-full bg-[#CCD9BF]/70"
+                  aria-hidden="true"
+                />
+
+                <span className="relative">
+                  before you arrived?
+                </span>
               </span>
             </span>
           </h2>
@@ -504,50 +498,42 @@ export default function Section03TurningPoint() {
           </p>
         </header>
 
-        <div className="coordinates-stage relative mt-8 sm:mt-10">
-          {/* Desktop connection between the three nodes */}
+        {/* Original three-card structure */}
+        <div className="environment-stage relative mt-9 sm:mt-11">
           <svg
-            viewBox="0 0 1000 60"
+            viewBox="0 0 1000 80"
             preserveAspectRatio="none"
-            className="pointer-events-none absolute inset-x-0 top-0 hidden h-7 w-full md:block"
+            className="pointer-events-none absolute -top-5 left-0 hidden h-12 w-full md:block"
             fill="none"
             aria-hidden="true"
+            focusable="false"
           >
             <path
-              className="desktop-connector"
-              d="M166 30 C270 5 390 55 500 30 S720 5 834 30"
+              className="card-connector"
+              d="M165 65 C270 5 390 5 500 65 C610 5 730 5 835 65"
               stroke="#819478"
-              strokeWidth="1.2"
+              strokeWidth="1"
               pathLength="1"
               strokeDasharray="1"
+              opacity="0.4"
               vectorEffect="non-scaling-stroke"
             />
           </svg>
 
-          {/* Mobile connection along the stacked cards */}
-          <div
-            className="mobile-connector pointer-events-none absolute bottom-7 left-[13px] top-7 w-px bg-[#819478]/40 md:hidden"
-            aria-hidden="true"
-          />
-
-          <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-3 md:gap-4 lg:gap-5">
-            {PLACES.map((place, index) => (
-              <PlaceCard
-                key={place.id}
-                place={place}
-                index={index}
-              />
+          <div className="relative grid grid-cols-1 items-stretch gap-4 md:grid-cols-3 lg:gap-5">
+            {PLACES.map((place) => (
+              <EnvironmentCard key={place.id} place={place} />
             ))}
           </div>
         </div>
 
         <footer className="turning-footer mt-7 flex flex-col items-center text-center sm:mt-8">
-          <p className="mb-5 text-[9px] leading-relaxed text-[#7B8471]">
+          <p className="mb-5 max-w-xl text-[9px] leading-relaxed text-[#7B8471]">
             Illustrative places and values—not live noise, occupancy
             or suitability readings.
           </p>
 
-          {/* Original button treatment preserved */}
+          {/* Original CTA style and target */}
           <a
             href="#discovery"
             className="turning-cta group inline-flex items-center space-x-2 rounded-full bg-[#263D31] px-7 py-3.5 font-mono text-xs uppercase tracking-widest text-[#F4F1E8] shadow-md transition-colors duration-300 hover:bg-[#819478] hover:text-[#252B26] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#819478]"
