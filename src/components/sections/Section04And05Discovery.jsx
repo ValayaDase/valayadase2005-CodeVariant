@@ -107,7 +107,7 @@ export default function Section04And05Discovery() {
   const [detailOpen, setDetailOpen] = useState(false);
 
   // Enable interactions only after the map expansion finishes.
-  const [workspaceReady, setWorkspaceReady] = useState(false);
+  const [workspaceReady, setWorkspaceReady] = useState(true);
 
   const handleResetFilters = () => {
     setSearchQuery("");
@@ -298,24 +298,15 @@ export default function Section04And05Discovery() {
             return;
           }
 
-          updateReady(false);
+          updateReady(true);
 
           const timeline = gsap.timeline({
-            onUpdate: () => {
-              updateReady(timeline.time() >= 1);
-            },
             scrollTrigger: {
               trigger: stageRef.current,
-              start: shortScreen ? "top 85%" : "top top",
-              end: shortScreen
-                ? "top 10%"
-                : () =>
-                  `+=${Math.round(
-                    window.innerHeight * (desktop ? 0.9 : 0.6)
-                  )}`,
-              pin: !shortScreen,
-              scrub: desktop ? 0.65 : 0.4,
-              anticipatePin: 1,
+              start: "top 85%",
+              end: "top 20%",
+              pin: false,
+              scrub: 0.8,
               invalidateOnRefresh: true,
             },
           });
@@ -324,49 +315,37 @@ export default function Section04And05Discovery() {
             .fromTo(
               mapFrameRef.current,
               {
-                scale: desktop ? 0.55 : 0.8,
-                y: 0,
+                scale: 0.94,
+                y: 18,
+                opacity: 0.9,
                 transformOrigin: "50% 50%",
-                borderRadius: desktop ? 36 : 28,
-                boxShadow:
-                  "0 10px 30px rgba(38,61,49,0.08)",
+                borderRadius: desktop ? 32 : 24,
+                boxShadow: "0 10px 30px rgba(38,61,49,0.08)",
               },
               {
                 scale: 1,
                 y: 0,
+                opacity: 1,
                 borderRadius: desktop ? 24 : 20,
-                boxShadow:
-                  "0 16px 45px rgba(38,61,49,0.1)",
+                boxShadow: "0 16px 45px rgba(38,61,49,0.1)",
                 duration: 1,
-                ease: "power2.inOut",
+                ease: "power2.out",
               },
               0
             )
             .fromTo(
-              hintRef.current,
-              {
-                autoAlpha: 1,
-              },
-              {
-                autoAlpha: 0,
-                duration: 0.25,
-                ease: "none",
-              },
-              0.1
-            )
-            .fromTo(
               controlsRef.current,
               {
-                autoAlpha: 0,
-                y: 18,
+                autoAlpha: 0.6,
+                y: 12,
               },
               {
                 autoAlpha: 1,
                 y: 0,
-                duration: 0.3,
+                duration: 0.4,
                 ease: "power3.out",
               },
-              1
+              0.2
             );
         }
       );

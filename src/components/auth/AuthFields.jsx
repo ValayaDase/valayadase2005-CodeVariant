@@ -79,12 +79,15 @@ export function CheckboxField({ id, checked, onChange, label, error }) {
       >
         <input
           id={id}
+          name={id}
           type="checkbox"
           checked={checked}
           onChange={onChange}
-          className="sr-only"
+          aria-invalid={Boolean(error)}
+          aria-describedby={error ? `${id}-error` : undefined}
+          className="peer sr-only"
         />
-        <div className="mt-0.5 text-[#26382B]">
+        <div className="mt-0.5 rounded-sm text-[#26382B] peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#49624E]">
           {checked ? (
             <CheckSquare className="w-4 h-4 text-[#26382B]" />
           ) : (
@@ -93,7 +96,7 @@ export function CheckboxField({ id, checked, onChange, label, error }) {
         </div>
         <span>{label}</span>
       </label>
-      {error && <p className="text-xs text-red-600 font-medium pl-6">{error}</p>}
+      {error && <p id={`${id}-error`} className="text-xs text-red-600 font-medium pl-6">{error}</p>}
     </div>
   );
 }

@@ -61,7 +61,6 @@ const AuthIllustration = memo(function AuthIllustration() {
         {!error ? (
           <Lottie
             src={animationData || "/animations/peaceful-at-work.json"}
-            animationData={animationData}
             loop={true}
             autoplay={true}
             className="w-full h-full object-contain"

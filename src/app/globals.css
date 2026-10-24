@@ -51,7 +51,6 @@
 html {
   background-color: var(--ivory);
   color: var(--dark-text);
-  scroll-behavior: smooth;
 }
 
 body {
@@ -232,5 +231,118 @@ body,
 * {
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;
+}
+
+/* ==========================================================================
+   Section 04 & 05 - Discovery scroll & Leaflet map host
+   ========================================================================== */
+.controls-scroll {
+  scrollbar-width: thin !important;
+  scrollbar-color: #becab1 #f4f1e8;
+}
+
+.controls-scroll::-webkit-scrollbar {
+  display: block !important;
+  height: 4px !important;
+}
+
+.controls-scroll::-webkit-scrollbar-track {
+  background: #f4f1e8;
+}
+
+.controls-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: #becab1;
+}
+
+.discovery-map-host {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.discovery-map-host > div {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 100% !important;
+}
+
+.discovery-map-host .leaflet-container {
+  width: 100% !important;
+  height: 100% !important;
+  background-color: #E3EBDD !important;
+}
+
+/* ==========================================================================
+   Section 06 - Quiet When scroll
+   ========================================================================== */
+.quiet-scroll {
+  scrollbar-width: thin !important;
+  scrollbar-color: #bdc9af #f1f4eb;
+}
+
+.quiet-scroll::-webkit-scrollbar {
+  display: block !important;
+  height: 4px !important;
+}
+
+.quiet-scroll::-webkit-scrollbar-track {
+  background: #f1f4eb;
+}
+
+.quiet-scroll::-webkit-scrollbar-thumb {
+  background: #bdc9af;
+  border-radius: 999px;
+}
+
+/* ==========================================================================
+   Section 07 - Focus Fit Score scroll
+   ========================================================================== */
+.fit-scroll {
+  scrollbar-width: thin !important;
+  scrollbar-color: #bdc9af #f1f4eb;
+}
+
+.fit-scroll::-webkit-scrollbar {
+  display: block !important;
+  height: 4px !important;
+}
+
+.fit-scroll::-webkit-scrollbar-track {
+  background: #f1f4eb;
+}
+
+.fit-scroll::-webkit-scrollbar-thumb {
+  background: #bdc9af;
+  border-radius: 999px;
+}
+
+/* ==========================================================================
+   Section 08 - Community Intelligence Carousel
+   ========================================================================== */
+.community-carousel-region {
+  min-width: 0;
+  width: 100%;
+  overflow: visible;
+}
+
+.community-carousel-region .splide {
+  width: 100%;
+}
+
+.community-carousel-region .splide__track {
+  overflow: visible !important;
+  padding-top: 10px;
+  padding-bottom: 22px;
+}
+
+.community-carousel-region .splide__slide {
+  display: flex;
+  height: auto;
+}
+
+.community-carousel-region .splide__list {
+  align-items: stretch;
 }
 

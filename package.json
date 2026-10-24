@@ -12,6 +12,8 @@
     "@animateicons/react": "^0.12.1",
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/utilities": "^3.2.2",
+    "@splidejs/react-splide": "^0.7.12",
+    "@splidejs/splide-extension-auto-scroll": "^0.5.3",
     "@types/leaflet": "^1.9.22",
     "@types/three": "^0.186.0",
     "framer-motion": "^14.6.0",

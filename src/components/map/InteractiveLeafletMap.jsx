@@ -31,32 +31,42 @@ export default function InteractiveLeafletMap({
       if (!mounted || !mapContainerRef.current) return;
       const L = leafletModule.default || leafletModule;
       const initialSpace = selectedSpace || spaces.find((space) => Number.isFinite(space.lat) && Number.isFinite(space.lng));
-      const center = initialSpace ? [initialSpace.lat, initialSpace.lng] : [19.076, 72.8777];
+      const center = initialSpace ? [initialSpace.lat, initialSpace.lng] : [40.7128, -74.006];
       const map = L.map(mapContainerRef.current, {
         center,
-        zoom: 12,
+        zoom: 13,
         zoomControl: true,
         scrollWheelZoom: true,
       });
       mapInstanceRef.current = map;
       map._spotwiseLeaflet = L;
 
+      // Reliable OpenStreetMap tiles (always loads without 403 or API key restrictions)
       L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {
           attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-          subdomains: "abcd",
+            '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+          subdomains: ["a", "b", "c"],
           maxZoom: 19,
         }
       ).addTo(map);
+
       if (typeof ResizeObserver !== "undefined") {
         resizeObserver = new ResizeObserver(() => map.invalidateSize());
         resizeObserver.observe(mapContainerRef.current);
       }
+
       requestAnimationFrame(() => {
         if (mounted && mapInstanceRef.current === map) map.invalidateSize(true);
       });
+      setTimeout(() => {
+        if (mounted && mapInstanceRef.current === map) map.invalidateSize(true);
+      }, 250);
+      setTimeout(() => {
+        if (mounted && mapInstanceRef.current === map) map.invalidateSize(true);
+      }, 600);
+
       setMapError(false);
       setMapReady(true);
     }).catch((error) => {

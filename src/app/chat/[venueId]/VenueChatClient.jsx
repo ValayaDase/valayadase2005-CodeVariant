@@ -36,15 +36,7 @@ export default function VenueChatClient({ venueId }) {
         {/* Venue Chat Component */}
         <VenueChat key={venueId} venue={venue} venueId={venueId} venueName={venueName} />
 
-        {/* Information Notice */}
-        <div className="p-4 rounded-2xl bg-white border border-[#E8E0D2] text-xs text-[#555D50] flex items-center justify-between shadow-xs">
-          <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-[#819477] shrink-0" />
-            <span>
-              Messages are saved to the Spotwise database and shared with people in this venue chat. Guest names are demo identities.
-            </span>
-          </div>
-        </div>
+        
       </div>
     </AppShell>
   );
