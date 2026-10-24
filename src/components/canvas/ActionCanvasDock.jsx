@@ -41,7 +41,6 @@ export default function ActionCanvasDock({
         {/* Dock Header Bar */}
         <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E8E0D2]/70 text-xs">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
             <span className="font-serif font-bold text-[#20231F] flex items-center gap-1.5">
               <AnimatedSparkles size={16} className="text-[#819477]" />
               Canvas Protocol Dock

@@ -311,7 +311,7 @@ export default function DiscoverPage() {
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                   viewMode === "list"
                     ? "bg-[#26382B] text-[#F5F3EC]"
-                    : "text-[#555D50] hover:text-[#20231F]"
+                    : "liquid-hover text-[#555D50] hover:text-[#20231F]"
                 }`}
               >
                 <List className="w-3.5 h-3.5" />
@@ -323,7 +323,7 @@ export default function DiscoverPage() {
                 className={`flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold transition-all ${
                   viewMode === "map"
                     ? "bg-[#26382B] text-[#F5F3EC]"
-                    : "text-[#555D50] hover:text-[#20231F]"
+                    : "liquid-hover text-[#555D50] hover:text-[#20231F]"
                 }`}
               >
                 <MapIcon className="w-3.5 h-3.5" />

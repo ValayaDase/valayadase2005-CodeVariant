@@ -50,7 +50,7 @@ export default function AppSidebar({ user, onCloseMobile }) {
                 href={item.href}
                 onClick={onCloseMobile}
                 aria-current={isActive ? "page" : undefined}
-                className={`relative flex min-h-11 items-center gap-3 overflow-hidden rounded-2xl px-3.5 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49624E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FCFBF7] ${
+                className={`liquid-hover relative flex min-h-11 items-center gap-3 overflow-hidden rounded-2xl px-3.5 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49624E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FCFBF7] ${
                   isActive ? "font-semibold text-[#263D31]" : "font-medium text-[#555D50] hover:bg-[#F3F2E9] hover:text-[#20231F]"
                 }`}
               >
@@ -94,7 +94,7 @@ export default function AppSidebar({ user, onCloseMobile }) {
         <button
           type="button"
           onClick={handleSignOut}
-          className="flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#E3E0D7] px-3 py-2 text-xs font-semibold text-[#555D50] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49624E]"
+          className="liquid-hover-red flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#E3E0D7] px-3 py-2 text-xs font-semibold text-[#555D50] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49624E]"
         >
           <LogOut className="h-3.5 w-3.5" />
           <span>Sign Out</span>

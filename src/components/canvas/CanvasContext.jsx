@@ -28,7 +28,7 @@ import {
   saveUserPreferences,
   DEFAULT_PREFERENCES,
 } from "@/lib/discovery/venue-data";
-import { backendRequest, getDemoUserId } from "@/lib/backend";
+import { backendRequest, getDemoUserId, syncSavedVenueIds } from "@/lib/backend";
 
 const CanvasContext = createContext(null);
 
@@ -58,12 +58,10 @@ export function CanvasProvider({ children }) {
     const localSavedTimer = setTimeout(() => {
       if (isMounted) setSavedIds(new Set(getSavedVenueIds()));
     }, 0);
-    const userId = getDemoUserId();
-    backendRequest(`/api/saved/${userId}`)
-      .then(({ venueIds }) => {
-        if (isMounted && Array.isArray(venueIds)) {
+    syncSavedVenueIds()
+      .then((venueIds) => {
+        if (isMounted) {
           setSavedIds(new Set(venueIds));
-          venueIds.forEach((id) => saveVenueId(id));
         }
       })
       .catch(() => {

@@ -11,7 +11,7 @@ import AppShell from "@/components/app/AppShell";
 import VenueCard from "@/components/app/VenueCard";
 import { CurtainReveal } from "@/components/motion/MotionPrimitives";
 import { calculateSuitability } from "@/lib/scoring/suitability";
-import { backendRequest, getDemoUserId } from "@/lib/backend";
+import { syncSavedVenueIds } from "@/lib/backend";
 import { getAllVenues, getSavedVenueIds } from "@/lib/discovery/venue-data";
 import {
   CanvasProvider,
@@ -29,12 +29,10 @@ export default function SavedPlacesPage() {
   const [backendError, setBackendError] = useState("");
 
   useEffect(() => {
-    backendRequest(`/api/saved/${getDemoUserId()}`)
-      .then(({ venueIds }) => {
-        if (Array.isArray(venueIds)) {
-          const saved = new Set(venueIds);
-          setSavedVenues(getAllVenues().filter((venue) => saved.has(venue.id)));
-        }
+    syncSavedVenueIds()
+      .then((venueIds) => {
+        const saved = new Set(venueIds);
+        setSavedVenues(getAllVenues().filter((venue) => saved.has(venue.id)));
       })
       .catch(() => setBackendError("Saved places could not be loaded from the backend."));
 
@@ -86,7 +84,7 @@ export default function SavedPlacesPage() {
 
             <Link
               href="/discover"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#26382B] hover:bg-[#20231F] text-[#F5F3EC] text-xs font-semibold transition-all shadow-sm shrink-0 self-start sm:self-auto"
+              className="liquid-hover-light inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#26382B] hover:bg-[#20231F] text-[#F5F3EC] text-xs font-semibold transition-all shadow-sm shrink-0 self-start sm:self-auto"
             >
               <AnimatedCompass size={16} className="text-[#F5F3EC]" />
               <span>Explore More Spots</span>
@@ -107,7 +105,7 @@ export default function SavedPlacesPage() {
               </p>
               <Link
                 href="/discover"
-                className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#26382B] text-[#F5F3EC] text-xs font-semibold hover:bg-[#20231F] transition-colors"
+                className="liquid-hover-light mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#26382B] text-[#F5F3EC] text-xs font-semibold hover:bg-[#20231F] transition-colors"
               >
                 <span>Browse Spaces Now</span>
                 <AnimatedArrowRight size={16} className="text-[#F5F3EC]" />

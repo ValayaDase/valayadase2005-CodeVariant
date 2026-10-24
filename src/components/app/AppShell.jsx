@@ -5,12 +5,15 @@ import { X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import AppSidebar from "./AppSidebar";
 import AppHeader from "./AppHeader";
+import BotanicalBackdrop from "./BotanicalBackdrop";
 import { PageEntrance } from "@/components/motion/MotionPrimitives";
 import { getDemoSession, signInDemo, DEMO_CREDENTIALS } from "@/lib/auth/demo-auth";
 import { LocationProvider } from "@/lib/location";
 
 export default function AppShell({ children, title, subtitle }) {
   const pathname = usePathname();
+  const isChatRoute = pathname?.startsWith("/chat/");
+  const showBotanicalBackdrop = ["/discover", "/saved", "/reports", "/preferences"].includes(pathname);
   const [session, setSession] = useState(null);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
@@ -52,7 +55,7 @@ export default function AppShell({ children, title, subtitle }) {
 
   return (
     <LocationProvider>
-      <div className="flex min-h-screen w-full flex-row bg-[#F5F3EC] text-[#20231F] selection:bg-[#819477] selection:text-white">
+      <div className={`spotwise-app ${isChatRoute ? "spotwise-chat" : ""} flex min-h-screen w-full flex-row bg-[#F5F3EC] text-[#20231F] selection:bg-[#819477] selection:text-white`}>
         {/* Desktop floating sidebar */}
         <div className="sticky top-3 hidden h-[calc(100dvh_-_1.5rem)] w-64 shrink-0 self-start lg:ml-3 lg:my-3 lg:block">
           <AppSidebar user={session?.user} />
@@ -95,10 +98,13 @@ export default function AppShell({ children, title, subtitle }) {
             onOpenMobile={() => setMobileNavOpen(true)}
             user={session?.user}
           />
-          <main className="mx-auto w-full min-w-0 max-w-7xl flex-1 p-3 sm:p-5 lg:p-8">
-            <PageEntrance key={pathname} disabled={pathname?.startsWith("/chat/")}>
-              {children}
-            </PageEntrance>
+          <main className="relative isolate mx-auto w-full min-w-0 max-w-7xl flex-1 p-3 sm:p-5 lg:p-8">
+            {showBotanicalBackdrop && <BotanicalBackdrop />}
+            <div className="relative z-10">
+              <PageEntrance key={pathname} disabled={isChatRoute}>
+                {children}
+              </PageEntrance>
+            </div>
           </main>
         </div>
       </div>

@@ -231,7 +231,7 @@ export default function PreferencesPage() {
                       className={`p-3 rounded-2xl border text-left text-xs transition-all ${
                         isSelected
                           ? "bg-[#26382B] text-[#F5F3EC] border-[#26382B] shadow-xs"
-                          : "bg-[#F5F3EC]/60 text-[#20231F] border-[#E8E0D2] hover:bg-[#F5F3EC]"
+                          : "liquid-hover bg-[#F5F3EC]/60 text-[#20231F] border-[#E8E0D2] hover:bg-[#F5F3EC]"
                       }`}
                     >
                       <span className="block font-semibold">

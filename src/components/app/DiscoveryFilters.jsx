@@ -129,7 +129,7 @@ export default function DiscoveryFilters({
                   className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-all ${
                     filters.noisePreference === noise
                       ? "bg-[#26382B] text-[#F5F3EC] shadow-xs"
-                      : "text-[#555D50] hover:text-[#20231F]"
+                      : "liquid-hover text-[#555D50] hover:text-[#20231F]"
                   }`}
                 >
                   {noise}
@@ -152,7 +152,7 @@ export default function DiscoveryFilters({
                   className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-all ${
                     filters.budget === b
                       ? "bg-[#26382B] text-[#F5F3EC] shadow-xs"
-                      : "text-[#555D50] hover:text-[#20231F]"
+                      : "liquid-hover text-[#555D50] hover:text-[#20231F]"
                   }`}
                 >
                   {b}
@@ -190,7 +190,7 @@ export default function DiscoveryFilters({
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all border ${
                 isSelected
                   ? "bg-[#819477] text-white border-[#819477] shadow-xs"
-                  : "bg-white text-[#555D50] border-[#E8E0D2] hover:border-[#819477] hover:text-[#20231F]"
+                  : "liquid-hover bg-white text-[#555D50] border-[#E8E0D2] hover:border-[#819477] hover:text-[#20231F]"
               }`}
             >
               {isSelected ? "✓ " : "+ "}
