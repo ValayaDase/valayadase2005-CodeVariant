@@ -8,7 +8,7 @@ Built with a focus on usability, visual aesthetics, and interactive experiences,
 
 ## 🌐 Live Demo
 
-**Deployed Application:** [Spotwise]([YOUR_DEPLOYED_URL](https://spot-wise.netlify.app/))
+**Deployed Application:** https://spot-wise.netlify.app/
 
 ---
 
