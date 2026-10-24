@@ -15,6 +15,12 @@ import VenueCard from "@/components/app/VenueCard";
 import VenueMap from "@/components/app/VenueMap";
 import { getAllVenues, getUserPreferences } from "@/lib/discovery/venue-data";
 import { calculateSuitability } from "@/lib/scoring/suitability";
+import {
+  CanvasProvider,
+  ActionCanvasDock,
+  ComparisonDrawer,
+  DropFeedbackToast,
+} from "@/components/canvas";
 
 export default function DiscoverPage() {
   const [allVenues, setAllVenues] = useState(() => getAllVenues());
@@ -151,26 +157,31 @@ export default function DiscoverPage() {
   }, [allVenues, filters, sortBy]);
 
   return (
-    <AppShell
-      title="Workspace Discovery"
-      subtitle="Find places that match your focus state, sensory needs, and schedule."
-    >
-      <div className="space-y-6 text-left">
-        {/* Welcome Header & Location Selector */}
-        <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] text-xs font-semibold text-[#819477] mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-[#819477]" />
-              <span>Sensory Match Engine Active</span>
+    <CanvasProvider initialPage="discover">
+      <AppShell
+        title="Workspace Discovery"
+        subtitle="Find places that match your focus state, sensory needs, and schedule."
+      >
+        <div className="space-y-6 text-left pb-36">
+          {/* Welcome Header & Location Selector */}
+          <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="max-w-2xl">
+              <div className="flex flex-wrap items-center gap-2 mb-3">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] text-xs font-semibold text-[#819477]">
+                  <Sparkles className="w-3.5 h-3.5 text-[#819477]" />
+                  <span>Sensory Match Engine Active</span>
+                </span>
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#26382B] text-xs font-semibold text-[#F5F3EC]">
+                  <span>Canvas Protocol Active</span>
+                </span>
+              </div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#20231F] tracking-tight">
+                Find your next focus spot.
+              </h1>
+              <p className="mt-2 text-sm text-[#555D50] leading-relaxed">
+                Primary actions operate on the canvas: Drag any card to the Action Dock below to Save Sanctuary, Schedule a Visit, or Compare side-by-side.
+              </p>
             </div>
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-[#20231F] tracking-tight">
-              Find your next focus spot.
-            </h1>
-            <p className="mt-2 text-sm text-[#555D50] leading-relaxed">
-              Discover places that match your cognitive style, quiet thresholds, and
-              intended visit time.
-            </p>
-          </div>
 
           {/* Location Selector */}
           <div className="p-4 rounded-2xl bg-[#F5F3EC]/80 border border-[#E8E0D2] flex flex-col gap-1.5 shrink-0">
@@ -239,7 +250,7 @@ export default function DiscoverPage() {
 
         {/* View Controls & Sort Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-          <div className="flex items-center gap-2">
+          <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
             <span className="text-sm font-semibold text-[#20231F]">
               Showing {processedVenues.length} spaces
             </span>
@@ -248,7 +259,7 @@ export default function DiscoverPage() {
             </span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             {/* Sort Dropdown */}
             <div className="flex items-center gap-1.5 text-xs text-[#555D50]">
               <ArrowUpDown className="w-3.5 h-3.5 text-[#819477]" />
@@ -256,7 +267,7 @@ export default function DiscoverPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-white py-1 px-2.5 rounded-lg border border-[#E8E0D2] font-semibold text-[#20231F] focus:outline-none"
+                className="max-w-[min(13rem,55vw)] bg-white py-1 px-2.5 rounded-lg border border-[#E8E0D2] font-semibold text-[#20231F] focus:outline-none"
               >
                 <option value="score">Focus Fit (Highest)</option>
                 <option value="noise">Noise (Quietest)</option>
@@ -318,13 +329,16 @@ export default function DiscoverPage() {
         ) : viewMode === "list" ? (
           /* Grid of Venue Cards */
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {processedVenues.map((venue) => (
+            {processedVenues.map((venue, index) => (
               <VenueCard
                 key={venue.id}
                 venue={venue}
+                index={index}
                 suitability={suitabilityMap[venue.id]}
                 selectedDay={filters.day}
                 selectedTime={filters.time}
+                isSelected={selectedVenueId === venue.id}
+                onSelect={setSelectedVenueId}
               />
             ))}
           </div>
@@ -338,19 +352,28 @@ export default function DiscoverPage() {
             />
             {/* Accompanying condensed cards below map */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {processedVenues.map((venue) => (
+              {processedVenues.map((venue, index) => (
                 <VenueCard
                   key={venue.id}
                   venue={venue}
+                  index={index}
                   suitability={suitabilityMap[venue.id]}
                   selectedDay={filters.day}
                   selectedTime={filters.time}
+                  isSelected={selectedVenueId === venue.id}
+                  onSelect={setSelectedVenueId}
                 />
               ))}
             </div>
           </div>
         )}
-      </div>
-    </AppShell>
+        </div>
+
+        {/* Canvas Protocol Dock & Overlays */}
+        <ActionCanvasDock mode="discover" />
+        <ComparisonDrawer />
+        <DropFeedbackToast />
+      </AppShell>
+    </CanvasProvider>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Compass, Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
+import { AnimatedLogo } from "@/components/common";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -39,19 +39,8 @@ export default function Navbar() {
           }`}
       >
         <div className="bg-[#263D31]/92 backdrop-blur-md text-[#F4F1E8] px-5 py-2.5 rounded-full border border-[#819478]/40 shadow-xl flex items-center justify-between">
-          {/* Logo */}
-          <a href="#hero" className="flex items-center group py-0.5 focus-visible:outline-none" aria-label="Spotwise Home">
-            <div className="relative h-6 sm:h-7 aspect-[2172/724] transition-transform duration-200 group-hover:scale-105">
-              <Image
-                src="/images/logo/b97527af-f745-457c-a0fb-ddb6d9649e8d.png"
-                alt="Spotwise"
-                fill
-                priority
-                className="object-contain object-left"
-                sizes="(max-width: 640px) 72px, 84px"
-              />
-            </div>
-          </a>
+          {/* Animated Logo */}
+          <AnimatedLogo size="sm" variant="light" href="#hero" />
 
           {/* Nav links */}
           <nav className="hidden lg:flex items-center space-x-4 xl:space-x-5 text-[11px] font-mono uppercase tracking-[0.14em] text-[#E3EBDD]/80">

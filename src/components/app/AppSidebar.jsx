@@ -2,111 +2,99 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import {
-  Compass,
-  Bookmark,
-  ClipboardList,
-  Sliders,
-  LogOut,
-} from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Bookmark, Compass, LogOut, MessageSquareText, SlidersHorizontal } from "lucide-react";
+import { AnimatedLogo } from "@/components/common";
 import { clearDemoSession, getInitials } from "@/lib/auth/demo-auth";
+
+const navItems = [
+  { label: "Discover", href: "/discover", icon: Compass, animation: { rotate: [0, -12, 8, 0], scale: [1, 0.9, 1.12, 1] } },
+  { label: "Saved Places", href: "/saved", icon: Bookmark, animation: { y: [3, -2, 0], scale: [0.88, 1.08, 1] } },
+  { label: "Community Reports", href: "/reports", icon: MessageSquareText, animation: { scale: [0.9, 1.08, 1], rotate: [0, -5, 0] } },
+  { label: "Preferences", href: "/preferences", icon: SlidersHorizontal, animation: { x: [-2, 2, -1, 0], rotate: [0, 3, -2, 0] } },
+];
 
 export default function AppSidebar({ user, onCloseMobile }) {
   const pathname = usePathname();
   const router = useRouter();
+  const reduceMotion = useReducedMotion();
 
   const displayName = user?.name || "Alex Mercer";
   const initials = user?.avatarInitials || getInitials(displayName);
   const displayRole = user?.role || (user?.isDemo ? "Remote Nomad" : "Nomad Member");
 
-  const navItems = [
-    { label: "Discover", href: "/discover", icon: Compass },
-    { label: "Saved Places", href: "/saved", icon: Bookmark },
-    { label: "Community Reports", href: "/reports", icon: ClipboardList },
-    { label: "Preferences", href: "/preferences", icon: Sliders },
-  ];
-
   const handleSignOut = () => {
     clearDemoSession();
     router.push("/sign-in");
+    onCloseMobile?.();
   };
 
   return (
     <aside
-      aria-label="Application Sidebar"
-      className="w-64 h-full bg-white border-r border-[#E8E0D2] flex flex-col justify-between p-5 select-none"
+      aria-label="Application navigation"
+      className="flex h-full min-h-0 w-full flex-col justify-between overflow-y-auto rounded-[1.75rem] border border-[#E3E0D7] bg-[#FCFBF7] p-4 text-[#263D31] shadow-[0_12px_36px_rgba(38,61,49,0.09)] sm:p-5"
     >
-      {/* Top Brand Logo */}
       <div>
-        <Link
-          href="/discover"
-          onClick={onCloseMobile}
-          className="flex items-center gap-2.5 px-2 py-1 rounded-full group focus:outline-none focus:ring-2 focus:ring-[#819477]"
-        >
-          <div className="w-8 h-8 rounded-full bg-[#26382B] flex items-center justify-center text-[#F5F3EC] shadow-sm transition-transform group-hover:scale-105">
-            <Compass className="w-4 h-4 text-[#F5F3EC]" strokeWidth={2.2} />
-          </div>
-          <div className="flex items-baseline">
-            <span className="text-lg font-semibold tracking-tight text-[#20231F]">
-              Spotwise
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#819477] ml-1 mb-0.5 inline-block" />
-          </div>
-        </Link>
+        <div className="px-1 py-1">
+          <AnimatedLogo size="md" href="/discover" onClick={onCloseMobile} />
+        </div>
 
-        {/* Main Navigation Links */}
-        <nav className="mt-6 space-y-1.5">
+        <nav aria-label="Main navigation" className="mt-7 space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive =
-              pathname === item.href ||
-              (item.href !== "/discover" && pathname.startsWith(item.href));
+            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
 
             return (
               <Link
-                key={item.label}
+                key={item.href}
                 href={item.href}
                 onClick={onCloseMobile}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  isActive
-                    ? "bg-[#26382B] text-[#F5F3EC] shadow-sm"
-                    : "text-[#555D50] hover:text-[#20231F] hover:bg-[#F5F3EC]"
+                aria-current={isActive ? "page" : undefined}
+                className={`relative flex min-h-11 items-center gap-3 overflow-hidden rounded-2xl px-3.5 py-2.5 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49624E] focus-visible:ring-offset-2 focus-visible:ring-offset-[#FCFBF7] ${
+                  isActive ? "font-semibold text-[#263D31]" : "font-medium text-[#555D50] hover:bg-[#F3F2E9] hover:text-[#20231F]"
                 }`}
               >
-                <Icon
-                  className={`w-4 h-4 ${
-                    isActive ? "text-[#819477]" : "text-[#819477]"
-                  }`}
-                />
-                <span>{item.label}</span>
+                {isActive && (
+                  <motion.span
+                    layoutId="spotwise-active-nav"
+                    aria-hidden="true"
+                    className="absolute inset-0 rounded-2xl bg-[#E3EBDD]"
+                    transition={reduceMotion ? { duration: 0 } : { type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <motion.span
+                  className="relative z-[1] inline-flex h-5 w-5 shrink-0 items-center justify-center"
+                  aria-hidden="true"
+                  animate={isActive && !reduceMotion ? item.animation : { rotate: 0, x: 0, y: 0, scale: 1 }}
+                  transition={reduceMotion ? { duration: 0 } : { duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
+                  whileHover={reduceMotion ? undefined : { scale: 1.08 }}
+                >
+                  <Icon size={18} strokeWidth={isActive ? 2.2 : 1.8} />
+                </motion.span>
+                <span className="relative z-[1] min-w-0 truncate tracking-tight">{item.label}</span>
               </Link>
             );
           })}
         </nav>
       </div>
 
-      {/* Bottom Profile and Sign Out Card */}
-      <div className="pt-4 border-t border-[#E8E0D2] space-y-3">
-        <div className="flex items-center gap-3 px-2 py-1.5">
-          <div className="w-9 h-9 rounded-full bg-[#E8E0D2] border border-[#819477]/40 flex items-center justify-center font-serif font-bold text-sm text-[#26382B] tracking-tight">
+      <div className="mt-6 space-y-3 border-t border-[#E3E0D7] pt-4">
+        <div className="flex min-w-0 items-center gap-3 px-1.5 py-1.5">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#819477]/40 bg-[#E8EBDD] font-serif text-sm font-bold tracking-tight text-[#26382B]">
             {initials}
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold text-[#20231F] truncate">
-              {displayName}
-            </p>
-            <p className="text-[11px] text-[#819477] truncate font-medium">
-              {displayRole}
-            </p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold text-[#20231F]">{displayName}</p>
+            <p className="truncate text-[11px] font-medium text-[#819477]">{displayRole}</p>
           </div>
         </div>
 
         <button
           type="button"
           onClick={handleSignOut}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-[#555D50] hover:text-red-700 hover:bg-red-50 border border-[#E8E0D2] transition-colors"
+          className="flex min-h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#E3E0D7] px-3 py-2 text-xs font-semibold text-[#555D50] transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#49624E]"
         >
-          <LogOut className="w-3.5 h-3.5" />
+          <LogOut className="h-3.5 w-3.5" />
           <span>Sign Out</span>
         </button>
       </div>

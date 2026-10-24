@@ -591,7 +591,7 @@ export default function Section02Problem() {
                       </div>
 
                       <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[#D4AA85]">
-                        First impressions don't tell the whole story
+                        First impressions don&apos;t tell the whole story
                       </p>
 
                       <h3

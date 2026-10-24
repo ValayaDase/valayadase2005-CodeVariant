@@ -119,16 +119,44 @@ export function isVenueSaved(venueId) {
   return saved.includes(venueId);
 }
 
+export function saveVenueId(venueId) {
+  const current = getSavedVenueIds();
+  if (!current.includes(venueId)) {
+    const updated = [venueId, ...current];
+    setStorage(STORAGE_KEYS.SAVED, updated);
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("spotwise_saved_changed", { detail: { venueId, saved: true } }));
+    }
+  }
+  return true;
+}
+
+export function removeSavedVenueId(venueId) {
+  const current = getSavedVenueIds();
+  const updated = current.filter((id) => id !== venueId);
+  setStorage(STORAGE_KEYS.SAVED, updated);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("spotwise_saved_changed", { detail: { venueId, saved: false } }));
+  }
+  return false;
+}
+
 export function toggleSavedVenue(venueId) {
   const current = getSavedVenueIds();
   let updated;
+  let isSaved = false;
   if (current.includes(venueId)) {
     updated = current.filter((id) => id !== venueId);
+    isSaved = false;
   } else {
     updated = [venueId, ...current];
+    isSaved = true;
   }
   setStorage(STORAGE_KEYS.SAVED, updated);
-  return updated.includes(venueId);
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("spotwise_saved_changed", { detail: { venueId, saved: isSaved } }));
+  }
+  return isSaved;
 }
 
 export function getSavedVenues() {
@@ -136,6 +164,7 @@ export function getSavedVenues() {
   const all = getAllVenues();
   return all.filter((v) => savedIds.includes(v.id));
 }
+
 
 /**
  * Venue Chat Storage

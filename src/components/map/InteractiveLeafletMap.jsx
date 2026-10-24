@@ -11,6 +11,8 @@ export default function InteractiveLeafletMap({
   const mapInstanceRef = useRef(null);
   const markersRef = useRef({});
   const [isMounted, setIsMounted] = useState(false);
+  const [mapReady, setMapReady] = useState(false);
+  const [mapError, setMapError] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -22,37 +24,63 @@ export default function InteractiveLeafletMap({
   useEffect(() => {
     if (!isMounted || !mapContainerRef.current) return;
 
-    let map = mapInstanceRef.current;
-    let L;
+    let mounted = true;
+    let resizeObserver;
 
-    // Dynamically import Leaflet in browser only
     import("leaflet").then((leafletModule) => {
-      L = leafletModule.default || leafletModule;
+      if (!mounted || !mapContainerRef.current) return;
+      const L = leafletModule.default || leafletModule;
+      const initialSpace = selectedSpace || spaces.find((space) => Number.isFinite(space.lat) && Number.isFinite(space.lng));
+      const center = initialSpace ? [initialSpace.lat, initialSpace.lng] : [19.076, 72.8777];
+      const map = L.map(mapContainerRef.current, {
+        center,
+        zoom: 12,
+        zoomControl: true,
+        scrollWheelZoom: true,
+      });
+      mapInstanceRef.current = map;
+      map._spotwiseLeaflet = L;
 
-      if (!mapInstanceRef.current && mapContainerRef.current) {
-        // Initialize Leaflet Map centered around NYC coordinates
-        map = L.map(mapContainerRef.current, {
-          center: [40.7148, -74.004],
-          zoom: 14,
-          zoomControl: true,
-          scrollWheelZoom: true,
-        });
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          attribution:
+            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+          subdomains: "abcd",
+          maxZoom: 19,
+        }
+      ).addTo(map);
 
-        // CartoDB Positron / OSM light tile layer styled for Warm Ivory & Sage palette
-        L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
-          {
-            attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
-            maxZoom: 19,
-          }
-        ).addTo(map);
-
-        mapInstanceRef.current = map;
+      if (typeof ResizeObserver !== "undefined") {
+        resizeObserver = new ResizeObserver(() => map.invalidateSize());
+        resizeObserver.observe(mapContainerRef.current);
       }
+      requestAnimationFrame(() => {
+        if (mounted && mapInstanceRef.current === map) map.invalidateSize(true);
+      });
+      setMapError(false);
+      setMapReady(true);
+    }).catch((error) => {
+      console.error("Leaflet map initialization failed:", error);
+      if (mounted) setMapError(true);
+    });
 
-      if (!map) return;
+    return () => {
+      mounted = false;
+      resizeObserver?.disconnect();
+      Object.values(markersRef.current).forEach((marker) => marker.remove());
+      markersRef.current = {};
+      mapInstanceRef.current?.remove();
+      mapInstanceRef.current = null;
+    };
+    // Initialization happens once after mount; venue data is handled below.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isMounted]);
+
+  useEffect(() => {
+    const map = mapInstanceRef.current;
+    const L = map?._spotwiseLeaflet;
+    if (!mapReady || !map || !L) return;
 
       // Clear existing markers
       Object.values(markersRef.current).forEach((m) => m.remove());
@@ -135,16 +163,10 @@ export default function InteractiveLeafletMap({
         markersRef.current[space.id] = marker;
       });
 
-      // Fly to selected space if changed externally
-      if (selectedSpace) {
-        map.flyTo([selectedSpace.lat, selectedSpace.lng], 15, { duration: 0.8 });
-      }
-    });
-
-    return () => {
-      // Map cleanup handled on container unmount
-    };
-  }, [isMounted, spaces, selectedSpace, onSelectSpace]);
+    if (selectedSpace && Number.isFinite(selectedSpace.lat) && Number.isFinite(selectedSpace.lng)) {
+      map.flyTo([selectedSpace.lat, selectedSpace.lng], 15, { duration: 0.8 });
+    }
+  }, [mapReady, spaces, selectedSpace, onSelectSpace]);
 
   return (
     <div className="relative w-full h-full min-h-[520px] lg:min-h-[660px] rounded-3xl overflow-hidden border border-[#E3E0D7] shadow-2xl">
@@ -154,6 +176,12 @@ export default function InteractiveLeafletMap({
         style={{ minHeight: "560px" }}
         data-lenis-prevent
       />
+
+      {mapError && (
+        <div role="status" className="absolute inset-0 z-[500] flex items-center justify-center bg-[#F5F3EC] p-6 text-center text-sm text-[#555D50]">
+          The map could not load. Check your connection and refresh the page.
+        </div>
+      )}
 
       {/* Floating Status System Legend */}
       <div className="absolute top-4 right-4 z-[400] glass-ivory px-4 py-3.5 rounded-2xl border border-[#E3E0D7] shadow-lg flex flex-col space-y-2 text-xs font-mono">

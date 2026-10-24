@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Compass, ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import { ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import { AnimatedLogo } from "@/components/common";
 import { InputField, CheckboxField } from "./AuthFields";
 import DemoCredentials from "./DemoCredentials";
 import { signInDemo, signUpDemo } from "@/lib/auth/demo-auth";
@@ -113,20 +113,7 @@ export default function AuthForm({ mode = "sign-in", onSwitchMode }) {
     <div className="w-full max-w-md mx-auto p-4 sm:p-6 flex flex-col justify-center">
       {/* Brand Wordmark & Back to Home */}
       <div className="flex items-center justify-between mb-6">
-        <Link
-          href="/"
-          className="flex items-center gap-2 group text-[#20231F] focus:outline-none focus:ring-2 focus:ring-[#819477] rounded-full px-1"
-        >
-          <div className="w-8 h-8 rounded-full bg-[#26382B] flex items-center justify-center text-[#F5F3EC] shadow-sm transition-transform group-hover:scale-105">
-            <Compass className="w-4 h-4 text-[#F5F3EC]" strokeWidth={2.2} />
-          </div>
-          <div className="flex items-baseline">
-            <span className="text-lg font-semibold tracking-tight text-[#20231F]">
-              Spotwise
-            </span>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#819477] ml-1 mb-0.5 inline-block" />
-          </div>
-        </Link>
+        <AnimatedLogo size="md" variant="dark" href="/" />
 
         <span className="text-xs uppercase tracking-wider font-semibold text-[#819477] px-2.5 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] transition-all">
           {isSignIn ? "Sign In" : "Sign Up"}

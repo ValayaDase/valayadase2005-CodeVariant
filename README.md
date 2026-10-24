@@ -1,64 +1,24 @@
-## Basic backend (MongoDB + Socket.IO)
+# Spotwise
 
-The frontend remains a Next.js app. A small Express server handles saved places and community reports over REST, and venue chat over Socket.IO. Chat messages, saved places, and reports are stored in MongoDB. Guest names are demo identities and are not authenticated accounts.
+Spotwise is a Next.js app with server-side API Route Handlers. The app stores community reports, saved places, visit plans, and venue chat messages in MongoDB Atlas. Chat refreshes from the database every four seconds; it does not require a persistent Socket.IO server.
 
-### Run locally
+## Local development
 
-1. Install dependencies with `npm install`.
-2. Copy `.env.example` to `.env` and set `MONGODB_URI` to a local MongoDB instance or your own MongoDB Atlas connection string. Keep `.env` private.
-3. Start MongoDB.
-4. Run `npm run dev` and open `http://localhost:3000`. This starts both Next.js and the Express/Socket.IO backend. Use `npm run dev:backend` by itself only when you want to run or debug the backend separately.
+1. Run `npm install`.
+2. Copy `.env.example` to `.env.local` and set `MONGODB_URI` to your MongoDB Atlas connection string.
+3. Run `npm run dev` and open `http://localhost:3000`.
 
-The backend accepts frontend requests from `FRONTEND_URL` (comma-separated origins), defaults to `http://localhost:3000`, and listens on `PORT` (default `4000`). Set `NEXT_PUBLIC_API_URL` to the backend URL if it differs.
+Next.js runs the UI and `/api/*` handlers in the same app. The MongoDB connection is opened by those handlers and reused between warm serverless invocations when the host allows it.
 
-### API and chat
+## API routes
 
-- `GET /api/health`
-- `GET /api/venues/:venueId/reports` and `POST` to submit a report/comment
-- `GET /api/reports` for report history
-- `GET /api/saved/:userId` and `PUT /api/saved/:venueId` to save/unsave a place
-- `GET /api/venues/:venueId/chat` for recent messages
-- Socket.IO events: `join-venue`, `send-message`, and `new-message`
+- `GET /api/health` checks the database connection.
+- `GET /api/venues/:venueId/reports` and `POST` to submit a report/comment.
+- `GET /api/reports` lists recent reports.
+- `GET /api/saved/:userId` and `PUT /api/saved/:venueId` to list or update saved places.
+- `GET /api/plans/:userId`, `POST /api/plans`, and `DELETE /api/plans/:planId` manage visit plans.
+- `GET` and `POST /api/venues/:venueId/chat` load and save venue messages.
 
-The server accepts only venue IDs present in `src/data/venues.json`, validates report and message lengths, and stores chat messages before broadcasting them. A demo browser identity is stored locally to associate saved places; use real authentication before treating user identities as trusted.
+Set `MONGODB_URI` in the hosting provider's environment-variable settings for production. On Netlify, connect the repository as a Next.js site and use `npm run build` as the build command; Netlify's Next.js adapter deploys the app's route handlers with the site. Guest identities are demo identities and are not authenticated accounts. Use real authentication before trusting user IDs.
 
-The provided venue data is still demo content. The community backend does not turn chat messages into verified venue conditions.
-
----
-
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Venue data is demo content. Community reports and chat messages are user-submitted and are not independently verified.

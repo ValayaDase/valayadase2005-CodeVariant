@@ -1,6 +1,7 @@
 "use client";
 
-import { Compass, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
+import { AnimatedLogo } from "@/components/common";
 
 export default function Footer() {
   const footerLinks = {
@@ -39,17 +40,7 @@ export default function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-8 lg:gap-12 pb-12 border-b border-[#E8E0D2]">
           {/* Brand info */}
           <div className="col-span-2">
-            <a href="#" className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-[#26382B] flex items-center justify-center text-[#F5F3EC] shadow-sm">
-                <Compass className="w-4 h-4 text-[#F5F3EC]" strokeWidth={2.2} />
-              </div>
-              <div className="flex items-baseline">
-                <span className="text-xl font-semibold tracking-tight text-[#20231F]">
-                  Spotwise
-                </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-[#819477] ml-1 mb-0.5 inline-block" />
-              </div>
-            </a>
+            <AnimatedLogo size="md" href="#" />
             <p className="mt-4 text-sm text-[#555D50] leading-relaxed max-w-sm">
               The sensory space discovery engine. Empowering remote workers,
               thinkers, and creators to find verified calm spaces that foster deep

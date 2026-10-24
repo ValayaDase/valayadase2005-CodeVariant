@@ -1,6 +1,3 @@
-export const API_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-
 const DEMO_USER_KEY = "spotwise_demo_user_id";
 
 export function getDemoUserId() {
@@ -14,8 +11,9 @@ export function getDemoUserId() {
 }
 
 export async function backendRequest(path, options = {}) {
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(path, {
     ...options,
+    cache: options.cache || "no-store",
     headers: {
       ...(options.body ? { "Content-Type": "application/json" } : {}),
       ...options.headers,

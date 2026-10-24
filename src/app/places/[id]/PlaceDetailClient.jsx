@@ -5,23 +5,32 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   MapPin,
-  Bookmark,
   CheckCircle2,
   MessageSquare,
   ArrowLeft,
-  Sparkles,
 } from "lucide-react";
+import { AnimatedBookmark, AnimatedSparkles } from "@/components/common";
 import AppShell from "@/components/app/AppShell";
 import SuitabilityScore from "@/components/app/SuitabilityScore";
 import QuietWhenPanel from "@/components/app/QuietWhenPanel";
 import CommunityReportForm from "@/components/app/CommunityReportForm";
+import { VenueDetailLocationSection } from "@/components/map";
 import {
   getVenueById,
   getUserPreferences,
+  isVenueSaved,
 } from "@/lib/discovery/venue-data";
 import { backendRequest, getDemoUserId } from "@/lib/backend";
 import { calculateSuitability } from "@/lib/scoring/suitability";
 import LoadingLottie from "@/components/common/LoadingLottie";
+import {
+  CanvasProvider,
+  DraggableCard,
+  ActionZone,
+  ActionCanvasDock,
+  ComparisonDrawer,
+  DropFeedbackToast,
+} from "@/components/canvas";
 
 export default function PlaceDetailClient({ id }) {
   const [venue, setVenue] = useState(() => (id ? getVenueById(id) : null));
@@ -37,6 +46,11 @@ export default function PlaceDetailClient({ id }) {
     backendRequest(`/api/saved/${userId}`)
       .then(({ venueIds }) => active && setSaved(venueIds.includes(id)))
       .catch(() => active && setSaveError("Saved places are unavailable while the backend is offline."));
+
+    const handleSavedChange = () => {
+      setSaved(isVenueSaved(id));
+    };
+    window.addEventListener("spotwise_saved_changed", handleSavedChange);
     backendRequest(`/api/venues/${id}/reports`)
       .then(({ reports }) => {
         if (!active || !reports.length) return;
@@ -55,23 +69,11 @@ export default function PlaceDetailClient({ id }) {
         }) : current);
       })
       .catch(() => {});
-    return () => { active = false; };
+    return () => {
+      active = false;
+      window.removeEventListener("spotwise_saved_changed", handleSavedChange);
+    };
   }, [id]);
-
-  const handleToggleSave = async () => {
-    if (!venue) return;
-    setSaveError("");
-    try {
-      const nextSaved = !saved;
-      await backendRequest(`/api/saved/${venue.id}`, {
-        method: "PUT",
-        body: JSON.stringify({ userId: getDemoUserId(), saved: nextSaved }),
-      });
-      setSaved(nextSaved);
-    } catch {
-      setSaveError("Could not update saved places. Check that the backend and database are running.");
-    }
-  };
 
   const handleReportSaved = async () => {
     try {
@@ -118,11 +120,12 @@ export default function PlaceDetailClient({ id }) {
   });
 
   return (
-    <AppShell
-      title={venue.name}
-      subtitle={`${venue.categoryLabel} in ${venue.neighborhood}`}
-    >
-      <div className="space-y-8 text-left max-w-6xl mx-auto">
+    <CanvasProvider initialPage="places">
+      <AppShell
+        title={venue.name}
+        subtitle={`${venue.categoryLabel} in ${venue.neighborhood}`}
+      >
+        <div className="space-y-8 text-left max-w-6xl mx-auto pb-36">
         {/* Back Link */}
         <div>
           <Link
@@ -149,7 +152,7 @@ export default function PlaceDetailClient({ id }) {
               />
             ) : (
               <div className="w-full h-full flex flex-col items-center justify-center p-8 text-[#555D50]">
-                <Sparkles className="w-12 h-12 text-[#819477] mb-2" />
+                <AnimatedSparkles size={48} className="text-[#819477] mb-2" />
                 <h2 className="text-2xl font-serif font-bold text-[#20231F]">
                   {venue.name}
                 </h2>
@@ -163,45 +166,45 @@ export default function PlaceDetailClient({ id }) {
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent pointer-events-none" />
 
             {/* Top Badges */}
-            <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
-              <span className="px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E8E0D2] text-xs font-semibold text-[#20231F] shadow-sm">
+            <div className="absolute top-3 left-3 right-3 z-10 flex flex-wrap items-start gap-2 sm:top-4 sm:left-4 sm:right-auto">
+              <span className="max-w-full rounded-full border border-[#E8E0D2] bg-white/95 px-3 py-1.5 text-[11px] font-semibold text-[#20231F] shadow-sm backdrop-blur-md sm:px-3.5 sm:text-xs">
                 {venue.categoryLabel}
               </span>
-              <span className="px-3 py-1.5 rounded-full bg-[#26382B]/90 backdrop-blur-md text-xs font-medium text-[#F5F3EC]">
+              <span className="max-w-full rounded-full bg-[#26382B]/90 px-3 py-1.5 text-[11px] font-medium text-[#F5F3EC] backdrop-blur-md sm:text-xs">
                 {venue.provenance}
               </span>
             </div>
 
             {/* Bottom Title on Image */}
-            <div className="absolute bottom-6 left-6 right-6 z-10 text-white flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div>
+            <div className="absolute bottom-4 left-4 right-4 z-10 flex flex-col justify-between gap-3 text-white sm:bottom-6 sm:left-6 sm:right-6 sm:flex-row sm:items-end sm:gap-4">
+              <div className="min-w-0">
                 <h1 className="text-2xl sm:text-4xl font-serif font-bold tracking-tight text-white drop-shadow-sm">
                   {venue.name}
                 </h1>
-                <p className="text-xs sm:text-sm text-[#F5F3EC]/90 mt-1 flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 text-[#819477]" />
-                  <span>{venue.address}</span>
+                <p className="mt-1 flex min-w-0 items-start gap-1.5 text-xs leading-relaxed text-[#F5F3EC]/90 sm:text-sm">
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#819477]" />
+                  <span className="min-w-0 break-words" aria-label={`Full address for ${venue.name}`}>{venue.address}</span>
                 </p>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  type="button"
-                  onClick={handleToggleSave}
-                  className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-semibold transition-all shadow-sm ${
-                    saved
-                      ? "bg-white text-[#26382B]"
-                      : "bg-white/80 hover:bg-white text-[#20231F]"
-                  }`}
+              {/* Action Controls: Draggable Sanctuary Token + Channel Chat Link */}
+              <div className="flex flex-wrap items-center gap-3 shrink-0">
+                <DraggableCard
+                  id={`detail-token-${venue.id}`}
+                  type={saved ? "saved_venue" : "venue"}
+                  item={venue}
+                  handleLabel={saved ? "Saved Sanctuary (Drag to Canvas)" : "Drag Sanctuary Token"}
+                  className="rounded-2xl"
                 >
-                  <Bookmark
-                    className={`w-4 h-4 ${
-                      saved ? "fill-[#26382B] text-[#26382B]" : ""
-                    }`}
-                  />
-                  <span>{saved ? "Saved" : "Save Place"}</span>
-                </button>
+                  <div className="px-3.5 py-2 rounded-2xl bg-white/95 backdrop-blur-md border border-[#E8E0D2] shadow-sm flex items-center gap-2 text-xs font-semibold text-[#20231F] cursor-grab select-none">
+                    <AnimatedBookmark
+                      size={16}
+                      isSaved={saved}
+                      className={saved ? "text-[#26382B]" : "text-[#819477]"}
+                    />
+                    <span>{saved ? "Saved Sanctuary" : "Sanctuary Token"}</span>
+                  </div>
+                </DraggableCard>
 
                 <Link
                   href={`/chat/${venue.id}`}
@@ -213,6 +216,37 @@ export default function PlaceDetailClient({ id }) {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Canvas Protocol Action Zones Strip */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {saved ? (
+            <ActionZone
+              id="remove-saved"
+              title="Release Sanctuary"
+              description="Drag the Sanctuary Token here to remove from library"
+              accepts={["venue", "saved_venue"]}
+              variant="danger"
+              compact
+            />
+          ) : (
+            <ActionZone
+              id="save-space"
+              title="Save Sanctuary"
+              description="Drag the Sanctuary Token here to save to your collection"
+              accepts={["venue", "saved_venue"]}
+              variant="primary"
+              compact
+            />
+          )}
+          <ActionZone
+            id="compare-spaces"
+            title="Compare with Others"
+            description="Drag the Sanctuary Token here to compare telemetry"
+            accepts={["venue", "saved_venue"]}
+            variant="secondary"
+            compact
+          />
         </div>
 
         {/* 2-Column Overview Grid */}
@@ -227,6 +261,14 @@ export default function PlaceDetailClient({ id }) {
               <p className="text-sm text-[#555D50] leading-relaxed">
                 {venue.description}
               </p>
+
+              <div className="mt-5 flex min-w-0 items-start gap-3 rounded-2xl border border-[#E8E0D2] bg-[#FAF8F3] p-4">
+                <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-[#819477]" aria-hidden="true" />
+                <div className="min-w-0">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#819477]">Full address</p>
+                  <address className="mt-1 break-words text-sm not-italic leading-relaxed text-[#20231F]">{venue.address}</address>
+                </div>
+              </div>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 pt-5 border-t border-[#E8E0D2]/70 text-xs">
                 <div className="p-3 rounded-xl bg-[#F5F3EC]/70">
@@ -367,7 +409,10 @@ export default function PlaceDetailClient({ id }) {
           venueName={venue.name}
         />
 
-        {/* Report Submission Modal / Section */}
+        {/* Dedicated Interactive Map & Geographic Distance Section */}
+        <VenueDetailLocationSection venue={venue} />
+
+        {/* Report Submission Section */}
         {showReportModal && (
           <div className="pt-4">
             <CommunityReportForm
@@ -377,7 +422,13 @@ export default function PlaceDetailClient({ id }) {
             />
           </div>
         )}
-      </div>
-    </AppShell>
+        </div>
+
+        {/* Canvas Protocol Dock & Overlays */}
+        <ActionCanvasDock mode={saved ? "saved" : "places"} />
+        <ComparisonDrawer />
+        <DropFeedbackToast />
+      </AppShell>
+    </CanvasProvider>
   );
 }
