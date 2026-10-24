@@ -1,59 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import "leaflet/dist/leaflet.css";
 @import "tailwindcss";
 
 :root {
-  --background: #F5F3EC;
-  --foreground: #20231F;
-  --bg-primary: #F5F3EC;
-  --surface: #FFFFFF;
-  --sage: #819477;
-  --forest: #26382B;
-  --charcoal: #20231F;
-  --beige: #E8E0D2;
+  --ivory: #F4F1E8;
+  --soft-white: #FCFBF7;
+  --forest: #263D31;
+  --sage: #819478;
+  --pale-green: #E3EBDD;
+  --dark-text: #252B26;
+  --secondary-text: #6C7168;
+  --border: #E3E0D7;
+  --problem-amber: #C58C5A;
+  --crowded-terracotta: #B86E52;
+  --quiet-green: #648568;
+  --unknown-grey: #92958D;
 }
 
 @theme {
-  --color-brand-bg: #F5F3EC;
-  --color-brand-surface: #FFFFFF;
-  --color-brand-sage: #819477;
-  --color-brand-forest: #26382B;
-  --color-brand-charcoal: #20231F;
-  --color-brand-beige: #E8E0D2;
+  --color-ivory: #F4F1E8;
+  --color-soft-white: #FCFBF7;
+  --color-forest: #263D31;
+  --color-sage: #819478;
+  --color-pale-green: #E3EBDD;
+  --color-dark-text: #252B26;
+  --color-secondary-text: #6C7168;
+  --color-border: #E3E0D7;
+  --color-problem-amber: #C58C5A;
+  --color-crowded: #B86E52;
+  --color-quiet: #648568;
+  --color-unknown: #92958D;
 }
 
 html {
+  background-color: var(--ivory);
+  color: var(--dark-text);
   scroll-behavior: smooth;
-  background-color: #F5F3EC;
-  color: #20231F;
 }
 
 body {
-  background-color: #F5F3EC;
-  color: #20231F;
-  font-family: var(--font-sans, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+  background-color: var(--ivory);
+  color: var(--dark-text);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background-color: #819477;
-  color: #FFFFFF;
+  background-color: #263D31;
+  color: #F4F1E8;
 }
 
-/* Custom light styling utilities */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(232, 224, 210, 0.7);
-}
-
-.subtle-border {
-  border-color: #E8E0D2;
-}
-
-/* Subtle editorial text styling */
+/* Typography Classes */
 .font-editorial {
-  font-family: "Georgia", "Cambria", "Times New Roman", serif;
-  letter-spacing: -0.02em;
+  font-family: 'DM Serif Display', 'Instrument Serif', Georgia, serif;
+  letter-spacing: -0.015em;
+}
+
+.font-instrument {
+  font-family: 'Instrument Serif', Georgia, serif;
+}
+
+.font-body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+}
+
+/* Glass & Card utilities matching light ivory theme */
+.glass-ivory {
+  background: rgba(252, 251, 247, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(227, 224, 215, 0.85);
+}
+
+.glass-dark {
+  background: rgba(38, 61, 49, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(129, 148, 120, 0.25);
+}
+
+.card-ivory {
+  background: #FCFBF7;
+  border: 1px solid #E3E0D7;
+  box-shadow: 0 4px 20px -2px rgba(38, 61, 49, 0.04);
+}
+
+/* Leaflet map custom styling for ivory/sage harmony */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background-color: #E3EBDD !important;
+  font-family: 'Plus Jakarta Sans', sans-serif !important;
+  z-index: 10;
+}
+
+.leaflet-tile {
+  filter: sepia(10%) saturate(85%) hue-rotate(45deg) brightness(98%) contrast(96%);
+}
+
+.custom-marker-pin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.custom-marker-pin:hover {
+  transform: scale(1.15) translateY(-2px);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F4F1E8;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #819478;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #263D31;
 }
