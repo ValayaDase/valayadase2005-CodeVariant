@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, ShieldCheck } from "lucide-react";
+import { Menu } from "lucide-react";
 
 export default function AppHeader({ title, subtitle, onOpenMobile, user }) {
   return (
@@ -30,10 +30,6 @@ export default function AppHeader({ title, subtitle, onOpenMobile, user }) {
 
       {/* Right: Telemetry pill & user badge */}
       <div className="flex items-center gap-2.5 sm:gap-3">
-        <div className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] text-xs font-semibold text-[#819477]">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Sensory Telemetry Engine</span>
-        </div>
 
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E8E0D2] shadow-sm">
           <div className="w-6 h-6 rounded-full bg-[#26382B] text-[#F5F3EC] flex items-center justify-center font-bold text-xs font-serif">

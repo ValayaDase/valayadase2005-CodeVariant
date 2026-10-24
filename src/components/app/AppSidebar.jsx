@@ -50,18 +50,6 @@ export default function AppSidebar({ user, onCloseMobile }) {
           </div>
         </Link>
 
-        {/* Sensory Telemetry Status Pill */}
-        <div className="mt-5 px-3 py-2 rounded-xl bg-[#F5F3EC] border border-[#E8E0D2] flex items-center justify-between text-[11px] text-[#555D50]">
-          <div className="flex items-center gap-1.5">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#819477] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#819477]"></span>
-            </span>
-            <span className="font-semibold text-[#26382B]">Sensory Radar</span>
-          </div>
-          <span className="text-[#819477] font-mono">v2.4 Live</span>
-        </div>
-
         {/* Main Navigation Links */}
         <nav className="mt-6 space-y-1.5">
           {navItems.map((item) => {

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Compass } from "lucide-react";
+import LoadingLottie from "@/components/common/LoadingLottie";
 
 export default function VenueMap({ venues = [], onSelectVenue, selectedVenueId }) {
   const mapContainerRef = useRef(null);
@@ -150,11 +151,8 @@ export default function VenueMap({ venues = [], onSelectVenue, selectedVenueId }
 
       {/* Fallback loading indicator */}
       {!mapLoaded && (
-        <div className="absolute inset-0 z-0 flex flex-col items-center justify-center bg-[#F5F3EC] text-[#555D50]">
-          <div className="w-8 h-8 border-2 border-[#819477] border-t-transparent rounded-full animate-spin mb-2" />
-          <p className="text-xs font-semibold uppercase tracking-wider">
-            Loading OpenStreetMap Tiles...
-          </p>
+        <div className="absolute inset-0 z-0 flex items-center justify-center bg-[#F5F3EC]">
+          <LoadingLottie size="lg" />
         </div>
       )}
     </div>

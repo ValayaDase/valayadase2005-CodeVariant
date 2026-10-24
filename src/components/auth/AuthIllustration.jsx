@@ -2,7 +2,7 @@
 
 import { useEffect, useState, memo } from "react";
 import dynamic from "next/dynamic";
-import { Sparkles, ShieldCheck, Volume2 } from "lucide-react";
+import { Sparkles } from "lucide-react";
 
 // Dynamically import Lottie from lottie-react without SSR.
 // lottie-react v3 exports a named { Lottie }, while v2 exported default.

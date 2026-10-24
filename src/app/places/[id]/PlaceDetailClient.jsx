@@ -21,6 +21,7 @@ import {
   isVenueSaved,
 } from "@/lib/discovery/venue-data";
 import { calculateSuitability } from "@/lib/scoring/suitability";
+import LoadingLottie from "@/components/common/LoadingLottie";
 
 export default function PlaceDetailClient({ id }) {
   const [venue, setVenue] = useState(() => (id ? getVenueById(id) : null));
@@ -42,11 +43,8 @@ export default function PlaceDetailClient({ id }) {
   if (!venue) {
     return (
       <AppShell title="Venue Profile" subtitle="Loading sanctuary details...">
-        <div className="py-20 text-center">
-          <div className="w-8 h-8 border-2 border-[#819477] border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-xs uppercase tracking-wider font-semibold text-[#555D50]">
-            Calibrating acoustic profile...
-          </p>
+        <div className="py-20 text-center flex items-center justify-center">
+          <LoadingLottie size="lg" />
         </div>
       </AppShell>
     );
