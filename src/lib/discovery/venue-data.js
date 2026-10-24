@@ -219,21 +219,54 @@ export function sendVenueChatMessage(venueId, text, author = "You") {
 
 /**
  * User Preferences Storage
+ * Defaults are completely neutral and open unless explicitly customized by the user.
  */
 export const DEFAULT_PREFERENCES = {
   activity: "Deep Work",
-  noisePreference: "Quiet",
-  budget: "$$",
-  requiredFacilities: ["wifi", "power_outlets", "ergonomic_seating"],
+  noisePreference: "Any",
+  budget: "Any",
+  requiredFacilities: [],
   defaultDay: "Today",
   defaultTime: "morning",
 };
 
 export function getUserPreferences() {
-  return getStorage(STORAGE_KEYS.PREFERENCES, DEFAULT_PREFERENCES);
+  const stored = getStorage(STORAGE_KEYS.PREFERENCES, null);
+  if (!stored) {
+    return { ...DEFAULT_PREFERENCES };
+  }
+
+  // Clear legacy hardcoded developer defaults if the user did not explicitly choose them
+  if (
+    !stored.userExplicitlySaved &&
+    (stored.noisePreference === "Quiet" || stored.budget === "$$") &&
+    Array.isArray(stored.requiredFacilities) &&
+    stored.requiredFacilities.length >= 3 &&
+    stored.requiredFacilities.includes("wifi") &&
+    stored.requiredFacilities.includes("power_outlets") &&
+    stored.requiredFacilities.includes("ergonomic_seating")
+  ) {
+    return { ...DEFAULT_PREFERENCES };
+  }
+
+  return {
+    activity: stored.activity || "Deep Work",
+    noisePreference: stored.noisePreference || "Any",
+    budget: stored.budget || "Any",
+    requiredFacilities: Array.isArray(stored.requiredFacilities)
+      ? stored.requiredFacilities
+      : [],
+    defaultDay: stored.defaultDay || "Today",
+    defaultTime: stored.defaultTime || "morning",
+    userExplicitlySaved: Boolean(stored.userExplicitlySaved),
+  };
 }
 
 export function saveUserPreferences(prefs) {
-  setStorage(STORAGE_KEYS.PREFERENCES, prefs);
-  return prefs;
+  const toSave = {
+    ...prefs,
+    userExplicitlySaved: true,
+  };
+  setStorage(STORAGE_KEYS.PREFERENCES, toSave);
+  return toSave;
 }

@@ -58,7 +58,7 @@ export default function AuthForm({ mode = "sign-in", onSwitchMode }) {
       setIsSubmitting(true);
       const res = signInDemo(formData.email, formData.password);
       if (res.success) {
-        setSuccessMessage("Welcome back! Redirecting to your discovery dashboard...");
+        setSuccessMessage(`Welcome back, ${res.session.user.name}! Redirecting...`);
         setTimeout(() => {
           router.push("/discover");
         }, 800);
@@ -87,7 +87,7 @@ export default function AuthForm({ mode = "sign-in", onSwitchMode }) {
       setIsSubmitting(true);
       const res = signUpDemo(formData);
       if (res.success) {
-        setSuccessMessage("Demo account created! Opening discovery dashboard...");
+        setSuccessMessage(`Welcome, ${res.session.user.name}! Opening discovery dashboard...`);
         setTimeout(() => {
           router.push("/discover");
         }, 900);
@@ -214,13 +214,17 @@ export default function AuthForm({ mode = "sign-in", onSwitchMode }) {
 
         <InputField
           id="email"
-          label="Email Address"
-          type="email"
+          label={isSignIn ? "Email or Full Name" : "Email Address"}
+          type={isSignIn ? "text" : "email"}
           value={formData.email}
           onChange={handleChange}
-          placeholder="e.g. demo@spotwise.app"
+          placeholder={
+            isSignIn
+              ? "e.g. demo@spotwise.app or your name"
+              : "e.g. demo@spotwise.app"
+          }
           error={errors.email}
-          autoComplete="email"
+          autoComplete={isSignIn ? "username" : "email"}
         />
 
         <InputField

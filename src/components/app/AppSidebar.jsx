@@ -9,11 +9,15 @@ import {
   Sliders,
   LogOut,
 } from "lucide-react";
-import { clearDemoSession } from "@/lib/auth/demo-auth";
+import { clearDemoSession, getInitials } from "@/lib/auth/demo-auth";
 
 export default function AppSidebar({ user, onCloseMobile }) {
   const pathname = usePathname();
   const router = useRouter();
+
+  const displayName = user?.name || "Alex Mercer";
+  const initials = user?.avatarInitials || getInitials(displayName);
+  const displayRole = user?.role || (user?.isDemo ? "Remote Nomad" : "Nomad Member");
 
   const navItems = [
     { label: "Discover", href: "/discover", icon: Compass },
@@ -84,15 +88,15 @@ export default function AppSidebar({ user, onCloseMobile }) {
       {/* Bottom Profile and Sign Out Card */}
       <div className="pt-4 border-t border-[#E8E0D2] space-y-3">
         <div className="flex items-center gap-3 px-2 py-1.5">
-          <div className="w-9 h-9 rounded-full bg-[#E8E0D2] border border-[#819477]/40 flex items-center justify-center font-serif font-bold text-sm text-[#26382B]">
-            {user?.avatarInitials || "AM"}
+          <div className="w-9 h-9 rounded-full bg-[#E8E0D2] border border-[#819477]/40 flex items-center justify-center font-serif font-bold text-sm text-[#26382B] tracking-tight">
+            {initials}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-semibold text-[#20231F] truncate">
-              {user?.name || "Alex Mercer"}
+              {displayName}
             </p>
             <p className="text-[11px] text-[#819477] truncate font-medium">
-              {user?.role || "Remote Nomad"}
+              {displayRole}
             </p>
           </div>
         </div>
@@ -103,7 +107,7 @@ export default function AppSidebar({ user, onCloseMobile }) {
           className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold text-[#555D50] hover:text-red-700 hover:bg-red-50 border border-[#E8E0D2] transition-colors"
         >
           <LogOut className="w-3.5 h-3.5" />
-          <span>Sign Out (Demo Session)</span>
+          <span>Sign Out</span>
         </button>
       </div>
     </aside>

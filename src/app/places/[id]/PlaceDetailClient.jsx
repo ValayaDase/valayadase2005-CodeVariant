@@ -17,6 +17,7 @@ import QuietWhenPanel from "@/components/app/QuietWhenPanel";
 import CommunityReportForm from "@/components/app/CommunityReportForm";
 import {
   getVenueById,
+  getUserPreferences,
 } from "@/lib/discovery/venue-data";
 import { backendRequest, getDemoUserId } from "@/lib/backend";
 import { calculateSuitability } from "@/lib/scoring/suitability";
@@ -104,12 +105,16 @@ export default function PlaceDetailClient({ id }) {
     );
   }
 
+  const prefs = getUserPreferences();
   const suitability = calculateSuitability(venue, {
-    activity: "Deep Work",
-    noisePreference: "Quiet",
-    day: "Monday",
-    time: "morning",
-    requiredFacilities: ["wifi", "power_outlets", "ergonomic_seating"],
+    activity: prefs.activity || "Deep Work",
+    noisePreference: prefs.noisePreference || "Any",
+    day: prefs.defaultDay || "Monday",
+    time: prefs.defaultTime || "morning",
+    budget: prefs.budget || "Any",
+    requiredFacilities: Array.isArray(prefs.requiredFacilities)
+      ? prefs.requiredFacilities
+      : [],
   });
 
   return (

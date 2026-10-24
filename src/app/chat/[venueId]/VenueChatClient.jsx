@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Users, ShieldCheck } from "lucide-react";
 import AppShell from "@/components/app/AppShell";
 import VenueChat from "@/components/app/VenueChat";
 import { getVenueById } from "@/lib/discovery/venue-data";
@@ -16,7 +16,7 @@ export default function VenueChatClient({ venueId }) {
       title={`${venueName} Channel`}
       subtitle="Real-time peer chat & verified room conditions"
     >
-      <div className="space-y-6 text-left max-w-4xl mx-auto">
+      <div className="space-y-6 text-left max-w-6xl mx-auto">
         {/* Navigation Breadcrumb */}
         <div className="flex items-center justify-between">
           <Link
@@ -27,16 +27,17 @@ export default function VenueChatClient({ venueId }) {
             <span>Back to {venueName} Overview</span>
           </Link>
 
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#819477] px-3 py-1 rounded-full bg-white border border-[#E8E0D2]">
-            Shared Venue Chat
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-[#819477] px-3.5 py-1.5 rounded-full bg-white border border-[#E8E0D2] shadow-xs flex items-center gap-1.5">
+            <Users className="w-3.5 h-3.5 text-[#819477]" />
+            <span>Shared Venue Chat</span>
           </span>
         </div>
 
         {/* Venue Chat Component */}
-        <VenueChat venueId={venueId} venueName={venueName} />
+        <VenueChat venue={venue} venueId={venueId} venueName={venueName} />
 
         {/* Information Notice */}
-        <div className="p-4 rounded-2xl bg-white border border-[#E8E0D2] text-xs text-[#555D50] flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-white border border-[#E8E0D2] text-xs text-[#555D50] flex items-center justify-between shadow-xs">
           <div className="flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#819477] shrink-0" />
             <span>

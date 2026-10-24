@@ -23,21 +23,19 @@ export default function DiscoverPage() {
   const [selectedLocation, setSelectedLocation] = useState("London (All Districts)");
   const [selectedVenueId, setSelectedVenueId] = useState(null);
 
-  // Initialize filters from saved preferences or defaults
+  // Initialize filters from saved preferences or neutral defaults
   const [filters, setFilters] = useState(() => {
     const prefs = getUserPreferences();
     return {
       searchQuery: "",
       activity: prefs.activity || "Deep Work",
-      noisePreference: prefs.noisePreference || "Quiet",
+      noisePreference: prefs.noisePreference || "Any",
       budget: prefs.budget || "Any",
       day: "Monday",
       time: "morning",
-      requiredFacilities: prefs.requiredFacilities || [
-        "wifi",
-        "power_outlets",
-        "ergonomic_seating",
-      ],
+      requiredFacilities: Array.isArray(prefs.requiredFacilities)
+        ? prefs.requiredFacilities
+        : [],
     };
   });
 

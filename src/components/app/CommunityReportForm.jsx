@@ -12,6 +12,7 @@ import {
   Zap,
 } from "lucide-react";
 import { backendRequest } from "@/lib/backend";
+import { getDemoSession } from "@/lib/auth/demo-auth";
 
 export default function CommunityReportForm({ venueId, venueName, onReportSubmitted }) {
   const [formData, setFormData] = useState({
@@ -38,14 +39,19 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
 
     setIsSubmitting(true);
     try {
+      const session = getDemoSession();
+      const currentAuthor = session?.user?.name || "Spotwise member";
       const { report } = await backendRequest(`/api/venues/${venueId}/reports`, {
         method: "POST",
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          author: currentAuthor,
+        }),
       });
       const saved = {
         ...report,
         id: report._id,
-        author: "Spotwise guest",
+        author: currentAuthor,
         timestamp: "Just now",
         timestampIso: report.createdAt,
       };

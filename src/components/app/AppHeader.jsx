@@ -1,8 +1,13 @@
 "use client";
 
 import { Menu } from "lucide-react";
+import { getInitials } from "@/lib/auth/demo-auth";
 
 export default function AppHeader({ title, subtitle, onOpenMobile, user }) {
+  const displayName = user?.name || "Alex Mercer";
+  const initials = user?.avatarInitials || getInitials(displayName);
+  const badgeLabel = user?.isDemo ? "Demo" : "Member";
+
   return (
     <header className="w-full bg-white border-b border-[#E8E0D2] px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4 sticky top-0 z-30 shadow-[0_2px_10px_rgba(32,35,31,0.02)]">
       {/* Left: Mobile Toggle & Page Title */}
@@ -28,18 +33,17 @@ export default function AppHeader({ title, subtitle, onOpenMobile, user }) {
         </div>
       </div>
 
-      {/* Right: Telemetry pill & user badge */}
+      {/* Right: User initials and name badge */}
       <div className="flex items-center gap-2.5 sm:gap-3">
-
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-[#E8E0D2] shadow-sm">
-          <div className="w-6 h-6 rounded-full bg-[#26382B] text-[#F5F3EC] flex items-center justify-center font-bold text-xs font-serif">
-            {user?.avatarInitials || "AM"}
+          <div className="w-6 h-6 rounded-full bg-[#26382B] text-[#F5F3EC] flex items-center justify-center font-bold text-xs font-serif tracking-tight">
+            {initials}
           </div>
           <span className="text-xs font-semibold text-[#20231F] hidden sm:inline">
-            {user?.name || "Alex Mercer"}
+            {displayName}
           </span>
           <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-[#819477]/15 text-[#26382B]">
-            Demo
+            {badgeLabel}
           </span>
         </div>
       </div>

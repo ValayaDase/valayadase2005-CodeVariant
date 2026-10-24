@@ -24,9 +24,11 @@ export default function AppShell({ children, title, subtitle }) {
       setSession(getDemoSession());
     };
     window.addEventListener("spotwise_auth_changed", handleAuthChange);
+    window.addEventListener("storage", handleAuthChange);
     return () => {
       clearTimeout(timer);
       window.removeEventListener("spotwise_auth_changed", handleAuthChange);
+      window.removeEventListener("storage", handleAuthChange);
     };
   }, []);
 

@@ -12,6 +12,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@animateicons/react": "^0.12.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
@@ -21,10 +22,10 @@
     "leaflet": "^1.9.4",
     "lottie-react": "^3.1.2",
     "lucide-react": "^1.61.0",
+    "mongoose": "^8.13.2",
     "next": "16.4.3",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "mongoose": "^8.13.2",
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.8.1"
   },

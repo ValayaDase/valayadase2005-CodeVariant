@@ -226,13 +226,23 @@ io.on("connection", (socket) => {
     }
     lastSentAt = now;
     try {
+      const author =
+        typeof payload?.author === "string" && payload.author.trim()
+          ? payload.author.trim().slice(0, 40)
+          : "Guest";
+
       const message = await ChatMessage.create({
         venueId,
-        author: "Spotwise guest",
+        author,
         text,
       });
-      const result = safeMessage(message);
-      io.to(`venue:${venueId}`).emit("new-message", result);
+      const result = {
+        ...safeMessage(message),
+        clientId: payload?.clientId,
+      };
+      // Broadcast to other peers in the venue room
+      socket.to(`venue:${venueId}`).emit("new-message", result);
+      // Acknowledge back to sender
       acknowledge({ message: result });
     } catch {
       acknowledge({ error: "Message could not be saved. Please try again." });
