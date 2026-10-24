@@ -93,20 +93,21 @@ const PROBLEMS = [
   },
 ];
 
+const DESKTOP_QUERY = "(min-width: 1024px)";
+
 function SectionHeader() {
   return (
     <div>
-      <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-[#C58C5A]/30 bg-[#C58C5A]/10 px-3 py-1.5">
-        <AlertTriangle className="h-3 w-3 text-[#AD764C]" />
-
-        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-[#AD764C]">
-          Section 02 · The Problem
+      <div className="mb-2.5 inline-flex items-center gap-2">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#819478]" />
+        <span className="font-mono text-[10px] font-semibold uppercase tracking-[0.24em] text-[#819478]">
+          The Invisible Frictions
         </span>
       </div>
 
       <h2 className="font-editorial text-3xl leading-[1.1] tracking-tight text-[#252B26] lg:text-[clamp(2rem,3vw,3rem)]">
         A place can look perfect.
-        <span className="mt-1 block italic text-[#B68155]">
+        <span className="mt-1 block italic text-[#718665]">
           And still be wrong for you.
         </span>
       </h2>
@@ -119,7 +120,7 @@ function Diagnostics({ problem }) {
 
   return (
     <div className="diagnostics rounded-2xl border border-[#E3E0D7] bg-[#FCFBF7] p-4 shadow-[0_8px_25px_rgba(38,61,49,0.04)] xl:p-5">
-      <div className="mb-3 flex items-center justify-between gap-3">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <span className="font-mono text-[8px] uppercase tracking-[0.14em] text-[#7E8478]">
           Diagnostic observation
         </span>
@@ -129,10 +130,10 @@ function Diagnostics({ problem }) {
         </span>
       </div>
 
-      <div className="flex items-center justify-between gap-4 border-b border-[#E3E0D7] pb-4">
-        <div className="flex min-w-0 items-center gap-3">
+      <div className="flex items-center justify-between gap-3 border-b border-[#E3E0D7] pb-4">
+        <div className="flex min-w-0 items-center gap-2.5">
           <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
             style={{
               backgroundColor: `${problem.statusAccent}18`,
               color: problem.statusAccent,
@@ -141,7 +142,7 @@ function Diagnostics({ problem }) {
             <Icon className="h-4 w-4" />
           </span>
 
-          <p className="text-xs font-medium leading-relaxed text-[#454D43]">
+          <p className="text-[11px] font-medium leading-relaxed text-[#454D43]">
             {problem.statusBadge}
           </p>
         </div>
@@ -162,7 +163,7 @@ function Diagnostics({ problem }) {
 
       <div className="grid grid-cols-3 gap-3 pt-4">
         {problem.telemetry.map((item) => (
-          <div key={item.label} className="telemetry-item">
+          <div key={item.label} className="telemetry-item min-w-0">
             <p className="font-mono text-[8px] uppercase leading-relaxed tracking-wider text-[#7E8478]">
               {item.label}
             </p>
@@ -192,251 +193,372 @@ export default function Section02Problem() {
 
     const ctx = gsap.context(() => {
       media.add(
-        "(min-width: 1024px) and (min-height: 800px) and (prefers-reduced-motion: no-preference)",
-        () => {
-          const cards = Array.from(
-            stageRef.current.querySelectorAll(".split-card")
-          );
+        {
+          desktop: DESKTOP_QUERY,
+          compact: "(max-width: 1023px)",
+          reduceMotion: "(prefers-reduced-motion: reduce)",
+          allowMotion: "(prefers-reduced-motion: no-preference)",
+        },
+        (context) => {
+          const { desktop, reduceMotion } = context.conditions;
 
-          const chapterMarkers = [];
-          const hold = { value: 0 };
+          if (reduceMotion) return;
 
-          let lastChapter = -1;
+          if (desktop) {
+            const cards = Array.from(
+              stageRef.current.querySelectorAll(".split-card")
+            );
 
-          gsap.set(progressRef.current, {
-            scaleX: 0,
-            transformOrigin: "left center",
-          });
+            const chapterMarkers = [];
+            const hold = { value: 0 };
 
-          cards.forEach((card, index) => {
-            gsap.set(card, {
-              yPercent: index === 0 ? 0 : 100,
-              autoAlpha: index === 0 ? 1 : 0,
-              zIndex: index + 1,
+            let lastChapter = -1;
+
+            const setProgress = gsap.quickSetter(
+              progressRef.current,
+              "scaleX"
+            );
+
+            gsap.set(progressRef.current, {
+              scaleX: 0,
+              transformOrigin: "left center",
             });
 
-            gsap.set(card.querySelector(".split-visual"), {
-              left: "0%",
-              width: "100%",
-            });
-
-            gsap.set(card.querySelector(".split-narrative"), {
-              autoAlpha: 0,
-              clipPath: "inset(0% 100% 0% 0%)",
-            });
-
-            gsap.set(card.querySelector(".scene-intro"), {
-              autoAlpha: 1,
-              y: 0,
-            });
-
-            gsap.set(card.querySelector(".scene-status"), {
-              autoAlpha: 0,
-              y: 12,
-            });
-          });
-
-          const timeline = gsap.timeline({
-            onUpdate: () => {
-              const time = timeline.time();
-
-              let chapter = 0;
-
-              chapterMarkers.forEach((marker) => {
-                if (time >= marker.time) chapter = marker.chapter;
+            cards.forEach((card, index) => {
+              gsap.set(card, {
+                yPercent: index === 0 ? 0 : 100,
+                autoAlpha: index === 0 ? 1 : 0,
+                zIndex: index + 1,
               });
 
-              if (chapter !== lastChapter) {
-                lastChapter = chapter;
-                setActiveChapter(chapter);
-              }
-
-              gsap.set(progressRef.current, {
-                scaleX: timeline.progress(),
+              // Keep the image layer full-size throughout the split.
+              gsap.set(card.querySelector(".split-visual"), {
+                clipPath: "inset(0% 0% 0% 0% round 24px)",
               });
-            },
-            scrollTrigger: {
-              trigger: desktopRef.current,
-              start: "top top",
-              end: () => `+=${window.innerHeight * 5}`,
-              scrub: 0.8,
-              pin: true,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-            },
-          });
 
-          const addSplitReveal = (card, start) => {
-            const visual = card.querySelector(".split-visual");
-            const narrative = card.querySelector(".split-narrative");
-            const intro = card.querySelector(".scene-intro");
-            const image = card.querySelector(".scene-image");
-            const status = card.querySelector(".scene-status");
+              gsap.set(card.querySelector(".scene-image"), {
+                xPercent: 0,
+                scale: 1.06,
+                transformOrigin: "center center",
+              });
 
-            // First see the place; then uncover its story.
-            timeline
-              .to(
-                intro,
-                {
-                  autoAlpha: 0,
-                  y: -18,
-                  duration: 0.35,
-                  ease: "power2.in",
-                },
-                start
-              )
-              .to(
-                visual,
-                {
-                  left: "52%",
-                  width: "48%",
-                  duration: 1.1,
-                  ease: "power3.inOut",
-                },
-                start + 0.08
-              )
-              .to(
-                narrative,
-                {
-                  autoAlpha: 1,
-                  clipPath: "inset(0% 0% 0% 0%)",
-                  duration: 0.95,
-                  ease: "power3.inOut",
-                },
-                start + 0.2
-              )
-              .fromTo(
-                image,
-                {
-                  scale: 1.08,
-                },
-                {
-                  scale: 1,
-                  duration: 1.2,
-                  ease: "power2.out",
-                  immediateRender: false,
-                },
-                start
-              )
-              .fromTo(
-                card.querySelectorAll(".story-reveal"),
-                {
-                  x: -20,
-                  opacity: 0,
-                },
-                {
-                  x: 0,
-                  opacity: 1,
-                  duration: 0.65,
-                  stagger: 0.09,
-                  ease: "power3.out",
-                  immediateRender: false,
-                },
-                start + 0.45
-              )
-              .fromTo(
-                card.querySelector(".metric-reveal"),
-                {
-                  y: 12,
-                  opacity: 0,
-                },
-                {
-                  y: 0,
-                  opacity: 1,
-                  duration: 0.5,
-                  ease: "power3.out",
-                  immediateRender: false,
-                },
-                start + 0.85
-              )
-              .fromTo(
-                card.querySelectorAll(".telemetry-item"),
-                {
-                  y: 10,
-                  opacity: 0,
-                },
-                {
-                  y: 0,
-                  opacity: 1,
-                  duration: 0.45,
-                  stagger: 0.08,
-                  ease: "power2.out",
-                  immediateRender: false,
-                },
-                start + 0.95
-              )
-              .to(
-                status,
-                {
-                  autoAlpha: 1,
-                  y: 0,
-                  duration: 0.6,
-                  ease: "power3.out",
-                },
-                start + 0.8
-              );
-          };
+              gsap.set(card.querySelector(".split-narrative"), {
+                autoAlpha: 0,
+                clipPath: "inset(0% 100% 0% 0%)",
+              });
 
-          // Chapter 01 starts as a full-image scene.
-          timeline.to(hold, {
-            value: 1,
-            duration: 0.35,
-            ease: "none",
-          });
+              gsap.set(card.querySelector(".scene-intro"), {
+                autoAlpha: 1,
+                y: 0,
+              });
 
-          addSplitReveal(cards[0], 0.35);
-
-          timeline.to(hold, {
-            value: 2,
-            duration: 0.9,
-            ease: "none",
-          });
-
-          cards.forEach((card, index) => {
-            if (index === 0) return;
-
-            const previous = cards[index - 1];
-            const transitionStart = timeline.duration();
-
-            chapterMarkers.push({
-              chapter: index,
-              time: transitionStart + 0.5,
+              gsap.set(card.querySelector(".scene-status"), {
+                autoAlpha: 0,
+                y: 10,
+              });
             });
 
-            // Preserve the original bottom-to-top card movement.
-            timeline
-              .to(
-                previous,
-                {
-                  yPercent: -100,
-                  autoAlpha: 0,
-                  duration: 1,
-                  ease: "power2.inOut",
-                },
-                transitionStart
-              )
-              .to(
-                card,
-                {
-                  yPercent: 0,
-                  autoAlpha: 1,
-                  duration: 1,
-                  ease: "power2.inOut",
-                },
-                transitionStart
-              );
+            const timeline = gsap.timeline({
+              onUpdate: () => {
+                const time = timeline.time();
 
-            // Brief full-photo moment before the split transformation.
-            const splitStart = transitionStart + 1.25;
+                let chapter = 0;
 
-            addSplitReveal(card, splitStart);
+                chapterMarkers.forEach((marker) => {
+                  if (time >= marker.time) {
+                    chapter = marker.chapter;
+                  }
+                });
 
-            // Reading space after all details have appeared.
+                if (chapter !== lastChapter) {
+                  lastChapter = chapter;
+                  setActiveChapter(chapter);
+                }
+
+                setProgress(timeline.progress());
+              },
+              scrollTrigger: {
+                trigger: desktopRef.current,
+                start: "top top",
+                end: () => `+=${window.innerHeight * 5.5}`,
+                scrub: 1,
+                pin: true,
+                anticipatePin: 1,
+                invalidateOnRefresh: true,
+              },
+            });
+
+            const addSplitReveal = (card, start) => {
+              const visual = card.querySelector(".split-visual");
+              const narrative = card.querySelector(".split-narrative");
+              const intro = card.querySelector(".scene-intro");
+              const image = card.querySelector(".scene-image");
+              const status = card.querySelector(".scene-status");
+              const top = card.querySelector(".scene-top");
+
+              timeline
+                .to(
+                  intro,
+                  {
+                    autoAlpha: 0,
+                    y: -12,
+                    duration: 0.45,
+                    ease: "power2.inOut",
+                  },
+                  start
+                )
+                .to(
+                  visual,
+                  {
+                    clipPath:
+                      "inset(0% 0% 0% 52% round 24px)",
+                    duration: 1.4,
+                    ease: "power2.inOut",
+                  },
+                  start + 0.08
+                )
+                .to(
+                  image,
+                  {
+                    xPercent: 26,
+                    scale: 1,
+                    duration: 1.55,
+                    ease: "power2.inOut",
+                  },
+                  start + 0.08
+                )
+                .fromTo(
+                  top,
+                  {
+                    left: "20px",
+                  },
+                  {
+                    left: "calc(52% + 20px)",
+                    duration: 1.4,
+                    ease: "power2.inOut",
+                    immediateRender: false,
+                  },
+                  start + 0.08
+                )
+                .to(
+                  narrative,
+                  {
+                    autoAlpha: 1,
+                    clipPath: "inset(0% 0% 0% 0%)",
+                    duration: 1.1,
+                    ease: "power2.inOut",
+                  },
+                  start + 0.25
+                )
+                .fromTo(
+                  card.querySelectorAll(".story-reveal"),
+                  {
+                    x: -14,
+                    opacity: 0,
+                  },
+                  {
+                    x: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.08,
+                    ease: "power3.out",
+                    immediateRender: false,
+                  },
+                  start + 0.6
+                )
+                .fromTo(
+                  card.querySelector(".metric-reveal"),
+                  {
+                    y: 8,
+                    opacity: 0,
+                  },
+                  {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.6,
+                    ease: "power3.out",
+                    immediateRender: false,
+                  },
+                  start + 1
+                )
+                .fromTo(
+                  card.querySelectorAll(".telemetry-item"),
+                  {
+                    y: 8,
+                    opacity: 0,
+                  },
+                  {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.55,
+                    stagger: 0.08,
+                    ease: "power3.out",
+                    immediateRender: false,
+                  },
+                  start + 1.1
+                )
+                .to(
+                  status,
+                  {
+                    autoAlpha: 1,
+                    y: 0,
+                    duration: 0.7,
+                    ease: "power3.out",
+                  },
+                  start + 1.05
+                );
+            };
+
+            // First image has a short establishing moment.
             timeline.to(hold, {
-              value: index + 3,
-              duration: 0.9,
+              value: 1,
+              duration: 0.4,
               ease: "none",
             });
+
+            addSplitReveal(cards[0], 0.4);
+
+            timeline.to(hold, {
+              value: 2,
+              duration: 0.85,
+              ease: "none",
+            });
+
+            cards.forEach((card, index) => {
+              if (index === 0) return;
+
+              const previous = cards[index - 1];
+              const transitionStart = timeline.duration();
+
+              chapterMarkers.push({
+                chapter: index,
+                time: transitionStart + 0.6,
+              });
+
+              // Preserve bottom-to-top card transitions.
+              timeline
+                .to(
+                  previous,
+                  {
+                    yPercent: -100,
+                    autoAlpha: 0,
+                    duration: 1.2,
+                    ease: "power2.inOut",
+                  },
+                  transitionStart
+                )
+                .to(
+                  card,
+                  {
+                    yPercent: 0,
+                    autoAlpha: 1,
+                    duration: 1.2,
+                    ease: "power2.inOut",
+                  },
+                  transitionStart
+                );
+
+              addSplitReveal(
+                card,
+                transitionStart + 1.45
+              );
+
+              timeline.to(hold, {
+                value: index + 3,
+                duration: 0.85,
+                ease: "none",
+              });
+            });
+
+            return;
+          }
+
+          // Mobile and short-height screen animations.
+          const mobileCards =
+            triggerRef.current.querySelectorAll(".mobile-story-card");
+
+          mobileCards.forEach((card) => {
+            const frame = card.querySelector(".mobile-story-image");
+            const image = card.querySelector(".mobile-parallax-image");
+            const chapter = card.querySelector(".mobile-chapter-number");
+            const copy = card.querySelector(".mobile-card-copy");
+
+            gsap.fromTo(
+              frame,
+              {
+                clipPath: "inset(7% 5% 7% 5% round 28px)",
+              },
+              {
+                clipPath: "inset(0% 0% 0% 0% round 0px)",
+                ease: "none",
+                scrollTrigger: {
+                  trigger: frame,
+                  start: "top 95%",
+                  end: "top 40%",
+                  scrub: 0.65,
+                  invalidateOnRefresh: true,
+                },
+              }
+            );
+
+            gsap.fromTo(
+              image,
+              {
+                scale: 1.14,
+                yPercent: 2,
+              },
+              {
+                scale: 1.08,
+                yPercent: -2,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: frame,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: 0.8,
+                  invalidateOnRefresh: true,
+                },
+              }
+            );
+
+            gsap.fromTo(
+              chapter,
+              {
+                y: 18,
+                opacity: 0.3,
+              },
+              {
+                y: 0,
+                opacity: 1,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: frame,
+                  start: "top 85%",
+                  end: "top 35%",
+                  scrub: 0.65,
+                },
+              }
+            );
+
+            gsap.fromTo(
+              Array.from(copy.children),
+              {
+                y: 18,
+                opacity: 0,
+              },
+              {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power3.out",
+                scrollTrigger: {
+                  trigger: copy,
+                  start: "top 92%",
+                  toggleActions: "play none none reverse",
+                },
+              }
+            );
           });
         }
       );
@@ -454,14 +576,13 @@ export default function Section02Problem() {
       ref={triggerRef}
       className="relative z-20 w-full rounded-t-[28px] border-t border-[#E3E0D7] bg-[#F4F1E8] shadow-[0_-24px_50px_rgba(15,28,20,0.35)] sm:rounded-t-[36px]"
     >
-      {/* Desktop cinematic story */}
+      {/* Desktop pinned story */}
       <div
         ref={desktopRef}
-        className="desktop-story relative h-[100svh] overflow-hidden px-8 py-7 xl:px-14 xl:py-9"
+        className="desktop-story relative h-[100svh] overflow-hidden px-6 py-4 xl:px-14 xl:py-7"
       >
         <div className="mx-auto flex h-full max-w-7xl flex-col">
-          {/* Stable section header */}
-          <header className="flex shrink-0 items-end justify-between gap-8 border-b border-[#DFDDD3] pb-5">
+          <header className="flex shrink-0 items-end justify-between gap-6 border-b border-[#DFDDD3] pb-3 xl:pb-5">
             <SectionHeader />
 
             <div className="shrink-0 pb-1 text-right">
@@ -474,7 +595,6 @@ export default function Section02Problem() {
                   <span className="font-semibold">
                     {String(activeChapter + 1).padStart(2, "0")}
                   </span>
-
                   <span className="text-[#9B9F93]"> / 04</span>
                 </span>
 
@@ -482,10 +602,11 @@ export default function Section02Problem() {
                   {PROBLEMS.map((problem, index) => (
                     <span
                       key={problem.id}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${activeChapter === index
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        activeChapter === index
                           ? "w-7 bg-[#263D31]"
                           : "w-2 bg-[#DADDD1]"
-                        }`}
+                      }`}
                     />
                   ))}
                 </div>
@@ -493,10 +614,10 @@ export default function Section02Problem() {
             </div>
           </header>
 
-          {/* Vertical card stage */}
+          {/* Bottom-to-top card stage */}
           <div
             ref={stageRef}
-            className="relative my-5 min-h-0 flex-1 overflow-hidden rounded-[26px]"
+            className="relative my-3 min-h-0 flex-1 overflow-hidden rounded-[26px] xl:my-5"
           >
             {PROBLEMS.map((problem, index) => {
               const Icon = problem.icon;
@@ -511,49 +632,53 @@ export default function Section02Problem() {
                     visibility: index === 0 ? "visible" : "hidden",
                   }}
                 >
-                  {/* Narrative revealed behind the moving image */}
+                  {/* Story panel */}
                   <div
-                    className="split-narrative absolute inset-y-0 left-0 flex w-[52%] flex-col justify-center py-5 pl-5 pr-7 xl:pl-7 xl:pr-10"
+                    className="split-narrative absolute inset-y-0 left-0 w-[52%] overflow-y-auto overscroll-contain"
                     style={{
                       opacity: 0,
                       visibility: "hidden",
                     }}
                   >
-                    <div className="story-reveal mb-3 flex items-center gap-3">
-                      <span
-                        className="h-px w-7"
+                    <div className="flex min-h-full flex-col justify-center py-5 pl-5 pr-7 xl:pl-7 xl:pr-10">
+                      <div className="story-reveal mb-3 flex items-center gap-3">
+                        <span
+                          className="h-px w-7"
+                          style={{
+                            backgroundColor: problem.statusAccent,
+                          }}
+                        />
+
+                        <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#7D8377]">
+                          Behind the first impression
+                        </span>
+                      </div>
+
+                      <p
+                        className="story-reveal mb-2 font-mono text-[9px] font-semibold uppercase leading-relaxed tracking-[0.12em]"
                         style={{
-                          backgroundColor: problem.statusAccent,
+                          color: problem.statusAccent,
                         }}
-                      />
+                      >
+                        {problem.badge}
+                      </p>
 
-                      <span className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#7D8377]">
-                        Behind the first impression
-                      </span>
-                    </div>
+                      <h3 className="story-reveal mb-4 font-editorial text-[clamp(1.65rem,2.65vw,2.65rem)] leading-[1.08] tracking-tight text-[#252B26]">
+                        {problem.title}
+                      </h3>
 
-                    <p
-                      className="story-reveal mb-2 font-mono text-[9px] font-semibold uppercase leading-relaxed tracking-[0.12em]"
-                      style={{ color: problem.statusAccent }}
-                    >
-                      {problem.badge}
-                    </p>
+                      <p className="story-reveal mb-5 text-[13px] leading-[1.8] text-[#6C7168] xl:text-sm">
+                        {problem.subtitle}
+                      </p>
 
-                    <h3 className="story-reveal mb-4 font-editorial text-[clamp(1.65rem,2.65vw,2.65rem)] leading-[1.08] tracking-tight text-[#252B26]">
-                      {problem.title}
-                    </h3>
-
-                    <p className="story-reveal mb-5 text-[13px] leading-[1.8] text-[#6C7168] xl:text-sm">
-                      {problem.subtitle}
-                    </p>
-
-                    <div className="story-reveal">
-                      <Diagnostics problem={problem} />
+                      <div className="story-reveal">
+                        <Diagnostics problem={problem} />
+                      </div>
                     </div>
                   </div>
 
-                  {/* Starts full-width, then transforms into the right panel */}
-                  <div className="split-visual absolute inset-y-0 left-0 z-10 w-full overflow-hidden rounded-[24px] bg-[#263D31]">
+                  {/* Full-size visual layer, revealed using clipping */}
+                  <div className="split-visual absolute inset-0 z-10 overflow-hidden rounded-[24px] bg-[#1B2D23]">
                     <Image
                       src={problem.image}
                       alt={problem.title}
@@ -562,10 +687,14 @@ export default function Section02Problem() {
                       sizes="(min-width: 1024px) 90vw, 100vw"
                     />
 
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#14231A]/90 via-[#14231A]/10 to-[#14231A]/30" />
+                    {/* Overall dark vignette overlay */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0E1A13]/95 via-[#14231A]/60 via-45% to-[#14231A]/40" />
 
-                    <div className="absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-[#14231A]/35 px-3 py-2 font-mono text-[8px] uppercase tracking-[0.16em] text-white backdrop-blur-md">
+                    {/* Left-side dark vignette for crystal-clear text readability across any photo brightness */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#0B150F]/90 via-[#14231A]/55 via-50% to-transparent" />
+
+                    <div className="scene-top absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
+                      <span className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-white/20 bg-[#101D15]/60 px-3 py-1.5 font-mono text-[8px] uppercase tracking-[0.16em] text-[#FCFBF7] backdrop-blur-md shadow-sm">
                         <span
                           className="h-1.5 w-1.5 rounded-full"
                           style={{
@@ -575,44 +704,45 @@ export default function Section02Problem() {
                         Field story {problem.number}
                       </span>
 
-                      <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-[#14231A]/30 text-white backdrop-blur-md">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/20 bg-[#101D15]/50 text-white backdrop-blur-md shadow-sm">
                         <Icon className="h-4 w-4" />
                       </span>
                     </div>
 
-                    {/* Full-image opening chapter title */}
-                    <div className="scene-intro absolute bottom-0 left-0 right-0 p-8 xl:p-10">
+                    {/* Full-image chapter opening with dedicated high-contrast scrim */}
+                    <div className="scene-intro absolute bottom-0 left-0 right-0 p-8 xl:p-10 bg-gradient-to-t from-[#0B150F]/95 via-[#111F16]/80 to-transparent pt-28">
                       <div className="mb-4 flex items-end gap-5">
-                        <span className="font-editorial text-[clamp(5rem,10vw,9rem)] leading-[0.8] tracking-tighter text-[#FCFBF7]/90">
+                        <span className="font-editorial text-[clamp(5rem,10vw,9rem)] leading-[0.8] tracking-tighter text-[#FCFBF7] drop-shadow-[0_6px_24px_rgba(0,0,0,0.9)]">
                           {problem.number}
                         </span>
 
-                        <span className="mb-1 h-px w-16 bg-[#D4AA85]" />
+                        <span className="mb-2 h-[1.5px] w-16 bg-[#819478] shadow-sm" />
                       </div>
 
-                      <p className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-[#D4AA85]">
-                        First impressions don't tell the whole story
+                      <p className="mb-3 font-mono text-[10px] font-bold uppercase tracking-[0.24em] text-[#E3EBDD] drop-shadow-[0_2px_8px_rgba(0,0,0,0.95)]">
+                        First impressions don&apos;t tell the whole story
                       </p>
 
                       <h3
-                        className="max-w-2xl font-editorial text-3xl leading-tight text-[#FCFBF7] xl:text-4xl"
+                        className="max-w-2xl font-editorial text-3xl leading-tight text-[#FCFBF7] xl:text-4xl drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]"
                         aria-hidden="true"
                       >
                         {problem.title}
                       </h3>
                     </div>
 
-                    {/* Remains on the final split image */}
+                    {/* Status within the final right-hand image area */}
                     <div
-                      className="scene-status absolute bottom-5 left-5 right-5 rounded-2xl border border-white/20 bg-[#14231A]/60 p-4 backdrop-blur-md"
+                      className="scene-status absolute bottom-5 right-5 rounded-2xl border border-white/20 bg-[#14231A]/60 p-4 backdrop-blur-md"
                       style={{
+                        left: "calc(52% + 20px)",
                         opacity: 0,
                         visibility: "hidden",
                       }}
                     >
                       <div className="mb-2 flex items-center gap-2">
                         <span
-                          className="h-1.5 w-1.5 rounded-full"
+                          className="h-1.5 w-1.5 shrink-0 rounded-full"
                           style={{
                             backgroundColor: problem.statusAccent,
                           }}
@@ -633,12 +763,12 @@ export default function Section02Problem() {
             })}
           </div>
 
-          {/* Scroll progress */}
+          {/* Fixed story footer */}
           <footer className="shrink-0">
             <div className="mb-4 h-px overflow-hidden bg-[#DCDDD2]">
               <div
                 ref={progressRef}
-                className="h-full w-full origin-left bg-[#B68155]"
+                className="h-full w-full origin-left bg-[#819478]"
                 style={{
                   transform: "scaleX(0)",
                 }}
@@ -647,7 +777,7 @@ export default function Section02Problem() {
 
             <div className="flex items-center justify-between gap-5">
               <div className="flex items-center gap-3">
-                <span className="flex h-7 w-7 items-center justify-center rounded-full border border-[#DADDD1] text-[#819478]">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#DADDD1] text-[#819478]">
                   <ArrowDown className="h-3 w-3" />
                 </span>
 
@@ -658,18 +788,18 @@ export default function Section02Problem() {
 
               <a
                 href="#turning-point"
-                className="group flex items-center gap-2 font-mono text-[10px] font-semibold text-[#263D31]"
+                className="group flex shrink-0 items-center gap-2 font-mono text-[10px] font-semibold text-[#263D31]"
               >
                 <span>Next: The Turning Point</span>
 
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 motion-reduce:transform-none" />
               </a>
             </div>
           </footer>
         </div>
       </div>
 
-      {/* Mobile / short-screen / reduced-motion layout */}
+      {/* Animated mobile and compact-screen story */}
       <div className="stacked-story px-5 py-12 sm:px-8">
         <div className="mx-auto max-w-2xl">
           <SectionHeader />
@@ -681,33 +811,41 @@ export default function Section02Problem() {
               return (
                 <article
                   key={problem.id}
-                  className="overflow-hidden rounded-[26px] border border-[#DEDCD2] bg-[#FCFBF7] shadow-sm"
+                  className="mobile-story-card overflow-hidden rounded-[26px] border border-[#DEDCD2] bg-[#FCFBF7] shadow-[0_10px_30px_rgba(38,61,49,0.05)]"
                 >
-                  <div className="relative aspect-[16/11] overflow-hidden bg-[#263D31]">
+                  <div className="mobile-story-image relative aspect-[16/11] overflow-hidden bg-[#263D31]">
                     <Image
                       src={problem.image}
                       alt={problem.title}
                       fill
-                      className="object-cover"
+                      className="mobile-parallax-image object-cover"
                       sizes="(min-width: 768px) 672px, 100vw"
                     />
 
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#14231A]/80 via-transparent to-transparent" />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0E1A13]/95 via-[#14231A]/55 to-[#14231A]/20" />
 
-                    <div className="absolute left-5 right-5 top-5 flex items-center justify-between">
+                    <div className="absolute left-5 right-5 top-5 flex items-center justify-between gap-3">
                       <span className="rounded-full border border-white/20 bg-[#14231A]/40 px-3 py-1.5 font-mono text-[9px] uppercase tracking-wider text-white backdrop-blur-md">
                         Chapter {problem.number} / 04
                       </span>
 
-                      <Icon className="h-4 w-4 text-white" />
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-[#14231A]/35 text-white backdrop-blur-md">
+                        <Icon className="h-3.5 w-3.5" />
+                      </span>
                     </div>
 
-                    <span className="absolute bottom-4 left-5 font-editorial text-7xl leading-none text-white/85">
-                      {problem.number}
-                    </span>
+                    <div className="absolute bottom-5 left-5 right-5 flex items-end justify-between gap-4">
+                      <span className="mobile-chapter-number font-editorial text-7xl leading-none tracking-tighter text-white/95 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
+                        {problem.number}
+                      </span>
+
+                      <span className="mb-1 max-w-[150px] text-right font-mono text-[8px] uppercase leading-relaxed tracking-[0.14em] text-[#E3EBDD] drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                        Behind the first impression
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="p-5 sm:p-6">
+                  <div className="mobile-card-copy p-5 sm:p-6">
                     <p
                       className="mb-2 font-mono text-[9px] font-semibold uppercase leading-relaxed tracking-[0.12em]"
                       style={{
@@ -734,11 +872,10 @@ export default function Section02Problem() {
 
           <a
             href="#turning-point"
-            className="mt-8 flex items-center justify-between rounded-2xl border border-[#DADDD1] px-5 py-4 font-mono text-xs text-[#263D31]"
+            className="mt-8 flex items-center justify-between gap-4 rounded-2xl border border-[#DADDD1] bg-[#EAEDE3]/40 px-5 py-4 font-mono text-xs text-[#263D31]"
           >
             <span>Next: The Turning Point</span>
-
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4 shrink-0" />
           </a>
         </div>
       </div>
@@ -752,13 +889,28 @@ export default function Section02Problem() {
           display: block;
         }
 
-        @media (min-width: 1024px) and (min-height: 800px) and (prefers-reduced-motion: no-preference) {
+        .split-narrative {
+          scrollbar-width: thin;
+          scrollbar-color: #c6ccbc transparent;
+        }
+
+        @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
           .desktop-story {
             display: block;
           }
 
           .stacked-story {
             display: none;
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .desktop-story {
+            display: none;
+          }
+
+          .stacked-story {
+            display: block;
           }
         }
       `}</style>
