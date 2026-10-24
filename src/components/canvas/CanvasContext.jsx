@@ -394,7 +394,7 @@ export function CanvasProvider({ children }) {
               <motion.div
                 initial={{ scale: 0.98, opacity: 0.95 }}
                 animate={{ scale: 1.02, opacity: 1, rotate: 1.5 }}
-                className="w-80 sm:w-96 rounded-3xl bg-white border-2 border-[#819477] overflow-hidden shadow-[0_25px_60px_rgba(38,56,43,0.35)] pointer-events-none z-50 text-left"
+                className="w-[min(20rem,calc(100vw-2rem))] sm:w-96 rounded-3xl bg-white border-2 border-[#819477] overflow-hidden shadow-[0_25px_60px_rgba(38,56,43,0.35)] pointer-events-none z-50 text-left"
               >
                 {/* Image Banner */}
                 <div className="relative w-full aspect-[16/9] bg-[#E8E0D2] overflow-hidden">

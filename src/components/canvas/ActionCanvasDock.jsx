@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronUp,
@@ -24,6 +24,14 @@ export default function ActionCanvasDock({
 
   const [collapsed, setCollapsed] = useState(false);
 
+  useEffect(() => {
+    const compactViewport = window.matchMedia("(max-width: 767px), (max-height: 760px)");
+    const syncDockToViewport = () => setCollapsed(compactViewport.matches);
+    syncDockToViewport();
+    compactViewport.addEventListener("change", syncDockToViewport);
+    return () => compactViewport.removeEventListener("change", syncDockToViewport);
+  }, []);
+
   return (
     <aside
       aria-label="Canvas Protocol Action Dock"
@@ -39,8 +47,8 @@ export default function ActionCanvasDock({
         } p-3 sm:p-4`}
       >
         {/* Dock Header Bar */}
-        <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E8E0D2]/70 text-xs">
-          <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 mb-2 border-b border-[#E8E0D2]/70 text-xs">
+          <div className="flex min-w-0 items-center gap-2">
             <span className="font-serif font-bold text-[#20231F] flex items-center gap-1.5">
               <AnimatedSparkles size={16} className="text-[#819477]" />
               Canvas Protocol Dock

@@ -170,7 +170,7 @@ export default function DiscoverPage() {
         title="Workspace Discovery"
         subtitle="Find places that match your focus state, sensory needs, and schedule."
       >
-        <div className="space-y-6 text-left pb-36">
+        <div className="space-y-6 text-left pb-64 xl:pb-72">
           {/* Welcome Header & Location Selector */}
           <CurtainReveal delay={0} className="rounded-3xl">
             <div className="grid gap-4 rounded-3xl border border-[#E8E0D2] bg-white p-5 shadow-[0_4px_24px_rgba(32,35,31,0.04)] sm:p-6 md:grid-cols-[minmax(0,1fr)_15rem] md:items-center md:gap-6">
@@ -238,7 +238,7 @@ export default function DiscoverPage() {
 
         {/* Dynamic Quick Insights Cards */}
         <CurtainReveal delay={0.28} className="rounded-2xl">
-        <StaggerGrid delay={0.34} className="grid grid-cols-2 gap-3.5 sm:gap-4 lg:grid-cols-4">
+        <StaggerGrid delay={0.34} className="grid grid-cols-1 min-[520px]:grid-cols-2 gap-3.5 sm:gap-4 lg:grid-cols-4">
           <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E8E0D2] shadow-xs">
             <p className="text-xs font-medium text-[#555D50]">Matching Sanctuaries</p>
             <p className="text-2xl font-serif font-bold text-[#26382B] mt-1">
@@ -356,7 +356,7 @@ export default function DiscoverPage() {
         ) : viewMode === "list" ? (
           /* Grid of Venue Cards */
           <CurtainReveal delay={0.42} className="rounded-3xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {processedVenues.map((venue, index) => (
               <VenueCard
                 key={venue.id}
@@ -382,7 +382,7 @@ export default function DiscoverPage() {
               onSelectVenue={setSelectedVenueId}
             />
             {/* Accompanying condensed cards below map */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {processedVenues.map((venue, index) => (
                 <VenueCard
                   key={venue.id}

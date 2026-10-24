@@ -399,10 +399,10 @@ export default function InteractiveMapEngine({
       {showToolbar && (
         <div className="absolute top-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
           {/* Status Badge */}
-          <div className="pointer-events-auto inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E8E0D2] text-xs font-semibold text-[#20231F] shadow-sm">
+          <div className="pointer-events-auto inline-flex max-w-full items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/95 backdrop-blur-md border border-[#E8E0D2] text-xs font-semibold text-[#20231F] shadow-sm">
             <span className="w-2 h-2 rounded-full bg-[#819477] animate-pulse" />
             <Compass className="w-3.5 h-3.5 text-[#819477]" />
-            <span>
+            <span className="truncate max-w-[54vw] sm:max-w-none">
               {mode === "detail"
                 ? `Sensory Telemetry Map · ${focusVenue?.name || "Sanctuary"}`
                 : `Interactive Map Engine · ${venues.length} Sanctuaries`}

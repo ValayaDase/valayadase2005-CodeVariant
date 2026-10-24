@@ -54,7 +54,7 @@ export default function SavedPlacesPage() {
         title="Saved Places"
         subtitle="Your personal collection of bookmarked focus sanctuaries."
       >
-        <div className="space-y-6 text-left pb-36">
+        <div className="space-y-6 text-left pb-64 xl:pb-72">
           {backendError && (
             <p role="status" className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-xs text-amber-900">
               {backendError}
@@ -95,7 +95,7 @@ export default function SavedPlacesPage() {
           {/* Results / Empty state */}
           <CurtainReveal className="rounded-3xl" delay={0.14}>
           {savedVenues.length === 0 ? (
-            <div className="rounded-3xl bg-white border border-[#E8E0D2] p-12 text-center my-8 shadow-xs">
+            <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-12 text-center my-8 shadow-xs">
               <AnimatedBookmark size={48} className="text-[#819477] mx-auto mb-3" />
               <h3 className="text-xl font-serif font-bold text-[#20231F]">
                 No saved spaces yet
@@ -112,7 +112,7 @@ export default function SavedPlacesPage() {
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {savedVenues.map((venue, index) => {
                 const suitability = calculateSuitability(venue, {
                   activity: "Deep Work",

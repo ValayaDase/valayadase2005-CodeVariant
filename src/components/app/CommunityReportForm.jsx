@@ -85,10 +85,10 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
   };
 
   return (
-    <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] text-left space-y-6">
+    <div className="rounded-3xl bg-white border border-[#E8E0D2] p-4 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)] text-left space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between pb-4 border-b border-[#E8E0D2]">
-        <div>
+      <div className="flex flex-col items-start justify-between gap-3 border-b border-[#E8E0D2] pb-4 sm:flex-row sm:items-center">
+        <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2 mb-1">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F5F3EC] border border-[#E8E0D2] text-xs font-semibold text-[#819477]">
               <ClipboardCheck className="w-3.5 h-3.5" />
@@ -246,7 +246,7 @@ export default function CommunityReportForm({ venueId, venueName, onReportSubmit
 
       {/* Canvas Protocol Submission Area: Draggable Capsule -> Action Zone */}
       <div className="pt-6 border-t border-[#E8E0D2] space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
             <Sparkles className="w-4 h-4 text-[#819477]" />
             <h4 className="text-xs font-bold uppercase tracking-wider text-[#20231F]">

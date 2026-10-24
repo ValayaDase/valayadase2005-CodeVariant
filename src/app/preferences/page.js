@@ -246,14 +246,14 @@ export default function PreferencesPage() {
 
             {/* Canvas Protocol Interaction Area: Draggable Spec Card -> Action Zones */}
             <div className="pt-6 border-t border-[#E8E0D2] space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
                 <div className="flex items-center gap-2">
                   <AnimatedSparkles size={16} className="text-[#819477]" />
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#20231F]">
                     Focus Profile Spec (Drag to Commit or Reset)
                   </h4>
                 </div>
-                <p className="text-[11px] text-[#555D50]">
+                <p className="text-[11px] text-[#555D50] sm:text-right">
                   No standard submit buttons — drag card into target zone.
                 </p>
               </div>

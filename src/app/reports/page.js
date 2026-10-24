@@ -98,7 +98,7 @@ export default function ReportsHistoryPage() {
                   className="rounded-3xl bg-white border border-[#E8E0D2] p-6 shadow-xs hover:shadow-md transition-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="text-xs uppercase tracking-wider font-semibold text-[#819477] px-2.5 py-0.5 rounded-full bg-[#F5F3EC] border border-[#E8E0D2]">
                         {report.venueCategory}
                       </span>

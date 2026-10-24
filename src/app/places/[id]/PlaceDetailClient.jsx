@@ -126,7 +126,7 @@ export default function PlaceDetailClient({ id }) {
         title={venue.name}
         subtitle={`${venue.categoryLabel} in ${venue.neighborhood}`}
       >
-        <div className="space-y-8 text-left max-w-6xl mx-auto pb-36">
+        <div className="space-y-8 text-left max-w-6xl mx-auto pb-64 xl:pb-72">
         {/* Back Link */}
         <div>
           <Link
@@ -256,9 +256,9 @@ export default function PlaceDetailClient({ id }) {
 
         {/* 2-Column Overview Grid */}
         <SectionReveal delay={0.06}>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-8">
           {/* Left Column: Narrative, Facilities, and Community Telemetry */}
-          <div className="lg:col-span-7 space-y-8">
+          <div className="xl:col-span-7 space-y-8">
             {/* Description & Atmosphere */}
             <div className="rounded-3xl bg-white border border-[#E8E0D2] p-6 sm:p-8 shadow-[0_4px_24px_rgba(32,35,31,0.04)]">
               <h2 className="text-lg font-serif font-bold text-[#20231F] mb-3">
@@ -276,7 +276,7 @@ export default function PlaceDetailClient({ id }) {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6 pt-5 border-t border-[#E8E0D2]/70 text-xs">
+              <div className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 gap-3 mt-6 pt-5 border-t border-[#E8E0D2]/70 text-xs">
                 <div className="p-3 rounded-xl bg-[#F5F3EC]/70">
                   <span className="text-[#555D50] block text-[11px]">Wi-Fi Speed</span>
                   <span className="font-bold text-[#20231F] mt-0.5 block">
@@ -303,7 +303,7 @@ export default function PlaceDetailClient({ id }) {
               <h2 className="text-lg font-serif font-bold text-[#20231F] mb-4">
                 Verified Amenities &amp; Equipment
               </h2>
-              <div className="grid grid-cols-2 gap-3 text-xs text-[#20231F]">
+              <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-3 text-xs text-[#20231F]">
                 {(venue.facilities || []).map((fac) => (
                   <div
                     key={fac}
@@ -380,7 +380,7 @@ export default function PlaceDetailClient({ id }) {
           </div>
 
           {/* Right Column: Suitability Score Breakdown & Quick Links */}
-          <div className="lg:col-span-5 space-y-6">
+          <div className="xl:col-span-5 space-y-6">
             <SuitabilityScore suitability={suitability} />
 
             {/* Quick Action: Open Venue Chat */}

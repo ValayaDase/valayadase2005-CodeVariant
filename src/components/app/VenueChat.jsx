@@ -278,9 +278,9 @@ export default function VenueChat({ venue, venueId, venueName }) {
       </div>
 
       {/* 2. SPLIT LAYOUT: LEFT SIDEBAR + RIGHT CHAT CONTAINER */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
         {/* LEFT COLUMN WIDGETS (4 Cols) */}
-        <div className="lg:col-span-4 space-y-4">
+        <div className="xl:col-span-4 space-y-4">
           {/* Widget 1: Shared chat refresh status */}
           <div className="rounded-3xl bg-white border border-[#E8E0D2] p-5 shadow-[0_2px_12px_rgba(32,35,31,0.03)]">
             <div className="flex items-center justify-between mb-2">
@@ -384,7 +384,7 @@ export default function VenueChat({ venue, venueId, venueName }) {
         </div>
 
         {/* RIGHT COLUMN: CHAT STREAM + COMPOSER (8 Cols) */}
-        <div className="lg:col-span-8">
+        <div className="xl:col-span-8">
           <div className="relative flex h-[min(680px,calc(100dvh_-_9rem))] min-h-[26rem] flex-col overflow-hidden rounded-3xl border border-[#E8E0D2] bg-white shadow-[0_8px_30px_rgba(32,35,31,0.04)] sm:min-h-[32rem]">
             {/* Subtle botanical leaves watermark in top-right & bottom-left */}
             <svg
