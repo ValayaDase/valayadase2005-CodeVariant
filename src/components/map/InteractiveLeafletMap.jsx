@@ -35,13 +35,12 @@ export default function InteractiveLeafletMap({
           scrollWheelZoom: true,
         });
 
-        // CartoDB Positron / OSM light tile layer styled for Warm Ivory & Sage palette
+        // Free OpenStreetMap standard tile layer (zero API key required, crisp real-world map)
         L.tileLayer(
-          "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+          "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
           {
             attribution:
-              '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: "abcd",
+              '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors',
             maxZoom: 19,
           }
         ).addTo(map);
@@ -152,8 +151,8 @@ export default function InteractiveLeafletMap({
         data-lenis-prevent
       />
 
-      {/* Floating Status System Legend */}
-      <div className="absolute top-4 right-4 z-[400] glass-ivory px-4 py-3.5 rounded-2xl border border-[#E3E0D7] shadow-lg flex flex-col space-y-2 text-xs font-mono">
+      {/* Floating Status System Legend (Hidden on small screens so map is completely open and visible) */}
+      <div className="hidden md:flex absolute top-4 right-4 z-[400] glass-ivory px-4 py-3.5 rounded-2xl border border-[#E3E0D7] shadow-lg flex-col space-y-2 text-xs font-mono">
         <p className="text-[10px] uppercase tracking-wider text-[#6C7168] font-bold border-b border-[#E3E0D7] pb-1.5">
           Acoustic & Space Telemetry
         </p>

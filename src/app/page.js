@@ -27,11 +27,14 @@ export default function Home() {
         {/* Section 03 — The Turning Point: What if you knew before you arrived? */}
         <Section03TurningPoint />
 
-        {/* Sections 04 & 05 — Cinematic Map Reveal & Discovery Map with Fixed Left Sidebar */}
-        <Section04And05Discovery />
+        {/* Discovery & Quiet-When Transition Wrapper: Discovery sticks while Section 06 slides over it like a card */}
+        <div id="discovery-quietwhen-wrapper" className="relative w-full">
+          {/* Sections 04 & 05 — Cinematic Map Reveal & Discovery Map with Fixed Left Sidebar */}
+          <Section04And05Discovery />
 
-        {/* Section 06 — Quiet When: Time-Based Discovery */}
-        <Section06QuietWhen />
+          {/* Section 06 — Quiet When: Time-Based Discovery */}
+          <Section06QuietWhen />
+        </div>
 
         {/* Section 07 — Focus Fit: Not Just Nearby, Right For You */}
         <Section07FocusFitScore />

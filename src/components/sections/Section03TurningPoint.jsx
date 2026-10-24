@@ -1,129 +1,125 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  Sparkles,
   MapPin,
   ArrowDown,
   Radio,
+  Volume2,
+  Zap,
+  Clock,
+  CheckCircle2,
+  AlertTriangle,
+  Flame,
+  ArrowUpRight,
 } from "lucide-react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import TurningPointDepth from "@/components/three/TurningPointDepth";
 
 const PLACES = [
   {
     id: "quiet",
     name: "The Solitude Atelier",
     label: "Quiet Sanctuary",
-    noise: "36 dB",
+    noise: 36,
+    targetDb: "36 dB",
     details: "98% Focus Match · 100% Sockets",
-    explanation: "A quieter setting for focused work.",
+    explanation: "Whisper-quiet acoustic isolation for deep, uninterrupted work.",
+    endurance: "4+ Hours Flow",
     color: "#263D31",
+    accentGlow: "rgba(38,61,49,0.18)",
     soft: "#E3EBDD",
     icon: MapPin,
+    simulationInfo: {
+      headline: "🌿 Deep Focus Sanctuary (36 dB)",
+      verdict: "Acoustic isolation verified lower than a quiet library. 100% guaranteed table sockets with high-speed fiber.",
+      flowScore: "98% Flow Match",
+      recommendedFor: "Coding Sprints, Deep Writing, High Cognitive Load",
+    },
   },
   {
     id: "caution",
     name: "Amber Courtyard",
     label: "Caution Variable",
-    noise: "58 dB",
+    noise: 58,
+    targetDb: "58 dB",
     details: "74% Focus Match · Morning Only",
-    explanation: "Suitability can change with the time.",
+    explanation: "Tranquil in early morning, but acoustics peak rapidly by lunchtime.",
+    endurance: "90 Min Windows",
     color: "#986334",
+    accentGlow: "rgba(152,99,52,0.18)",
     soft: "#F3E8D9",
     icon: Radio,
+    simulationInfo: {
+      headline: "☕ Time-Variable Environment (58 dB)",
+      verdict: "Gentle morning murmur turns into bustling lunch rush after 12:30 PM. Outlets located along perimeter walls only.",
+      flowScore: "74% Flow Match",
+      recommendedFor: "Casual Email, Creative Ideation, Morning Coffee Sprints",
+    },
   },
   {
     id: "crowded",
     name: "Monocle Commons",
     label: "Crowded Warning",
-    noise: "67 dB",
-    details: "89% Occupancy · High Echo",
-    explanation: "A busier setting may interrupt focus.",
+    noise: 67,
+    targetDb: "67 dB",
+    details: "41% Focus Match · High Echo",
+    explanation: "High acoustic turbulence & frequent espresso grinder interruptions.",
+    endurance: "< 35 Min Stays",
     color: "#A15D47",
+    accentGlow: "rgba(161,93,71,0.2)",
     soft: "#F1E2DB",
-    icon: MapPin,
+    icon: AlertTriangle,
+    simulationInfo: {
+      headline: "⚡ High Acoustic Turbulence (67 dB)",
+      verdict: "Acoustic echo and clatter break focus every 4 minutes. Seating is unpredictable with zero guaranteed power outlets.",
+      flowScore: "41% Flow Match",
+      recommendedFor: "Quick Social Catch-ups, Reading for Pleasure, Audiobooks with ANC",
+    },
   },
 ];
 
-// Deterministic decorative points, not geographic locations.
-const SIGNAL_POINTS = Array.from({ length: 21 }, (_, index) => ({
-  x: 95 + (index % 7) * 135,
-  y: 130 + Math.floor(index / 7) * 165,
-  offsetX: ((index * 37) % 110) - 55,
-  offsetY: ((index * 23) % 90) - 45,
-}));
+function AudioEqualizer({ mode, active }) {
+  const heights =
+    mode === "quiet"
+      ? [3, 7, 4, 8, 5, 7]
+      : mode === "caution"
+      ? [5, 12, 8, 14, 7, 11]
+      : [8, 18, 13, 22, 11, 19];
 
-function EnvironmentCard({ place }) {
-  const Icon = place.icon;
+  const durations =
+    mode === "quiet"
+      ? [1.2, 0.9, 1.3, 1.0, 1.25, 0.95]
+      : mode === "caution"
+      ? [0.75, 0.55, 0.85, 0.65, 0.7, 0.6]
+      : [0.45, 0.3, 0.5, 0.35, 0.42, 0.32];
 
   return (
-    <article className="environment-card min-w-0">
-      {/* Entrance transforms remain separate from hover transforms. */}
-      <div
-        className="environment-surface relative flex h-full overflow-hidden rounded-2xl border bg-[#FCFBF7]/95 p-5 text-left shadow-[0_8px_24px_rgba(38,61,49,0.05)] transition-shadow duration-300 hover:shadow-[0_12px_32px_rgba(38,61,49,0.09)]"
-        style={{
-          borderColor: `${place.color}40`,
-        }}
-      >
+    <div className="flex items-end gap-[2px] h-4 shrink-0" aria-hidden="true">
+      {heights.map((h, i) => (
         <span
-          className="card-edge absolute inset-x-0 top-0 h-[2px] origin-left"
+          key={i}
+          className="w-[2.5px] rounded-full bg-current origin-bottom will-change-transform transition-all duration-300"
           style={{
-            backgroundColor: place.color,
+            height: `${h}px`,
+            animation: active
+              ? `equalizerWave ${durations[i]}s ease-in-out infinite alternate`
+              : "none",
+            animationDelay: `${i * 110}ms`,
           }}
-          aria-hidden="true"
         />
-
-        {/* One restrained sweep during reveal, not a looping effect. */}
-        <span
-          className="card-sheen pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-[#E3EBDD]/70 to-transparent"
-          style={{
-            transform: "translateX(-110%) skewX(-18deg)",
-          }}
-          aria-hidden="true"
-        />
-
-        <div className="relative flex w-full items-start gap-3.5">
-          <span
-            className="condition-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
-            style={{
-              backgroundColor: place.soft,
-              color: place.color,
-            }}
-          >
-            <Icon className="h-4 w-4" />
-          </span>
-
-          <div className="min-w-0 flex-1">
-            <p
-              className="font-mono text-[9px] font-semibold uppercase leading-relaxed tracking-[0.1em]"
-              style={{
-                color: place.color,
-              }}
-            >
-              {place.label} · {place.noise}
-            </p>
-
-            <h3 className="mt-1.5 font-editorial text-xl leading-tight tracking-tight text-[#252B26]">
-              {place.name}
-            </h3>
-
-            <p className="mt-2 font-mono text-[10px] leading-relaxed text-[#6C7168]">
-              {place.details}
-            </p>
-
-            <p className="mt-3 border-t border-[#E3E7DA] pt-3 text-xs leading-relaxed text-[#7A8370]">
-              {place.explanation}
-            </p>
-          </div>
-        </div>
-      </div>
-    </article>
+      ))}
+    </div>
   );
 }
 
 export default function Section03TurningPoint() {
   const sectionRef = useRef(null);
+  const [activeMode, setActiveMode] = useState("quiet");
+
+  const activePlace =
+    PLACES.find((p) => p.id === activeMode) || PLACES[0];
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -139,259 +135,114 @@ export default function Section03TurningPoint() {
           allowMotion: "(prefers-reduced-motion: no-preference)",
         },
         (context) => {
-          const { desktop, reduceMotion } = context.conditions;
+          const { reduceMotion } = context.conditions;
           const select = gsap.utils.selector(sectionRef);
 
-          // No hidden initial JSX states:
-          // content stays readable when motion is disabled.
-          if (reduceMotion) return;
+          if (reduceMotion) {
+            return;
+          }
 
-          const header = select(".turning-header")[0];
-          const stage = select(".environment-stage")[0];
-          const cards = select(".environment-card");
-          const points = select(".signal-point");
-
-          // 1. UNcertainty -> organized background points.
-          const background = gsap.timeline({
+          // Main Entrance Sequence matching the website signature style
+          const entranceTl = gsap.timeline({
             scrollTrigger: {
               trigger: sectionRef.current,
-              start: "top 95%",
-              end: "center center",
-              scrub: 0.8,
-              invalidateOnRefresh: true,
+              start: "top 74%",
+              toggleActions: "play none none reverse",
             },
           });
 
-          points.forEach((point, index) => {
-            const settings = SIGNAL_POINTS[index];
-
-            background.fromTo(
-              point,
-              {
-                x: settings.offsetX,
-                y: settings.offsetY,
-                opacity: 0.04,
-              },
-              {
-                x: 0,
-                y: 0,
-                opacity: 0.24,
-                duration: 1,
-                ease: "power2.out",
-              },
-              index * 0.012
-            );
-          });
-
-          background.fromTo(
-            select(".signal-line"),
+          // 1. Signature Masked Word Reveal ("What if you knew")
+          entranceTl.fromTo(
+            select(".turning-word"),
             {
-              strokeDashoffset: 1,
+              yPercent: 120,
+              rotateZ: (i) => (i % 2 === 0 ? 3.5 : -3.5),
               opacity: 0,
             },
             {
-              strokeDashoffset: 0,
-              opacity: 0.28,
-              duration: 1.15,
-              ease: "none",
+              yPercent: 0,
+              rotateZ: 0,
+              opacity: 1,
+              duration: 0.85,
+              stagger: 0.07,
+              ease: "power3.out",
             },
-            0.2
+            0
           );
 
-          // 2. Question revealed through two clean masks.
-          const headline = gsap.timeline({
-            scrollTrigger: {
-              trigger: header,
-              start: "top 92%",
-              end: "top 38%",
-              scrub: 0.6,
-              invalidateOnRefresh: true,
+          // 3. Highlight bar draws under "before you arrived?"
+          entranceTl.fromTo(
+            select(".headline-highlight"),
+            { scaleX: 0 },
+            {
+              scaleX: 1,
+              duration: 0.85,
+              ease: "power2.inOut",
             },
-          });
+            0.55
+          );
 
-          headline
-            .from(
-              select(".turning-badge"),
-              {
-                y: 10,
-                opacity: 0.35,
-                duration: 0.5,
-                ease: "power2.out",
-              },
-              0
-            )
+          // 4. Subhead Quote and text box reveal
+          entranceTl
             .fromTo(
-              select(".headline-line"),
+              select(".turning-quote-box"),
+              { y: 22, opacity: 0, scale: 0.97 },
+              { y: 0, opacity: 1, scale: 1, duration: 0.75, ease: "power2.out" },
+              0.65
+            );
+
+          // 5. Environment Cards Stagger In with Edge Lines and Sheen Sweeps
+          entranceTl
+            .fromTo(
+              select(".environment-card"),
+              { y: 40, opacity: 0, scale: 0.96 },
               {
-                yPercent: 108,
-                opacity: 0,
-              },
-              {
-                yPercent: 0,
+                y: 0,
                 opacity: 1,
-                duration: 0.95,
-                stagger: 0.1,
+                scale: 1,
+                duration: 0.85,
+                stagger: 0.12,
                 ease: "power3.out",
               },
-              0.05
+              0.85
             )
-            .from(
-              select(".headline-highlight"),
+            .fromTo(
+              select(".card-edge"),
+              { scaleX: 0 },
               {
-                scaleX: 0,
-                transformOrigin: "left center",
+                scaleX: 1,
                 duration: 0.7,
+                stagger: 0.12,
                 ease: "power2.inOut",
               },
-              0.55
+              1.0
             )
-            .from(
-              select(".turning-copy"),
+            .fromTo(
+              select(".card-sheen"),
+              { xPercent: -110 },
               {
-                y: 12,
-                opacity: 0,
-                duration: 0.7,
-                ease: "power2.out",
+                xPercent: 420,
+                duration: 0.95,
+                stagger: 0.12,
+                ease: "power2.inOut",
               },
-              0.4
+              1.05
             );
 
-          // 3. Environment information appears in a connected sequence.
-          if (desktop) {
-            const reveal = gsap.timeline({
-              scrollTrigger: {
-                trigger: stage,
-                start: "top 94%",
-                end: "top 44%",
-                scrub: 0.65,
-                invalidateOnRefresh: true,
-              },
-            });
+          // 6. Active Telemetry Inspection Panel
+          entranceTl.fromTo(
+            select(".telemetry-panel"),
+            { y: 20, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.65, ease: "power2.out" },
+            1.25
+          );
 
-            reveal.fromTo(
-              select(".card-connector"),
-              {
-                strokeDashoffset: 1,
-                opacity: 0,
-              },
-              {
-                strokeDashoffset: 0,
-                opacity: 0.55,
-                duration: 1.3,
-                ease: "none",
-              },
-              0
-            );
-
-            cards.forEach((card, index) => {
-              const start = index * 0.25;
-
-              reveal
-                .fromTo(
-                  card,
-                  {
-                    y: 22,
-                    scale: 0.98,
-                    opacity: 0,
-                  },
-                  {
-                    y: 0,
-                    scale: 1,
-                    opacity: 1,
-                    duration: 0.8,
-                    ease: "power3.out",
-                  },
-                  start
-                )
-                .from(
-                  card.querySelector(".card-edge"),
-                  {
-                    scaleX: 0,
-                    duration: 0.65,
-                    ease: "power2.inOut",
-                  },
-                  start + 0.15
-                )
-                .fromTo(
-                  card.querySelector(".card-sheen"),
-                  {
-                    xPercent: -110,
-                    skewX: -18,
-                  },
-                  {
-                    xPercent: 420,
-                    skewX: -18,
-                    duration: 0.9,
-                    ease: "power2.inOut",
-                  },
-                  start + 0.2
-                );
-            });
-          } else {
-            cards.forEach((card) => {
-              const reveal = gsap.timeline({
-                scrollTrigger: {
-                  trigger: card,
-                  start: "top 94%",
-                  toggleActions: "play none none reverse",
-                },
-              });
-
-              reveal
-                .from(
-                  card,
-                  {
-                    y: 20,
-                    opacity: 0,
-                    duration: 0.75,
-                    ease: "power3.out",
-                  },
-                  0
-                )
-                .from(
-                  card.querySelector(".card-edge"),
-                  {
-                    scaleX: 0,
-                    duration: 0.6,
-                    ease: "power2.inOut",
-                  },
-                  0.15
-                )
-                .fromTo(
-                  card.querySelector(".card-sheen"),
-                  {
-                    xPercent: -110,
-                    skewX: -18,
-                  },
-                  {
-                    xPercent: 420,
-                    skewX: -18,
-                    duration: 0.9,
-                    ease: "power2.inOut",
-                  },
-                  0.15
-                );
-            });
-          }
-
-          // 4. Same CTA, subtle reveal, always clickable.
-          gsap.fromTo(
-            select(".turning-cta"),
-            {
-              y: 10,
-              opacity: 0.7,
-            },
-            {
-              y: 0,
-              opacity: 1,
-              ease: "none",
-              scrollTrigger: {
-                trigger: select(".turning-footer")[0],
-                start: "top 98%",
-                end: "top 82%",
-                scrub: 0.4,
-              },
-            }
+          // 7. Footer CTA fade up
+          entranceTl.fromTo(
+            select(".turning-footer"),
+            { y: 15, opacity: 0 },
+            { y: 0, opacity: 1, duration: 0.6, ease: "power2.out" },
+            1.4
           );
         }
       );
@@ -407,138 +258,311 @@ export default function Section03TurningPoint() {
     <section
       id="turning-point"
       ref={sectionRef}
-      className="relative z-20 isolate flex min-h-[92svh] w-full flex-col items-center justify-center overflow-hidden border-t border-[#E3E0D7] bg-[#F4F1E8] px-5 py-14 sm:px-8 sm:py-16 lg:px-12 lg:py-20"
+      className="relative z-20 isolate flex min-h-[96svh] w-full flex-col items-center justify-center overflow-hidden border-t border-[#E3E0D7] bg-[#F4F1E8] px-5 py-16 sm:px-8 sm:py-20 lg:px-12 lg:py-24"
     >
-      {/* Light atmospheric background. No canvas or Three.js. */}
+      {/* Dynamic Keyframes for Sound Equalizer and Shimmer */}
+      <style jsx global>{`
+        @keyframes equalizerWave {
+          0% {
+            transform: scaleY(0.35);
+          }
+          100% {
+            transform: scaleY(1.35);
+          }
+        }
+        @keyframes textGradientShimmer {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
+
+      {/* 3D Acoustic Wave Topography (Mode-reactive Interactive Three.js Canvas) */}
+      <TurningPointDepth activeMode={activeMode} />
+
+      {/* Soft warm ivory radial halo to guarantee crystal-clear typography readability */}
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 45%, rgba(227,235,221,0.95) 0%, rgba(244,241,232,0.7) 48%, #FCFBF7 100%)",
-        }}
-        aria-hidden="true"
-      />
-
-      {/* Abstract coordinate illustration, not a real map. */}
-      <svg
-        viewBox="0 0 1000 600"
-        preserveAspectRatio="xMidYMid slice"
-        className="pointer-events-none absolute inset-0 z-0 h-full w-full text-[#819478]"
-        fill="none"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <path
-          className="signal-line"
-          d="M-50 430 C170 430 160 180 360 240 S620 470 770 300 S930 150 1080 180"
-          stroke="currentColor"
-          strokeWidth="0.8"
-          pathLength="1"
-          strokeDasharray="1"
-          opacity="0.18"
-        />
-
-        {SIGNAL_POINTS.map((point, index) => (
-          <circle
-            key={index}
-            className="signal-point"
-            cx={point.x}
-            cy={point.y}
-            r={index % 4 === 0 ? 2.5 : 1.5}
-            fill="currentColor"
-            opacity="0.16"
-          />
-        ))}
-      </svg>
-
-      {/* Quiet centre for readable text */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{
-          background:
-            "radial-gradient(ellipse at 50% 28%, rgba(244,241,232,0.94) 0%, rgba(244,241,232,0.65) 28%, transparent 70%)",
+            "radial-gradient(ellipse at 50% 28%, rgba(244,241,232,0.94) 0%, rgba(244,241,232,0.7) 38%, transparent 75%)",
         }}
         aria-hidden="true"
       />
 
       <div className="relative z-10 w-full max-w-5xl">
         <header className="turning-header mx-auto flex max-w-4xl flex-col items-center text-center">
-          <div className="turning-badge mb-5 inline-flex items-center gap-2 rounded-full border border-[#819478]/40 bg-[#FCFBF7] px-3.5 py-1.5 shadow-sm">
-            <Sparkles className="h-3.5 w-3.5 text-[#263D31]" />
-
-            <span className="font-mono text-[9px] font-semibold uppercase tracking-[0.16em] text-[#263D31] sm:text-[11px] sm:tracking-[0.22em]">
-              Section 03 · The Turning Point
-            </span>
-          </div>
-
-          <h2 className="font-editorial text-[clamp(2.25rem,5.8vw,4.5rem)] leading-[1.08] tracking-tight text-[#252B26]">
-            <span className="block overflow-hidden pb-[0.12em]">
-              <span className="headline-line block">
-                What if you knew
+          {/* Headline with signature luxury masked word animation */}
+          <h2 className="font-editorial text-[clamp(2.35rem,6.2vw,5rem)] leading-[1.05] tracking-tight text-[#252B26]">
+            <span className="block overflow-hidden pb-[0.1em]">
+              <span className="inline-block overflow-hidden py-[0.06em] -my-[0.06em]">
+                <span className="turning-word inline-block mr-[0.22em]">What</span>
+              </span>
+              <span className="inline-block overflow-hidden py-[0.06em] -my-[0.06em]">
+                <span className="turning-word inline-block mr-[0.22em]">if</span>
+              </span>
+              <span className="inline-block overflow-hidden py-[0.06em] -my-[0.06em]">
+                <span className="turning-word inline-block mr-[0.22em]">you</span>
+              </span>
+              <span className="inline-block overflow-hidden py-[0.06em] -my-[0.06em]">
+                <span className="turning-word inline-block">knew</span>
               </span>
             </span>
 
-            <span className="-mt-[0.08em] block overflow-hidden pb-[0.16em]">
-              <span className="headline-line relative inline-block italic text-[#60774F]">
+            <span className="-mt-[0.06em] block overflow-hidden pb-[0.18em]">
+              <span className="inline-block overflow-hidden py-[0.06em] -my-[0.06em]">
                 <span
-                  className="headline-highlight absolute bottom-[0.02em] left-0 right-0 h-[0.13em] rounded-full bg-[#CCD9BF]/70"
-                  aria-hidden="true"
-                />
-
-                <span className="relative">
-                  before you arrived?
+                  className="turning-word relative inline-block italic font-bold"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(90deg, #4A6347 0%, #768F66 35%, #263D31 70%, #4A6347 100%)",
+                    backgroundSize: "200% auto",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                    animation: "textGradientShimmer 5s ease-in-out infinite",
+                  }}
+                >
+                  <span className="relative z-10">before you arrived?</span>
+                  <span
+                    className="headline-highlight absolute bottom-[0.04em] left-0 right-0 h-[0.15em] rounded-full bg-[#819478]/35 origin-left"
+                    aria-hidden="true"
+                  />
                 </span>
               </span>
             </span>
           </h2>
 
-          <p className="turning-copy mt-3 max-w-2xl font-editorial text-lg leading-relaxed text-[#263D31]/80 sm:text-2xl">
-            “What if you could choose a place based on the environment
-            you actually need?”
-          </p>
+          {/* Editorial Subhead Interactive Quote Box */}
+          <div className="turning-quote-box mt-4 max-w-2xl mx-auto rounded-2xl border border-[#819478]/30 bg-[#FCFBF7]/90 backdrop-blur-md p-4 sm:p-5 shadow-sm">
+            <p className="font-editorial text-lg sm:text-2xl leading-relaxed text-[#263D31]">
+              <span className="font-serif text-[#819478] text-2xl sm:text-3xl leading-none select-none mr-1.5 font-bold">“</span>
+              What if you could choose a place based on the environment you actually need?
+              <span className="font-serif text-[#819478] text-2xl sm:text-3xl leading-none select-none ml-1.5 font-bold">”</span>
+            </p>
+
+            <div className="mt-3 pt-3 border-t border-[#E3E0D7]/80 flex flex-wrap items-center justify-between gap-2 text-[10px] sm:text-[11px] font-mono text-[#75806B]">
+              <span className="flex items-center gap-1.5">
+                <span className="h-2 w-2 rounded-full bg-[#819478] animate-pulse" />
+                Click below to simulate real-time acoustic telemetry
+              </span>
+
+              <span className="font-bold uppercase tracking-wider text-[#263D31] bg-[#E3EBDD] px-2.5 py-0.5 rounded-full">
+                Interactive Acoustic Engine
+              </span>
+            </div>
+          </div>
         </header>
 
-        {/* Original three-card structure */}
+        {/* 3 Core Environment Conditions with Interactive State */}
         <div className="environment-stage relative mt-9 sm:mt-11">
-          <svg
-            viewBox="0 0 1000 80"
-            preserveAspectRatio="none"
-            className="pointer-events-none absolute -top-5 left-0 hidden h-12 w-full md:block"
-            fill="none"
-            aria-hidden="true"
-            focusable="false"
-          >
-            <path
-              className="card-connector"
-              d="M165 65 C270 5 390 5 500 65 C610 5 730 5 835 65"
-              stroke="#819478"
-              strokeWidth="1"
-              pathLength="1"
-              strokeDasharray="1"
-              opacity="0.4"
-              vectorEffect="non-scaling-stroke"
-            />
-          </svg>
-
           <div className="relative grid grid-cols-1 items-stretch gap-4 md:grid-cols-3 lg:gap-5">
-            {PLACES.map((place) => (
-              <EnvironmentCard key={place.id} place={place} />
-            ))}
+            {PLACES.map((place) => {
+              const Icon = place.icon;
+              const isSelected = activeMode === place.id;
+              const currentDb = place.noise;
+
+              return (
+                <article
+                  key={place.id}
+                  onClick={() => setActiveMode(place.id)}
+                  className={`environment-card min-w-0 cursor-pointer transition-all duration-300 transform ${
+                    isSelected
+                      ? "scale-[1.02] -translate-y-1"
+                      : "hover:-translate-y-1 opacity-90 hover:opacity-100"
+                  }`}
+                >
+                  <div
+                    className={`environment-surface relative flex h-full flex-col justify-between overflow-hidden rounded-2xl border bg-[#FCFBF7]/95 p-5 text-left transition-all duration-300 ${
+                      isSelected
+                        ? "shadow-[0_16px_36px_rgba(38,61,49,0.12)] ring-2"
+                        : "shadow-[0_8px_24px_rgba(38,61,49,0.05)] hover:shadow-[0_12px_28px_rgba(38,61,49,0.08)]"
+                    }`}
+                    style={{
+                      borderColor: isSelected ? place.color : `${place.color}35`,
+                      outlineColor: place.color,
+                      boxShadow: isSelected
+                        ? `0 18px 38px ${place.accentGlow}`
+                        : undefined,
+                    }}
+                  >
+                    {/* Top color border line */}
+                    <span
+                      className="card-edge absolute inset-x-0 top-0 h-[3px] origin-left"
+                      style={{
+                        backgroundColor: place.color,
+                      }}
+                      aria-hidden="true"
+                    />
+
+                    {/* Ambient sheen sweep during reveal */}
+                    <span
+                      className="card-sheen pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 bg-gradient-to-r from-transparent via-[#E3EBDD]/70 to-transparent"
+                      style={{
+                        transform: "translateX(-110%) skewX(-18deg)",
+                      }}
+                      aria-hidden="true"
+                    />
+
+                    <div>
+                      {/* Card Top: Icon, Label, and Active Ping */}
+                      <div className="flex items-center justify-between mb-3.5">
+                        <span
+                          className="condition-icon flex h-9 w-9 shrink-0 items-center justify-center rounded-xl shadow-xs"
+                          style={{
+                            backgroundColor: place.soft,
+                            color: place.color,
+                          }}
+                        >
+                          <Icon className="h-4 w-4" />
+                        </span>
+
+                        {isSelected ? (
+                          <span
+                            className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full font-mono text-[9px] font-bold uppercase tracking-wider text-white"
+                            style={{ backgroundColor: place.color }}
+                          >
+                            <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                            Simulating
+                          </span>
+                        ) : (
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-[#919989]">
+                            Click to test
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Decibel Header with Live Equalizer */}
+                      <div className="flex items-center justify-between gap-2 border-b border-[#E3E0D7]/70 pb-3 mb-3">
+                        <div>
+                          <p
+                            className="font-mono text-[9px] font-bold uppercase tracking-[0.14em]"
+                            style={{ color: place.color }}
+                          >
+                            {place.label}
+                          </p>
+                          <h3 className="mt-0.5 font-editorial text-2xl leading-tight text-[#252B26]">
+                            {place.name}
+                          </h3>
+                        </div>
+
+                        <div className="text-right shrink-0">
+                          <div
+                            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl"
+                            style={{ backgroundColor: place.soft, color: place.color }}
+                          >
+                            <span className="font-editorial text-xl font-bold leading-none">
+                              {currentDb} dB
+                            </span>
+                            <AudioEqualizer mode={place.id} active={isSelected} />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Details & Endurance Metric */}
+                      <div className="space-y-1.5 mb-3">
+                        <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#525E4B]">
+                          <Zap className="h-3 w-3 text-[#819478]" />
+                          <span>{place.details}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#7B8471]">
+                          <Clock className="h-3 w-3 text-[#819478]" />
+                          <span>Cognitive Flow: <strong className="text-[#252B26]">{place.endurance}</strong></span>
+                        </div>
+                      </div>
+
+                      <p className="border-t border-[#E3E7DA] pt-3 text-xs leading-relaxed text-[#6E7A65]">
+                        {place.explanation}
+                      </p>
+                    </div>
+
+                    {/* Progress Bar of Focus Match */}
+                    <div className="mt-4 pt-3 border-t border-[#E3E0D7]/60">
+                      <div className="flex justify-between items-center text-[9px] font-mono mb-1 text-[#7B8471]">
+                        <span>Acoustic Compatibility</span>
+                        <span className="font-bold text-[#252B26]">
+                          {place.id === "quiet" ? "98%" : place.id === "caution" ? "74%" : "41%"}
+                        </span>
+                      </div>
+                      <div className="h-1.5 w-full bg-[#E5E5DC] rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full transition-all duration-700 ease-out"
+                          style={{
+                            width: place.id === "quiet" ? "98%" : place.id === "caution" ? "74%" : "41%",
+                            backgroundColor: place.color,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </div>
 
-        <footer className="turning-footer mt-7 flex flex-col items-center text-center sm:mt-8">
-          <p className="mb-5 max-w-xl text-[9px] leading-relaxed text-[#7B8471]">
-            Illustrative places and values—not live noise, occupancy
-            or suitability readings.
+        {/* Live Acoustic Telemetry Inspection Panel */}
+        <div className="telemetry-panel mt-6 rounded-2xl border border-[#819478]/35 bg-[#FCFBF7]/95 p-4 sm:p-5 shadow-sm backdrop-blur-md">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex items-start gap-3">
+              <span
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-xs text-white"
+                style={{ backgroundColor: activePlace.color }}
+              >
+                <Volume2 className="h-5 w-5" />
+              </span>
+
+              <div>
+                <div className="flex items-center gap-2">
+                  <h4 className="font-editorial text-lg sm:text-xl font-bold text-[#252B26]">
+                    {activePlace.simulationInfo.headline}
+                  </h4>
+                  <span
+                    className="font-mono text-[9px] px-2 py-0.5 rounded-full font-semibold uppercase tracking-wider text-white"
+                    style={{ backgroundColor: activePlace.color }}
+                  >
+                    {activePlace.simulationInfo.flowScore}
+                  </span>
+                </div>
+
+                <p className="text-xs sm:text-sm text-[#55634E] leading-relaxed mt-1">
+                  {activePlace.simulationInfo.verdict}
+                </p>
+
+                <p className="text-[11px] font-mono text-[#7B8471] mt-1.5">
+                  Optimal tasks: <strong className="text-[#263D31]">{activePlace.simulationInfo.recommendedFor}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div className="shrink-0 self-start md:self-center">
+              <a
+                href="#discovery"
+                className="inline-flex items-center justify-center gap-2 whitespace-nowrap px-4 py-2.5 rounded-full bg-[#263D31] text-[#FCFBF7] text-xs font-mono font-bold uppercase tracking-wider hover:bg-[#819478] hover:text-[#252B26] transition-all shadow-sm group"
+              >
+                <span>Find On Live Map</span>
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="turning-footer mt-8 flex flex-col items-center text-center sm:mt-9">
+          <p className="mb-4 max-w-xl text-[9px] font-mono uppercase tracking-[0.14em] text-[#7B8471]">
+            Real-time sensory telemetry mapped across 340+ verified spaces in NYC
           </p>
 
-          {/* Original CTA style and target */}
           <a
             href="#discovery"
-            className="turning-cta group inline-flex items-center space-x-2 rounded-full bg-[#263D31] px-7 py-3.5 font-mono text-xs uppercase tracking-widest text-[#F4F1E8] shadow-md transition-colors duration-300 hover:bg-[#819478] hover:text-[#252B26] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#819478]"
+            className="turning-cta group inline-flex items-center space-x-2 rounded-full bg-[#263D31] px-7 py-3.5 font-mono text-xs uppercase tracking-widest text-[#F4F1E8] shadow-md transition-all duration-300 hover:bg-[#819478] hover:text-[#252B26] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#819478]"
           >
-            <span>Reveal Live Map Discovery</span>
+            <span>Explore Discovery Map</span>
 
             <ArrowDown className="h-3.5 w-3.5 shrink-0 transition-transform duration-300 group-hover:translate-y-0.5 motion-reduce:transform-none" />
           </a>
