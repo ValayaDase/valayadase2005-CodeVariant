@@ -35,7 +35,7 @@ export default function InteractiveLeafletMap({
           scrollWheelZoom: true,
         });
 
-        // CartoDB Positron / OSM light tile layer perfectly styled for Warm Ivory & Sage
+        // CartoDB Positron / OSM light tile layer styled for Warm Ivory & Sage palette
         L.tileLayer(
           "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
           {
@@ -61,40 +61,63 @@ export default function InteractiveLeafletMap({
 
         const color =
           space.status === "quiet"
-            ? "#648568"
+            ? "#263D31"
             : space.status === "crowded"
             ? "#B86E52"
+            : space.status === "caution"
+            ? "#C58C5A"
             : "#92958D";
+
+        const ringColor =
+          space.status === "quiet"
+            ? "#819478"
+            : space.status === "crowded"
+            ? "#E89B82"
+            : space.status === "caution"
+            ? "#E8BE92"
+            : "#C5C7C1";
 
         const customIcon = L.divIcon({
           className: "custom-leaflet-marker",
           html: `
             <div style="
               background-color: ${color};
-              width: ${isSelected ? "38px" : "30px"};
-              height: ${isSelected ? "38px" : "30px"};
+              width: ${isSelected ? "42px" : "32px"};
+              height: ${isSelected ? "42px" : "32px"};
               border-radius: 9999px;
               display: flex;
+              flex-direction: column;
               align-items: center;
               justify-content: center;
-              box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-              border: 3px solid #FCFBF7;
+              box-shadow: 0 6px 18px rgba(38,61,49,0.32);
+              border: 3px solid ${isSelected ? "#FCFBF7" : ringColor};
               transform: translate(-50%, -50%);
-              transition: all 0.25s ease;
+              transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
               cursor: pointer;
             ">
               <span style="
                 color: #FCFBF7;
                 font-family: monospace;
-                font-size: ${isSelected ? "11px" : "9px"};
+                font-size: ${isSelected ? "11px" : "10px"};
                 font-weight: 700;
+                line-height: 1;
               ">
                 ${space.noiseLevel}
               </span>
+              <span style="
+                color: #E3EBDD;
+                font-family: monospace;
+                font-size: 7px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                margin-top: 1px;
+              ">
+                dB
+              </span>
             </div>
           `,
-          iconSize: [30, 30],
-          iconAnchor: [15, 15],
+          iconSize: [32, 32],
+          iconAnchor: [16, 16],
         });
 
         const marker = L.marker([space.lat, space.lng], { icon: customIcon }).addTo(
@@ -121,30 +144,34 @@ export default function InteractiveLeafletMap({
   }, [isMounted, spaces, selectedSpace, onSelectSpace]);
 
   return (
-    <div className="relative w-full h-full min-h-[500px] lg:min-h-[620px] rounded-2xl overflow-hidden border border-[#E3E0D7] shadow-xl">
+    <div className="relative w-full h-full min-h-[520px] lg:min-h-[660px] rounded-3xl overflow-hidden border border-[#E3E0D7] shadow-2xl">
       <div
         ref={mapContainerRef}
         className="w-full h-full"
-        style={{ minHeight: "520px" }}
+        style={{ minHeight: "560px" }}
         data-lenis-prevent
       />
 
       {/* Floating Status System Legend */}
-      <div className="absolute top-4 right-4 z-[400] glass-ivory px-4 py-3 rounded-xl border border-[#E3E0D7] shadow-md flex flex-col space-y-1.5 text-xs font-mono">
-        <p className="text-[10px] uppercase tracking-wider text-[#6C7168] font-bold border-b border-[#E3E0D7] pb-1">
-          Acoustic Status System
+      <div className="absolute top-4 right-4 z-[400] glass-ivory px-4 py-3.5 rounded-2xl border border-[#E3E0D7] shadow-lg flex flex-col space-y-2 text-xs font-mono">
+        <p className="text-[10px] uppercase tracking-wider text-[#6C7168] font-bold border-b border-[#E3E0D7] pb-1.5">
+          Acoustic & Space Telemetry
         </p>
-        <div className="flex items-center space-x-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#648568]" />
-          <span className="text-[#252B26]">Quiet (&lt;45 dB)</span>
+        <div className="flex items-center space-x-2.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#263D31]" />
+          <span className="text-[#252B26] font-medium">Quiet Sanctuary (&lt;45 dB)</span>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#C58C5A]" />
+          <span className="text-[#252B26] font-medium">Caution / Variable (45–60 dB)</span>
+        </div>
+        <div className="flex items-center space-x-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-[#B86E52]" />
-          <span className="text-[#252B26]">Crowded (&gt;65 dB)</span>
+          <span className="text-[#252B26] font-medium">Crowded / Loud (&gt;60 dB)</span>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-[#92958D]" />
-          <span className="text-[#252B26]">Syncing / Unknown</span>
+          <span className="text-[#252B26] font-medium">Syncing / Calibrating</span>
         </div>
       </div>
     </div>

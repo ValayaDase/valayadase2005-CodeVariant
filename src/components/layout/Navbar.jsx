@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Volume2, Menu, X, ArrowUpRight } from "lucide-react";
+import { Compass, Menu, X, ArrowUpRight } from "lucide-react";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -9,121 +9,110 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
+      // Reveal floating persistent navbar once user scrolls past the framed hero
+      setScrolled(window.scrollY > 380);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const navLinks = [
-    { label: "The Search", href: "#hero" },
-    { label: "The Friction", href: "#friction" },
-    { label: "The Turning Point", href: "#turning-point" },
+    { label: "Search", href: "#hero" },
+    { label: "Problem", href: "#problem" },
+    { label: "Turning Point", href: "#turning-point" },
     { label: "Discovery Map", href: "#discovery" },
     { label: "Quiet When", href: "#quiet-when" },
     { label: "Focus Fit", href: "#focus-fit" },
+    { label: "Community", href: "#community" },
     { label: "Compare", href: "#compare" },
   ];
 
   return (
     <>
+      {/* Floating persistent navigation header - reveals smoothly once user scrolls past hero */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl transition-all duration-400 ease-out ${
           scrolled
-            ? "bg-[#F4F1E8]/90 backdrop-blur-md border-b border-[#E3E0D7] py-3.5 shadow-sm"
-            : "bg-transparent py-5"
+            ? "translate-y-0 opacity-100 pointer-events-auto"
+            : "-translate-y-24 opacity-0 pointer-events-none"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 flex items-center justify-between">
-          {/* Brand Logo */}
-          <a href="#hero" className="flex items-baseline space-x-2.5 group">
-            <span className="font-editorial text-2xl tracking-tight text-[#263D31] group-hover:text-[#819478] transition-colors">
+        <div className="bg-[#263D31]/92 backdrop-blur-md text-[#F4F1E8] px-5 py-2.5 rounded-full border border-[#819478]/40 shadow-xl flex items-center justify-between">
+          {/* Logo */}
+          <a href="#hero" className="flex items-center space-x-2 text-[#FCFBF7] group">
+            <span className="w-2 h-2 rounded-full bg-[#819478] group-hover:scale-125 transition-transform" />
+            <span className="font-editorial text-lg tracking-[0.06em] text-[#FCFBF7] font-normal uppercase">
               Spotwise
-            </span>
-            <span className="text-[10px] tracking-[0.2em] uppercase font-mono text-[#6C7168] hidden sm:inline-block">
-              The Quiet Place
             </span>
           </a>
 
-          {/* Center Navigation Links - Desktop */}
-          <nav className="hidden lg:flex items-center space-x-7">
+          {/* Nav links */}
+          <nav className="hidden md:flex items-center space-x-5 lg:space-x-6 text-[11px] font-mono uppercase tracking-[0.15em] text-[#E3EBDD]/80">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="text-xs uppercase tracking-[0.16em] text-[#6C7168] hover:text-[#263D31] transition-colors font-medium relative group py-1"
+                className="hover:text-white transition-colors"
               >
                 {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-[1.5px] bg-[#263D31] transition-all duration-200 group-hover:w-full" />
               </a>
             ))}
           </nav>
 
-          {/* Right Action & Acoustic Telemetry Indicator */}
-          <div className="flex items-center space-x-3.5">
-            {/* Live Telemetry Pill */}
-            <div className="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-full bg-[#E3EBDD]/70 border border-[#819478]/30 text-[#263D31]">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#648568] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#648568]"></span>
-              </span>
-              <Volume2 className="w-3.5 h-3.5 text-[#648568]" />
-              <span className="text-[11px] font-mono tracking-wider font-medium">
-                41 dB · Serene
-              </span>
-            </div>
-
-            {/* CTA Button */}
+          {/* Right CTA */}
+          <div className="flex items-center space-x-3">
             <a
               href="#discovery"
-              className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-full bg-[#263D31] text-[#F4F1E8] text-xs font-medium tracking-wider uppercase hover:bg-[#819478] hover:text-[#252B26] transition-all duration-200 shadow-sm"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] transition-colors"
             >
-              <span>Find Focus</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              <span>Explore</span>
+              <ArrowUpRight className="w-3 h-3" />
             </a>
 
-            {/* Mobile menu trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-[#263D31] hover:text-[#819478] focus:outline-none"
+              className="md:hidden p-1 text-[#FCFBF7] hover:text-[#819478]"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <Menu className="w-4 h-4" />
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-[#F4F1E8] flex flex-col pt-24 px-8 pb-10 lg:hidden border-b border-[#E3E0D7]">
-          <div className="flex flex-col space-y-6 flex-1">
-            <p className="text-[11px] uppercase tracking-[0.25em] text-[#819478] font-mono">
-              Chapters & Exploration
+        <div className="fixed inset-0 z-50 bg-[#263D31]/95 backdrop-blur-md text-[#F4F1E8] flex flex-col pt-20 px-8 pb-10 md:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="self-end p-2 text-[#FCFBF7] mb-6"
+            aria-label="Close menu"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="flex flex-col space-y-4 flex-1">
+            <p className="text-[11px] uppercase tracking-[0.25em] text-[#819478] font-mono font-bold">
+              Navigation Chapters
             </p>
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="font-editorial text-2xl text-[#263D31] hover:text-[#819478] transition-colors"
+                className="font-editorial text-2xl text-[#FCFBF7] hover:text-[#819478] transition-colors"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          <div className="pt-6 border-t border-[#E3E0D7] flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-xs font-mono text-[#6C7168]">
-              <span className="h-2 w-2 rounded-full bg-[#648568]" />
-              <span>Acoustic Network: Active</span>
-            </div>
+          <div className="pt-6 border-t border-[#819478]/30">
             <a
               href="#discovery"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-5 py-2.5 rounded-full bg-[#263D31] text-[#F4F1E8] text-xs font-medium uppercase tracking-wider"
+              className="block w-full text-center py-3 rounded-full bg-[#FCFBF7] text-[#263D31] text-xs font-mono uppercase font-bold tracking-wider"
             >
-              Launch Map
+              Explore Discovery Map
             </a>
           </div>
         </div>

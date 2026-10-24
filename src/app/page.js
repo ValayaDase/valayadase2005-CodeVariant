@@ -3,7 +3,7 @@
 import Navbar from "@/components/layout/Navbar";
 import SmoothScrollProvider from "@/components/common/SmoothScrollProvider";
 import Section01Hero from "@/components/sections/Section01Hero";
-import Section02Friction from "@/components/sections/Section02Friction";
+import Section02Problem from "@/components/sections/Section02Problem";
 import Section03TurningPoint from "@/components/sections/Section03TurningPoint";
 import Section04And05Discovery from "@/components/sections/Section04And05Discovery";
 import Section06QuietWhen from "@/components/sections/Section06QuietWhen";
@@ -19,31 +19,31 @@ export default function Home() {
         {/* Fixed Editorial Navigation Header */}
         <Navbar />
 
-        {/* Section 01 — The Opening: "The Search" */}
+        {/* Section 01 — Hero: Show the Problem Immediately */}
         <Section01Hero />
 
-        {/* Section 02 — The Friction: "The Wrong Place" (Pinned 3-chapter GSAP timeline) */}
-        <Section02Friction />
+        {/* Section 02 — The Problem: Pinned Bottom-to-Top Reveal (4 Core Frictions) */}
+        <Section02Problem />
 
-        {/* Section 03 — The Turning Point: "What If?" (Chaos to clarity spatial shift) */}
+        {/* Section 03 — The Turning Point: What if you knew before you arrived? */}
         <Section03TurningPoint />
 
-        {/* Sections 04 & 05 — The Reveal: "Meet Spotwise" & Discovery Workspace (Leaflet map + Filter sidebar) */}
+        {/* Sections 04 & 05 — Cinematic Map Reveal & Discovery Map with Fixed Left Sidebar */}
         <Section04And05Discovery />
 
-        {/* Section 06 — Quiet When (Temporal 24-hr predictive acoustic timeline) */}
+        {/* Section 06 — Quiet When: Time-Based Discovery */}
         <Section06QuietWhen />
 
-        {/* Section 07 — Focus Fit Score (Algorithmic compatibility engine) */}
+        {/* Section 07 — Focus Fit: Not Just Nearby, Right For You */}
         <Section07FocusFitScore />
 
-        {/* Section 08 — Community Intelligence (Live ground truth & report modal) */}
+        {/* Section 08 — Community Intelligence: Better Information Powered by People */}
         <Section08CommunityIntelligence />
 
-        {/* Section 09 — Compare and Choose (Multi-space decision matrix) */}
+        {/* Section 09 — Compare and Choose: Choose with Confidence */}
         <Section09CompareAndChoose />
 
-        {/* Section 10 — The Resolution & Interactive Fluid Wave Footer */}
+        {/* Sections 10 & 11 — The Resolution & Premium Lenval-Inspired Interactive Wordmark Footer */}
         <Section10ResolutionAndFooter />
       </main>
     </SmoothScrollProvider>

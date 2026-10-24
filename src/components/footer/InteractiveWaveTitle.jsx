@@ -12,26 +12,37 @@ export default function InteractiveWaveTitle() {
     const container = containerRef.current;
     if (!canvas || !container) return;
 
+    // Check if pointer is fine (mouse/trackpad, not touch)
+    const isTouch = window.matchMedia("(hover: none)").matches;
+
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let width = (canvas.width = container.clientWidth);
-    let height = (canvas.height = Math.min(260, Math.max(130, container.clientWidth * 0.18)));
+    let height = (canvas.height = Math.min(280, Math.max(140, container.clientWidth * 0.19)));
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.scale(dpr, dpr);
 
-    // Ripple wave simulation points
-    let ripples = [];
-    let mouse = { x: width / 2, y: height / 2, active: false, speed: 0 };
-    let lastMouse = { x: width / 2, y: height / 2 };
+    // Wind and light cursor trailing simulation
+    let mouse = {
+      x: width / 2,
+      y: height / 2,
+      targetX: width / 2,
+      targetY: height / 2,
+      active: false,
+      speed: 0,
+    };
+
+    let trail = [];
+    const maxTrail = 16;
 
     const handleResize = () => {
       if (!container) return;
       width = container.clientWidth;
-      height = Math.min(260, Math.max(130, container.clientWidth * 0.18));
+      height = Math.min(280, Math.max(140, container.clientWidth * 0.19));
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       ctx.scale(dpr, dpr);
@@ -40,33 +51,32 @@ export default function InteractiveWaveTitle() {
     window.addEventListener("resize", handleResize);
 
     const handleMouseMove = (e) => {
+      if (isTouch) return;
       const rect = canvas.getBoundingClientRect();
       const currentX = e.clientX - rect.left;
       const currentY = e.clientY - rect.top;
 
-      const dist = Math.hypot(currentX - lastMouse.x, currentY - lastMouse.y);
-      mouse.speed = dist;
-      mouse.x = currentX;
-      mouse.y = currentY;
+      mouse.targetX = currentX;
+      mouse.targetY = currentY;
       mouse.active = true;
 
-      // Add ripple on mouse movement
-      if (dist > 4 && ripples.length < 18) {
-        ripples.push({
-          x: currentX,
-          y: currentY,
-          radius: 4,
-          maxRadius: Math.min(180, width * 0.25),
-          strength: Math.min(1.0, dist * 0.04 + 0.3),
-          life: 1.0,
-        });
-      }
+      // Add to trailing wind particles
+      trail.push({
+        x: currentX,
+        y: currentY,
+        radius: 35 + Math.random() * 25,
+        opacity: 0.85,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
+      });
 
-      lastMouse.x = currentX;
-      lastMouse.y = currentY;
+      if (trail.length > maxTrail) {
+        trail.shift();
+      }
     };
 
     const handleMouseEnter = () => {
+      if (isTouch) return;
       mouse.active = true;
       setIsHovered(true);
     };
@@ -85,98 +95,111 @@ export default function InteractiveWaveTitle() {
 
     const render = () => {
       animationId = requestAnimationFrame(render);
-      time += 0.025;
+      time += 0.02;
+
+      // Smooth cursor interpolation
+      mouse.x += (mouse.targetX - mouse.x) * 0.15;
+      mouse.y += (mouse.targetY - mouse.y) * 0.15;
 
       ctx.clearRect(0, 0, width, height);
 
-      // Auto ambient ripple when not interacted with
-      if (!mouse.active && Math.random() < 0.02 && ripples.length < 5) {
-        ripples.push({
-          x: (0.2 + Math.random() * 0.6) * width,
-          y: (0.3 + Math.random() * 0.4) * height,
-          radius: 2,
-          maxRadius: 140,
-          strength: 0.5,
-          life: 1.0,
-        });
-      }
-
-      // Update existing ripples
-      for (let i = ripples.length - 1; i >= 0; i--) {
-        const r = ripples[i];
-        r.radius += 2.2;
-        r.life -= 0.016;
-        if (r.life <= 0 || r.radius >= r.maxRadius) {
-          ripples.splice(i, 1);
+      // Fade out trailing breeze
+      for (let i = trail.length - 1; i >= 0; i--) {
+        const p = trail[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.opacity *= 0.92;
+        p.radius += 0.8;
+        if (p.opacity <= 0.02) {
+          trail.splice(i, 1);
         }
       }
 
-      // Compute font size to stretch beautifully across container
-      const fontSize = Math.floor(width * 0.17);
+      // Compute editorial font size stretched across container
+      const fontSize = Math.floor(width * 0.165);
       ctx.font = `italic 400 ${fontSize}px "Instrument Serif", "DM Serif Display", Georgia, serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
 
       const text = "SPOTWISE";
       const centerX = width / 2;
-      const centerY = height / 2 + fontSize * 0.05;
+      const centerY = height / 2 + fontSize * 0.04;
 
-      // Draw horizontal slices with wave distortion
-      const sliceCount = 38;
-      const sliceHeight = height / sliceCount;
+      // 1. Draw subtle ambient base text
+      ctx.fillStyle = "rgba(244, 241, 232, 0.35)";
+      ctx.fillText(text, centerX, centerY);
 
-      for (let s = 0; s < sliceCount; s++) {
-        const sy = s * sliceHeight;
-        let waveOffsetX = 0;
-        let waveOffsetY = 0;
-        let brightnessBoost = 0;
+      // 2. Cursor Wind / Light sweep effect
+      // When hovered, illuminate nearby letters with soft radial gradient and subtle horizontal breeze shift
+      if (mouse.active || trail.length > 0) {
+        const sliceCount = 36;
+        const sliceHeight = height / sliceCount;
 
-        // Calculate wave effect from active ripples
-        for (let r of ripples) {
-          const dy = sy - r.y;
-          const dist = Math.abs(dy);
-          if (dist < r.radius) {
-            const factor = Math.cos((dist / r.radius) * Math.PI * 0.5);
-            const rippleWave = Math.sin(r.radius * 0.15 - dist * 0.1) * r.strength * r.life * 14;
-            waveOffsetX += rippleWave * factor;
-            brightnessBoost += factor * r.life * 0.35;
+        for (let s = 0; s < sliceCount; s++) {
+          const sy = s * sliceHeight;
+          const dy = sy - mouse.y;
+          const distY = Math.abs(dy);
+
+          let breezeOffset = 0;
+          let lightIntensity = 0;
+
+          // Influence from current cursor position
+          if (mouse.active && distY < 120) {
+            const factor = Math.cos((distY / 120) * Math.PI * 0.5);
+            breezeOffset += Math.sin(time * 3 + s * 0.25) * factor * 5;
+            lightIntensity += factor * 0.65;
+          }
+
+          // Influence from trailing wind breeze
+          for (let p of trail) {
+            const pDistY = Math.abs(sy - p.y);
+            if (pDistY < p.radius) {
+              const pFactor = (1 - pDistY / p.radius) * p.opacity;
+              breezeOffset += Math.sin(time * 2 + p.x * 0.05) * pFactor * 3;
+              lightIntensity += pFactor * 0.25;
+            }
+          }
+
+          if (lightIntensity > 0.02) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(0, sy, width, sliceHeight + 1);
+            ctx.clip();
+
+            // Luminous warm ivory / pale sage highlight
+            const alpha = Math.min(0.98, 0.4 + lightIntensity);
+            ctx.fillStyle = `rgba(244, 241, 232, ${alpha})`;
+            ctx.fillText(text, centerX + breezeOffset, centerY);
+
+            // Shimmer crest reflection
+            if (lightIntensity > 0.3) {
+              ctx.fillStyle = `rgba(227, 235, 221, ${lightIntensity * 0.5})`;
+              ctx.fillText(text, centerX + breezeOffset + 0.8, centerY - 0.8);
+            }
+
+            ctx.restore();
           }
         }
 
-        // Ambient fluid sway
-        const ambientWave = Math.sin(time + s * 0.2) * 2.5;
-        waveOffsetX += ambientWave;
+        // Draw soft cursor atmospheric wind glow
+        if (mouse.active) {
+          const gradient = ctx.createRadialGradient(
+            mouse.x,
+            mouse.y,
+            10,
+            mouse.x,
+            mouse.y,
+            140
+          );
+          gradient.addColorStop(0, "rgba(227, 235, 221, 0.12)");
+          gradient.addColorStop(0.5, "rgba(129, 148, 120, 0.06)");
+          gradient.addColorStop(1, "rgba(38, 61, 49, 0)");
 
-        ctx.save();
-        ctx.beginPath();
-        ctx.rect(0, sy, width, sliceHeight + 1);
-        ctx.clip();
-
-        // Base text in warm ivory with alpha
-        const alpha = Math.min(0.95, 0.45 + brightnessBoost);
-        ctx.fillStyle = `rgba(244, 241, 232, ${alpha})`;
-        ctx.fillText(text, centerX + waveOffsetX, centerY + waveOffsetY);
-
-        // Highlight sheen on wave peaks (shimmering glass/water reflection)
-        if (brightnessBoost > 0.08) {
-          ctx.fillStyle = `rgba(227, 235, 221, ${brightnessBoost * 0.7})`;
-          ctx.fillText(text, centerX + waveOffsetX + 1, centerY + waveOffsetY - 1);
+          ctx.save();
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, width, height);
+          ctx.restore();
         }
-
-        ctx.restore();
-      }
-
-      // Draw subtle luminous wave contour lines over the text when hovered
-      if (ripples.length > 0) {
-        ctx.save();
-        for (let r of ripples) {
-          ctx.beginPath();
-          ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-          ctx.strokeStyle = `rgba(227, 235, 221, ${r.life * 0.2})`;
-          ctx.lineWidth = 1.2;
-          ctx.stroke();
-        }
-        ctx.restore();
       }
     };
 
@@ -199,16 +222,16 @@ export default function InteractiveWaveTitle() {
       <span className="sr-only">SPOTWISE</span>
       <canvas
         ref={canvasRef}
-        className="w-full block transition-opacity duration-500"
+        className="w-full block transition-all duration-500"
         style={{
           filter: isHovered
-            ? "drop-shadow(0 0 25px rgba(129, 148, 120, 0.25))"
+            ? "drop-shadow(0 0 35px rgba(227, 235, 221, 0.2))"
             : "none",
         }}
       />
-      <div className="text-center mt-1">
-        <p className="text-[10px] tracking-[0.3em] uppercase text-[#819478]/80 font-mono">
-          Hover or drag across to displace soundwave ripples
+      <div className="text-center mt-2">
+        <p className="text-[10px] tracking-[0.25em] uppercase text-[#819478]/80 font-mono">
+          Hover or move pointer across the wordmark to cast wind & illumination
         </p>
       </div>
     </div>
