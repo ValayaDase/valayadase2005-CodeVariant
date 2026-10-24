@@ -1,35 +1,51 @@
-import LandingExperience from "@/components/transitions/LandingExperience";
-import ProblemSection from "@/components/sections/ProblemSection";
-import FeaturesSection from "@/components/sections/FeaturesSection";
-import HowItWorksSection from "@/components/sections/HowItWorksSection";
-import FinalCTASection from "@/components/sections/FinalCTASection";
-import Footer from "@/components/layout/Footer";
+"use client";
+
+import Navbar from "@/components/layout/Navbar";
+import SmoothScrollProvider from "@/components/common/SmoothScrollProvider";
+import Section01Hero from "@/components/sections/Section01Hero";
+import Section02Problem from "@/components/sections/Section02Problem";
+import Section03TurningPoint from "@/components/sections/Section03TurningPoint";
+import Section04And05Discovery from "@/components/sections/Section04And05Discovery";
+import Section06QuietWhen from "@/components/sections/Section06QuietWhen";
+import Section07FocusFitScore from "@/components/sections/Section07FocusFitScore";
+import Section08CommunityIntelligence from "@/components/sections/Section08CommunityIntelligence";
+import Section09CompareAndChoose from "@/components/sections/Section09CompareAndChoose";
+import Section10ResolutionAndFooter from "@/components/sections/Section10ResolutionAndFooter";
 
 export default function Home() {
   return (
-    <main className="w-full min-h-screen bg-[#F5F3EC] text-[#20231F] overflow-x-hidden selection:bg-[#819477] selection:text-white">
-      {/* 
-        Scroll Experience Container:
-        1. Simple elegant Intro screen
-        2. Hero slides up and overlaps intro as user scrolls
-        3. Navbar slides down from above into fixed header
-      */}
-      <LandingExperience />
+    <SmoothScrollProvider>
+      <main className="w-full min-h-screen bg-[#F4F1E8] text-[#252B26] overflow-x-hidden selection:bg-[#263D31] selection:text-[#F4F1E8]">
+        {/* Fixed Editorial Navigation Header */}
+        <Navbar />
 
-      {/* The Problem Section */}
-      <ProblemSection />
+        {/* Section 01 — Hero: Show the Problem Immediately */}
+        <Section01Hero />
 
-      {/* 4 Core Features Section */}
-      <FeaturesSection />
+        {/* Section 02 — The Problem: Pinned Bottom-to-Top Reveal (4 Core Frictions) */}
+        <Section02Problem />
 
-      {/* How It Works Section */}
-      <HowItWorksSection />
+        {/* Section 03 — The Turning Point: What if you knew before you arrived? */}
+        <Section03TurningPoint />
 
-      {/* Final Call to Action */}
-      <FinalCTASection />
+        {/* Sections 04 & 05 — Cinematic Map Reveal & Discovery Map with Fixed Left Sidebar */}
+        <Section04And05Discovery />
 
-      {/* Site Footer */}
-      <Footer />
-    </main>
+        {/* Section 06 — Quiet When: Time-Based Discovery */}
+        <Section06QuietWhen />
+
+        {/* Section 07 — Focus Fit: Not Just Nearby, Right For You */}
+        <Section07FocusFitScore />
+
+        {/* Section 08 — Community Intelligence: Better Information Powered by People */}
+        <Section08CommunityIntelligence />
+
+        {/* Section 09 — Compare and Choose: Choose with Confidence */}
+        <Section09CompareAndChoose />
+
+        {/* Sections 10 & 11 — The Resolution & Premium Lenval-Inspired Interactive Wordmark Footer */}
+        <Section10ResolutionAndFooter />
+      </main>
+    </SmoothScrollProvider>
   );
 }

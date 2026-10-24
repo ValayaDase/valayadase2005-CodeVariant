@@ -1,18 +1,4 @@
-import { Inter, Newsreader } from "next/font/google";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const newsreader = Newsreader({
-  variable: "--font-serif",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
 
 export const viewport = {
   width: "device-width",
@@ -21,26 +7,24 @@ export const viewport = {
 };
 
 export const metadata = {
-  title: "Spotwise — Choose your spot wisely | Space Discovery Engine",
+  title: "Spotwise — The Quiet Place | Find Your Focus",
   description:
-    "Discover sensory-verified quiet workspaces based on real-time acoustic telemetry, crowd forecasts, power outlet density, and high-speed Wi-Fi.",
+    "Spotwise helps students, remote workers, researchers, and professionals discover quiet workspaces based on live acoustic telemetry, crowd forecasts, seating, and Wi-Fi reliability.",
   keywords: [
+    "Spotwise",
     "quiet workspaces",
-    "focus spots",
-    "remote work cafes",
+    "focus places",
     "acoustic telemetry",
-    "study spaces",
-    "deep work",
+    "study cafes",
+    "silent libraries",
+    "remote work spaces",
   ],
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${newsreader.variable} scroll-smooth`}
-    >
-      <body className="min-h-screen bg-[#F5F3EC] text-[#20231F] selection:bg-[#819477] selection:text-white">
+    <html lang="en" className="scroll-smooth">
+      <body className="min-h-screen bg-[#F4F1E8] text-[#252B26] antialiased selection:bg-[#263D31] selection:text-[#F4F1E8]">
         {children}
       </body>
     </html>

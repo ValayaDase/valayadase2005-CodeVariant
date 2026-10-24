@@ -1,140 +1,136 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Compass, Menu, X, ArrowUpRight } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Menu, X, ArrowUpRight } from "lucide-react";
 
-export default function Navbar({ style }) {
+export default function Navbar() {
+  const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // Reveal floating persistent navbar once user scrolls past the framed hero
+      setScrolled(window.scrollY > 380);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const navLinks = [
-    { label: "Discovery", href: "#features" },
-    { label: "Quiet Meter", href: "#discovery-card" },
-    { label: "The Problem", href: "#problem" },
-    { label: "How It Works", href: "#how-it-works" },
+    { label: "Search", href: "#hero" },
+    { label: "Problem", href: "#problem" },
+    { label: "Turning Point", href: "#turning-point" },
+    { label: "Discovery Map", href: "#discovery" },
+    { label: "Quiet When", href: "#quiet-when" },
+    { label: "Focus Fit", href: "#focus-fit" },
+    { label: "Community", href: "#community" },
+    { label: "Compare", href: "#compare" },
   ];
 
   return (
-    <motion.header
-      style={style}
-      initial={false}
-      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-8 py-3 transition-colors duration-300 pointer-events-auto"
-    >
-      <div className="max-w-7xl mx-auto">
-        <nav
-          className="flex items-center justify-between px-5 py-3 rounded-full bg-white/85 backdrop-blur-md border border-[#E8E0D2] shadow-[0_4px_24px_rgba(32,35,31,0.06)]"
-          aria-label="Main Navigation"
-        >
-          {/* Brand Logo */}
-          <a
-            href="#"
-            className="flex items-center gap-2.5 text-[#20231F] group focus:outline-none focus:ring-2 focus:ring-[#819477] rounded-full px-1"
-          >
-            <div className="w-8 h-8 rounded-full bg-[#26382B] flex items-center justify-center text-[#F5F3EC] shadow-sm transition-transform duration-300 group-hover:scale-105">
-              <Compass className="w-4 h-4 text-[#F5F3EC]" strokeWidth={2.2} />
-            </div>
-            <div className="flex items-baseline">
-              <span className="text-lg font-semibold tracking-tight text-[#20231F]">
-                Spotwise
-              </span>
-              <span className="w-1.5 h-1.5 rounded-full bg-[#819477] ml-1 mb-0.5 inline-block" />
-            </div>
+    <>
+      {/* Floating persistent navigation header - reveals smoothly once user scrolls past hero */}
+      <header
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[92%] max-w-5xl transition-all duration-400 ease-out ${
+          scrolled
+            ? "translate-y-0 opacity-100 pointer-events-auto"
+            : "-translate-y-24 opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="bg-[#263D31]/92 backdrop-blur-md text-[#F4F1E8] px-5 py-2.5 rounded-full border border-[#819478]/40 shadow-xl flex items-center justify-between">
+          {/* Logo */}
+          <a href="#hero" className="flex items-center space-x-2 text-[#FCFBF7] group">
+            <span className="w-2 h-2 rounded-full bg-[#819478] group-hover:scale-125 transition-transform" />
+            <span className="font-editorial text-lg tracking-[0.06em] text-[#FCFBF7] font-normal uppercase">
+              Spotwise
+            </span>
           </a>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-1 lg:gap-2">
+          {/* Nav links */}
+          <nav className="hidden md:flex items-center space-x-5 lg:space-x-6 text-[11px] font-mono uppercase tracking-[0.15em] text-[#E3EBDD]/80">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
-                className="px-3.5 py-1.5 text-sm font-medium text-[#20231F]/80 hover:text-[#20231F] hover:bg-[#F5F3EC] rounded-full transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#819477]"
+                className="hover:text-white transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* Right CTA */}
+          <div className="flex items-center space-x-3">
+            <Link
+              href="/sign-in"
+              className="hidden lg:inline-flex text-[11px] font-mono uppercase tracking-wider text-[#E3EBDD] hover:text-white px-2 py-1 transition-colors"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/discover"
+              className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-full bg-[#FCFBF7] text-[#263D31] text-[10px] font-mono font-bold uppercase tracking-wider hover:bg-[#E3EBDD] transition-colors"
+            >
+              <span>Launch App</span>
+              <ArrowUpRight className="w-3 h-3" />
+            </Link>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-1 text-[#FCFBF7] hover:text-[#819478]"
+              aria-label="Toggle menu"
+            >
+              <Menu className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Mobile Drawer Menu */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 bg-[#263D31]/95 backdrop-blur-md text-[#F4F1E8] flex flex-col pt-20 px-8 pb-10 md:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="self-end p-2 text-[#FCFBF7] mb-6"
+            aria-label="Close menu"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          <div className="flex flex-col space-y-4 flex-1">
+            <p className="text-[11px] uppercase tracking-[0.25em] text-[#819478] font-mono font-bold">
+              Navigation Chapters
+            </p>
+            {navLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="font-editorial text-2xl text-[#FCFBF7] hover:text-[#819478] transition-colors"
               >
                 {link.label}
               </a>
             ))}
           </div>
 
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-2.5">
-            <Link
-              href="/sign-in"
-              className="text-xs uppercase tracking-wider font-semibold text-[#20231F] hover:text-[#819477] px-3 py-1.5 transition-colors focus:outline-none focus:ring-2 focus:ring-[#819477] rounded-full"
-            >
-              Sign In
-            </Link>
+          <div className="pt-6 border-t border-[#819478]/30 space-y-3">
             <Link
               href="/discover"
-              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-[#F5F3EC] bg-[#26382B] hover:bg-[#20231F] rounded-full transition-all duration-200 shadow-sm hover:shadow hover:-translate-y-0.5 focus:outline-none focus:ring-2 focus:ring-[#819477]"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block w-full text-center py-3 rounded-full bg-[#FCFBF7] text-[#263D31] text-xs font-mono uppercase font-bold tracking-wider"
             >
-              <span>Launch App</span>
-              <ArrowUpRight className="w-3.5 h-3.5" />
+              Launch App
+            </Link>
+            <Link
+              href="/sign-in"
+              onClick={() => setMobileMenuOpen(false)}
+              className="block w-full text-center py-2.5 rounded-full border border-[#819478]/40 text-[#FCFBF7] text-xs font-mono uppercase font-semibold tracking-wider hover:bg-[#819478]/10"
+            >
+              Sign In (Demo)
             </Link>
           </div>
-
-          {/* Mobile Menu Button */}
-          <div className="flex md:hidden">
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-[#20231F] hover:bg-[#F5F3EC] rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#819477]"
-              aria-label="Toggle menu"
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5" />
-              ) : (
-                <Menu className="w-5 h-5" />
-              )}
-            </button>
-          </div>
-        </nav>
-      </div>
-
-      {/* Mobile Dropdown */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden mt-2 px-4"
-          >
-            <div className="p-4 rounded-2xl bg-white border border-[#E8E0D2] shadow-xl space-y-3">
-              <div className="flex flex-col space-y-1">
-                {navLinks.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="px-3 py-2 text-base font-medium text-[#20231F] hover:bg-[#F5F3EC] rounded-xl transition-colors"
-                  >
-                    {link.label}
-                  </a>
-                ))}
-              </div>
-              <div className="pt-3 border-t border-[#E8E0D2] flex flex-col gap-2">
-                <Link
-                  href="/sign-in"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full flex items-center justify-center py-2 text-xs font-semibold uppercase tracking-wider text-[#20231F] hover:bg-[#F5F3EC] rounded-xl"
-                >
-                  Sign In (Demo)
-                </Link>
-                <Link
-                  href="/discover"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-[#F5F3EC] bg-[#26382B] rounded-xl shadow-sm"
-                >
-                  <span>Launch App</span>
-                  <ArrowUpRight className="w-4 h-4" />
-                </Link>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.header>
+        </div>
+      )}
+    </>
   );
 }
